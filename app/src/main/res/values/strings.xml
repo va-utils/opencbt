@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">Android OpenCBT</string>
+    <string name="action_newrecord">Новая запись</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_about">О приложении</string>
+
+    <string name="newrecord_text_situation">Ситуация при которой возникла мысль:</string>
+    <string name="newrecord_text_thought">Ваша автоматическая мысль:</string>
+    <string name="newrecord_text_rational">Ваш рациональный ответ:</string>
+    <string name="newrecord_text_emotions">Ваши эмоции (что Вы чувствуете?):</string>
+    <string name="newrecord_text_intensity">Отметьте уровень дискомфорта: </string>
+    <string name="newrecord_text_distortions">Отметить искажения:</string>
+    <string name="newrecord_text_feelings">Телесные ощущения:</string>
+    <string name="newrecord_text_actions">Предпринятые действия:</string>
+    <string name="newrecord_button_add">Сохранить в дневник</string>
+    <string name="newrecord_button_delete">Удалить</string>
+
+    <string name="adapter_situation">Ситуация: %1$s</string>
+    <string name="adapter_thought">Мысль: %1$s</string>
+    <string name="adapter_distortions">Искажения: %1$s</string>
+    <string name="adapter_emotions">Эмоции: %1$s</string>
+    <string name="adapter_feelsing">Ощущения: %1$s</string>
+    <string name="adapter_actions">Действия: %1$s</string>
+    <string name="adapter_disput">Ответ: %1$s</string>
+    <string name="adapter_intensity">Дискомфорт: %1$d%%</string>
+    <string name="adapter_empty">Вы создали пустую запись. Хотите продолжить заполнение?</string>
+
+    <string name="newrecord_text_emptysituation">Поле \"Ситуация\" не заполнено</string>
+    <string name="newrecord_text_emptydisput">Поле \"Рациональный ответ\" не заполнено</string>
+    <string name="newrecord_text_emptyemotion">Поле \"Эмоции\" не заполнено</string>
+    <string name="newrecord_text_emptydistortion">Когнитивные искажения не отмечены</string>
+
+    <string name="dist_all_or_nothing">Всё или ничего</string>
+    <string name="dist_overgeneralizing">Сверхобобщение</string>
+    <string name="dist_filtering">Негативный фильтр</string>
+    <string name="dist_disqual_positive">Обесценивание положительного</string>
+    <string name="dist_jump_conclusion">Поспешные выводы</string>
+    <string name="dist_magn_and_min">Преувеличение и преуменьшение</string>
+    <string name="dist_emotional_reasoning">Эмоциональное обоснование</string>
+    <string name="dist_must_statement">Долженствования</string>
+    <string name="dist_labeling">Ярлыки</string>
+    <string name="dist_personalistion">Персонализация</string>
+
+    <string name="newrecord_toast_empty">Поле для автоматической мысли обязательно для заполнения</string>
+
+    <string name="main_text_welcome">Дневник автоматических мыслей — эффективная техника из
+        когнитивно-поведенческой психотерапии. С его помощью Вы научитесь находить у себя огорчающие
+    мысли, определять искажения в них и сможете заменить их более адаптивными. С идеями, лежащими в основе
+        этого метода, Вы можете ознакомиться в книгах Дэвида Бернса, Мэтью Маккея и других специалистов в области КПТ.
+
+        Для того чтобы записать первую мысль, нажмите на кнопку в углу экрана.</string>
+
+    <string name="about">Android OpenCBT — свободное и бесплатное приложение для ведения дневника автоматических мыслей
+    из когнитивно-поведенческой терапии. Его можно использовать для саморазвития, а также для облегчения симптомов тревоги или депрессии. Приложение не имеет доступа к Вашей телефонной книге и файлам, хранящимся в телефоне,
+    не подключается к Интернету. Если Вы столкнулись с проблемой или неправильной работой приложения, пожалуйста, сообщите об этом мне, и я постараюсь это исправить.</string>
+
+    <string name="about_button_send">Сообщить о проблеме</string>
+    <string name="about_button_website">Сайт приложения</string>
+    <string name="about_button_cbt">Узнать больше о КПТ</string>
+
+    <string name="title_about">О приложении</string>
+    <string name="title_newrecord">Запись в дневник</string>
+
+    <string name="app_version">Версия: %1$s (%2$s)</string>
+    <string name="app_author">Вяличкин В.А. 2020</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <string name="pref_columns">Что записываем в дневник? (предлагается заполнить для новых записей)</string>
+    <string name="pref_thoughts">Автоматические мысли</string>
+    <string name="pref_disput">Рациональный ответ</string>
+    <string name="pref_situation">Ситуация</string>
+    <string name="pref_emotions">Эмоции</string>
+    <string name="pref_feelings">Телесные ощущения</string>
+    <string name="pref_actions">Действия</string>
+    <string name="pref_intensity">Уровень дискомфорта</string>
+    <string name="pref_distortions">Когнитивные искажения</string>
+    <string name="pref_empty">Должно быть выбрано хотя бы одно поле для записи в дневник</string>
+
+</resources>
