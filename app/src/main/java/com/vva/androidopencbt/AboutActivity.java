@@ -37,11 +37,13 @@ public class AboutActivity extends AppCompatActivity {
         //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show();
         Uri github = Uri.parse("https://github.com/va-utils/opencbt");
         Intent webIntent = new Intent(Intent.ACTION_VIEW,github);
+        startActivity(webIntent);
     }
 
     public void getCBTInfo(View v)
     {
         Uri cbt = Uri.parse("https://github.com/va-utils/opencbt/wiki");
         Intent webIntent = new Intent(Intent.ACTION_VIEW,cbt);
+        startActivity(webIntent);
     }
 }
