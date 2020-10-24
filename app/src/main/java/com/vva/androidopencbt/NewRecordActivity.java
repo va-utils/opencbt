@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -333,13 +336,14 @@ public class NewRecordActivity extends AppCompatActivity {
     public void setEditText(View v)
     {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View promptView = inflater.inflate(R.layout.prompt,null);
+        final View promptView = inflater.inflate(R.layout.prompt,null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(promptView);
 
         final TextView promptTextView = promptView.findViewById(R.id.prompt_textview);
         final EditText promptEditText = promptView.findViewById(R.id.prompt_edittext);
         final EditText currentEditText = (EditText)v;
+
 
 
         builder.setCancelable(true);
@@ -380,7 +384,6 @@ public class NewRecordActivity extends AppCompatActivity {
             }
         });
 
-
         builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -388,6 +391,11 @@ public class NewRecordActivity extends AppCompatActivity {
             }
         });
         AlertDialog dialog = builder.create();
+        try {
+            dialog.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+        catch (Exception e){}
         dialog.show();
     }
 }
