@@ -58,5 +58,11 @@
             app:title="@string/pref_disput" />
 
     </PreferenceCategory>
+    <PreferenceCategory app:title="Настройки отображения">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="desc_ordering"
+            app:title="Сперва более новые"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

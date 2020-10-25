@@ -1,13 +1,12 @@
 package com.vva.androidopencbt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.view.View;
 import android.view.Menu;
@@ -64,9 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void showRecords()
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int ordering;
+        if (prefs.getBoolean("desc_ordering",false))
+            ordering=DateBaseHelper.ORDER_DESC;
+        else
+            ordering=DateBaseHelper.ORDER_ASC;
+
         DateBaseAdapter adapter = new DateBaseAdapter(this);
         adapter.open();
-        List<Record> records = adapter.getRecords(0,false);
+        List<Record> records = adapter.getRecords(ordering);
         adapter.close();
 
         if(records.isEmpty())
@@ -103,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
             activity_flag = true;
             Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(aboutIntent);
+            return true;
+        }
+
+        if (id == R.id.action_html)
+        {
+            activity_flag = true;
+            Intent pdfIntent = new Intent(MainActivity.this, SaveHTMLActivity.class);
+            startActivity(pdfIntent);
             return true;
         }
 

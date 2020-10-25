@@ -29,8 +29,15 @@ public class DateBaseAdapter
         dbHelper.close();
     }
 
-    private Cursor getAllEntries(int orderBy ,boolean showOld)
+    private Cursor getAllEntries(int orderBy)
     {
+        String orderClause = null;
+        if(orderBy == DateBaseHelper.ORDER_DESC)
+            orderClause = DateBaseHelper.COLUMN_DATETIME + " DESC";
+        else if(orderBy == DateBaseHelper.ORDER_ASC)
+            orderClause = DateBaseHelper.COLUMN_DATETIME + " ASC";
+        else
+            orderClause = null;
         String[] clms = new String[10];
         clms[0] = DateBaseHelper.COLUMN_ID;
         clms[1] = DateBaseHelper.COLUMN_SITUATION;
@@ -42,13 +49,13 @@ public class DateBaseAdapter
         clms[7] = DateBaseHelper.COLUMN_INTENSITY;
         clms[8] = DateBaseHelper.COLUMN_DISTORTIONS;
         clms[9] = DateBaseHelper.COLUMN_DATETIME;
-        return db.query(DateBaseHelper.TABLE,clms,null,null,null,null,null);
+        return db.query(DateBaseHelper.TABLE,clms,null,null,null,null,orderClause);
     }
 
-    public List<Record> getRecords(int orderBy, boolean showOlds)
+    public List<Record> getRecords(int orderBy)
     {
         ArrayList<Record> records = new ArrayList<>();
-        Cursor cursor = getAllEntries(orderBy, showOlds);
+        Cursor cursor = getAllEntries(orderBy);
         if(cursor.moveToFirst()) {
             do
             {

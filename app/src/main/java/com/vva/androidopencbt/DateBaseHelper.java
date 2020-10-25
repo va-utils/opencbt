@@ -22,7 +22,6 @@ public class DateBaseHelper extends SQLiteOpenHelper
 
     public static final int ORDER_ASC = 0;
     public static final int ORDER_DESC = 1;
-    public static final int ORDER_NONE = 2;
 
     public DateBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, SCHEMA);

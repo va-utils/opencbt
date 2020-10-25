@@ -1,5 +1,8 @@
 package com.vva.androidopencbt;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -75,6 +78,12 @@ public class Record
         return formatter.format(getDateTime());
     }
 
+    String getShortDateTimeString()
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+        return formatter.format(getDateTime());
+    }
+
     short getDistortionsValue() { return this.distortions; }
 
     void setDistortionsValue(short value)
@@ -94,6 +103,46 @@ public class Record
         setIntensity(intensity);
         setDistortionsValue(distortions);
         setDateTime(date);
+    }
+
+    public String getDistortionsString(Context context)
+    {
+        if(getDistortionsValue()==0) return "";
+        Resources res = context.getResources();
+        StringBuilder builder = new StringBuilder();
+        if((getDistortionsValue()&ALL_OR_NOTHING)!=0)
+            builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ");
+        if((getDistortionsValue()&OVERGENERALIZING)!=0)
+            builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ");
+        if((getDistortionsValue()&FILTERING)!=0)
+            builder.append(res.getString(R.string.dist_filtering)).append(", ");
+        if((getDistortionsValue()&DISQUAL_POSITIVE)!=0)
+            builder.append(res.getString(R.string.dist_disqual_positive) ).append(", ");
+        if((getDistortionsValue()&JUMP_CONCLUSION)!=0)
+            builder.append(res.getString(R.string.dist_jump_conclusion)).append(", ");
+        if((getDistortionsValue()&MAGN_AND_MIN)!=0)
+            builder.append(res.getString(R.string.dist_magn_and_min)).append(", ");
+        if((getDistortionsValue()&EMOTIONAL_REASONING)!=0)
+            builder.append(res.getString(R.string.dist_emotional_reasoning)).append(", ");
+        if((getDistortionsValue()&MUST_STATEMENTS)!=0)
+            builder.append(res.getString(R.string.dist_must_statement)).append(", ");
+        if((getDistortionsValue()&LABELING)!=0)
+            builder.append(res.getString(R.string.dist_labeling)).append(", ");
+        if((getDistortionsValue()&PERSONALIZATION)!=0)
+            builder.append(res.getString(R.string.dist_personalistion)).append(", ");;
+
+        for(int i = 0;i < builder.length(); i++) //убираем заглавные буквы
+        {
+            if(Character.isAlphabetic(builder.codePointAt(i)))
+            {
+                if(Character.isUpperCase(builder.charAt(i)))
+                {
+                    builder.setCharAt(i,Character.toLowerCase(builder.charAt(i)));
+                }
+            }
+        }
+
+        return builder.substring(0,builder.length()-2);
     }
 
     boolean isEmpty()
