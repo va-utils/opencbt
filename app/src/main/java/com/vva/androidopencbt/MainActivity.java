@@ -6,14 +6,20 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.vva.androidopencbt.db.DbRecord;
+import com.vva.androidopencbt.recordslist.RvFragment;
 
 import java.util.List;
 
@@ -25,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     RecordAdapter recordAdapter;
     boolean activity_flag = false;
 
+    RecordsViewModel vm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +42,26 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         welcomeTextView = findViewById(R.id.welcomeTextView);
 
-        listView.setOnItemLongClickListener(listener);
+//        listView.setOnItemLongClickListener(listener);
+        vm = new ViewModelProvider(this).get(RecordsViewModel.class);
+        vm.getAllRecords().observe(this, dbRecords -> {
+            if (!dbRecords.isEmpty()) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, new RvFragment())
+                        .commit();
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, new WelcomeFragment())
+                        .commit();
+            }
+        });
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        showRecords();
+//        showRecords();
     }
 
     ListView.OnItemLongClickListener listener = new AdapterView.OnItemLongClickListener() {
