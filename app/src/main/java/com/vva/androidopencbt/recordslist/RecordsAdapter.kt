@@ -11,13 +11,13 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter: ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter(val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), listener)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -33,7 +33,11 @@ class RecordsAdapter: ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(Di
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord) {
+        fun bind(record: DbRecord, onClickListener: RecordListener) {
+            itemView.setOnClickListener {
+                onClickListener.onClick(record)
+            }
+
             dateTextView.text = record.datetime?.getDateTimeString()
             record.apply {
                 distortions?.let {
@@ -117,4 +121,8 @@ class RecordsAdapter: ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(Di
             return oldItem == newItem
         }
     }
+}
+
+class RecordListener(val clickListener: (record: DbRecord?) -> Unit) {
+    fun onClick(record: DbRecord) = clickListener(record)
 }

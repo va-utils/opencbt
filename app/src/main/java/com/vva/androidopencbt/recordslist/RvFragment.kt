@@ -1,5 +1,6 @@
 package com.vva.androidopencbt.recordslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.vva.androidopencbt.NewRecordActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
@@ -21,7 +23,15 @@ class RvFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
-        dataAdapter = RecordsAdapter()
+        dataAdapter = RecordsAdapter(RecordListener {
+            if (it == null) {
+
+            } else {
+                val newRecordIntent = Intent(activity, NewRecordActivity::class.java)
+                newRecordIntent.putExtra("ID", it.id)
+                startActivity(newRecordIntent)
+            }
+        })
         
         viewModel.getAllRecords().observe(viewLifecycleOwner, Observer {
             dataAdapter.submitList(it)
