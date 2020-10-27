@@ -16,6 +16,13 @@
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory app:title="Настройки отображения">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="desc_ordering"
+            app:title="Сначала новые записи"/>
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/pref_columns">
         <SwitchPreferenceCompat
             app:defaultValue="true"
@@ -57,12 +64,6 @@
             app:key="enable_rational"
             app:title="@string/pref_disput" />
 
-    </PreferenceCategory>
-    <PreferenceCategory app:title="Настройки отображения">
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:key="desc_ordering"
-            app:title="Сперва более новые"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

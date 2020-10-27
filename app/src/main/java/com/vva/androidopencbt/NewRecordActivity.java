@@ -11,6 +11,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -398,4 +401,34 @@ public class NewRecordActivity extends AppCompatActivity {
         catch (Exception e){}
         dialog.show();
     }
+
+     @Override
+     public boolean onCreateOptionsMenu(Menu menu)
+     {
+         MenuInflater inflater = getMenuInflater();
+         inflater.inflate(R.menu.menu_newrecord,menu);
+         return true;
+     }
+
+     @Override
+     public boolean onOptionsItemSelected(MenuItem item)
+     {
+         if(item.getItemId()==R.id.menu_help)
+         {
+             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // builder.setView(v);
+             builder.setMessage(getText(R.string.dialog_help_text));
+             builder.setTitle("Справка");
+             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                 @Override
+                 public void onClick(DialogInterface dialog, int which) {
+                     dialog.cancel();
+                 }
+             });
+             AlertDialog dialog = builder.create();
+             dialog.show();
+             return true;
+         }
+         return false;
+     }
 }
