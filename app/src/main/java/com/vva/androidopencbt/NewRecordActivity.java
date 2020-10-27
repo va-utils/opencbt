@@ -2,6 +2,8 @@ package com.vva.androidopencbt;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
@@ -24,6 +26,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vva.androidopencbt.db.DbRecord;
+
 import org.w3c.dom.Text;
 
 import java.util.Date;
@@ -32,7 +36,7 @@ import static android.view.View.GONE;
 
 public class NewRecordActivity extends AppCompatActivity {
 
-    DateBaseAdapter adapter;
+    RecordsViewModel viewModel;
     EditText thoughtEditText;
     EditText rationalEditText;
     EditText situationEditText;
@@ -60,6 +64,8 @@ public class NewRecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_record);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        viewModel = new ViewModelProvider(this).get(RecordsViewModel.class);
+
         // инициализация контроллов
         thoughtEditText = findViewById(R.id.thoughtEditText);
         rationalEditText = findViewById(R.id.rationalEditText);
@@ -98,9 +104,6 @@ public class NewRecordActivity extends AppCompatActivity {
         labelingCheckBox = findViewById(R.id.labelingCheckBox);
         personCheckBox = findViewById(R.id.personCheckBox);
 
-        //------------------------
-        adapter = new DateBaseAdapter(this);
-        //------------------------
         Bundle bundle = getIntent().getExtras();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if(bundle!=null)
@@ -113,99 +116,93 @@ public class NewRecordActivity extends AppCompatActivity {
                 deleteButton.setVisibility(View.VISIBLE);
                 //---
 
-                adapter.open();
-                Record record = adapter.getEvent(id);
-                adapter.close();
+//                adapter.open();
+//                Record record = adapter.getEvent(id);
+//                adapter.close();
 
-                if(!record.getThought().isEmpty() || prefs.getBoolean("enable_thoughts",true))
-                    thoughtEditText.setText(record.getThought());
-                else
-                {
-                    findViewById(R.id.nr_thoughtTextView).setVisibility(GONE);
-                    thoughtEditText.setVisibility(GONE);
-                }
+                viewModel.getRecordById(id).observe(this, record -> {
+                    if (record == null)
+                        return;
 
-                if(!record.getRational().isEmpty() || prefs.getBoolean("enable_rational",true))
-                    rationalEditText.setText(record.getRational());
-                else
-                {
-                    findViewById(R.id.nr_rationalTextView).setVisibility(GONE);
-                    rationalEditText.setVisibility(GONE);
-                }
+                    if (!record.getThoughts().isEmpty() || prefs.getBoolean("enable_thoughts", true))
+                        thoughtEditText.setText(record.getThoughts());
+                    else {
+                        findViewById(R.id.nr_thoughtTextView).setVisibility(GONE);
+                        thoughtEditText.setVisibility(GONE);
+                    }
 
-                if(!record.getEmotion().isEmpty() || prefs.getBoolean("enable_emotions",true))
-                    emotionEditText.setText(record.getEmotion());
-                else{
-                    findViewById(R.id.nr_emotionTextView).setVisibility(GONE);
-                    emotionEditText.setVisibility(GONE);
-                }
+                    if (!record.getRational().isEmpty() || prefs.getBoolean("enable_rational", true))
+                        rationalEditText.setText(record.getRational());
+                    else {
+                        findViewById(R.id.nr_rationalTextView).setVisibility(GONE);
+                        rationalEditText.setVisibility(GONE);
+                    }
+
+                    if (!record.getEmotions().isEmpty() || prefs.getBoolean("enable_emotions", true))
+                        emotionEditText.setText(record.getEmotions());
+                    else {
+                        findViewById(R.id.nr_emotionTextView).setVisibility(GONE);
+                        emotionEditText.setVisibility(GONE);
+                    }
 
 
-                if(!record.getSituation().isEmpty() || prefs.getBoolean("enable_situation",true))
-                    situationEditText.setText(record.getSituation());
-                else
-                {
-                    findViewById(R.id.nr_situationTextView).setVisibility(GONE);
-                    situationEditText.setVisibility(GONE);
-                }
+                    if (!record.getSituation().isEmpty() || prefs.getBoolean("enable_situation", true))
+                        situationEditText.setText(record.getSituation());
+                    else {
+                        findViewById(R.id.nr_situationTextView).setVisibility(GONE);
+                        situationEditText.setVisibility(GONE);
+                    }
 
-                if(!record.getFeelings().isEmpty() || prefs.getBoolean("enable_feelings",true))
-                    feelingsEditText.setText(record.getFeelings());
-                else
-                {
-                    findViewById(R.id.nr_feelingsTextView).setVisibility(GONE);
-                    feelingsEditText.setVisibility(GONE);
-                }
+                    if (!record.getFeelings().isEmpty() || prefs.getBoolean("enable_feelings", true))
+                        feelingsEditText.setText(record.getFeelings());
+                    else {
+                        findViewById(R.id.nr_feelingsTextView).setVisibility(GONE);
+                        feelingsEditText.setVisibility(GONE);
+                    }
 
-                if(!record.getActions().isEmpty() || prefs.getBoolean("enable_actions",true))
-                    actionsEditText.setText(record.getActions());
-                else
-                {
-                    findViewById(R.id.nr_actionsTextView).setVisibility(GONE);
-                    actionsEditText.setVisibility(GONE);
-                }
+                    if (!record.getActions().isEmpty() || prefs.getBoolean("enable_actions", true))
+                        actionsEditText.setText(record.getActions());
+                    else {
+                        findViewById(R.id.nr_actionsTextView).setVisibility(GONE);
+                        actionsEditText.setVisibility(GONE);
+                    }
 
-                if(record.getIntensity()!=0 || prefs.getBoolean("enable_intensity",true))
-                {
-                    intensitySeekBar.setProgress(record.getIntensity());
-                    percentTextView.setText(record.getIntensity() + "%");
-                }
-                else
-                {
-                    findViewById(R.id.nr_intensityTextView).setVisibility(GONE);
-                    intensitySeekBar.setVisibility(GONE);
-                    percentTextView.setVisibility(GONE);
-                }
+                    if (record.getIntensity() != 0 || prefs.getBoolean("enable_intensity", true)) {
+                        intensitySeekBar.setProgress(record.getIntensity());
+                        percentTextView.setText(record.getIntensity() + "%");
+                    } else {
+                        findViewById(R.id.nr_intensityTextView).setVisibility(GONE);
+                        intensitySeekBar.setVisibility(GONE);
+                        percentTextView.setVisibility(GONE);
+                    }
 
-                if(record.getDistortionsValue()!=0 || prefs.getBoolean("enable_distortions",true))
-                {
-                    short dist = record.getDistortionsValue();
-                    //---сделать разбор dist и отобразить CheckBox-ы
-                    allOrNothingCheckBox.setChecked( (dist&Record.ALL_OR_NOTHING)!=0 );
-                    overgeneralizingCheckBox.setChecked( (dist&Record.OVERGENERALIZING)!=0 );
-                    filteringCheckBox.setChecked( (dist&Record.FILTERING)!=0 );
-                    disqualCheckBox.setChecked( (dist&Record.DISQUAL_POSITIVE)!=0 );
-                    jumpCheckBox.setChecked( (dist&Record.JUMP_CONCLUSION)!=0 );
-                    magnMinCheckBox.setChecked( (dist&Record.MAGN_AND_MIN)!=0 );
-                    emoReasonCheckBox.setChecked( (dist&Record.EMOTIONAL_REASONING)!=0 );
-                    mustCheckBox.setChecked( (dist&Record.MUST_STATEMENTS)!=0 );
-                    labelingCheckBox.setChecked( (dist&Record.LABELING)!=0 );
-                    personCheckBox.setChecked( (dist&Record.PERSONALIZATION)!=0);
-                }
-                else
-                {
-                    allOrNothingCheckBox.setVisibility(GONE);
-                    overgeneralizingCheckBox.setVisibility(GONE);
-                    filteringCheckBox.setVisibility(GONE);
-                    disqualCheckBox.setVisibility(GONE);
-                    jumpCheckBox.setVisibility(GONE);
-                    magnMinCheckBox.setVisibility(GONE);
-                    emoReasonCheckBox.setVisibility(GONE);
-                    mustCheckBox.setVisibility(GONE);
-                    labelingCheckBox.setVisibility(GONE);
-                    personCheckBox.setVisibility(GONE);
-                    findViewById(R.id.nr_distortionTextView).setVisibility(GONE);
-                }
+                    if (record.getDistortions() != 0 || prefs.getBoolean("enable_distortions", true)) {
+                        int dist = record.getDistortions();
+                        //---сделать разбор dist и отобразить CheckBox-ы
+                        allOrNothingCheckBox.setChecked((dist & Record.ALL_OR_NOTHING) != 0);
+                        overgeneralizingCheckBox.setChecked((dist & Record.OVERGENERALIZING) != 0);
+                        filteringCheckBox.setChecked((dist & Record.FILTERING) != 0);
+                        disqualCheckBox.setChecked((dist & Record.DISQUAL_POSITIVE) != 0);
+                        jumpCheckBox.setChecked((dist & Record.JUMP_CONCLUSION) != 0);
+                        magnMinCheckBox.setChecked((dist & Record.MAGN_AND_MIN) != 0);
+                        emoReasonCheckBox.setChecked((dist & Record.EMOTIONAL_REASONING) != 0);
+                        mustCheckBox.setChecked((dist & Record.MUST_STATEMENTS) != 0);
+                        labelingCheckBox.setChecked((dist & Record.LABELING) != 0);
+                        personCheckBox.setChecked((dist & Record.PERSONALIZATION) != 0);
+                    } else {
+                        allOrNothingCheckBox.setVisibility(GONE);
+                        overgeneralizingCheckBox.setVisibility(GONE);
+                        filteringCheckBox.setVisibility(GONE);
+                        disqualCheckBox.setVisibility(GONE);
+                        jumpCheckBox.setVisibility(GONE);
+                        magnMinCheckBox.setVisibility(GONE);
+                        emoReasonCheckBox.setVisibility(GONE);
+                        mustCheckBox.setVisibility(GONE);
+                        labelingCheckBox.setVisibility(GONE);
+                        personCheckBox.setVisibility(GONE);
+                        findViewById(R.id.nr_distortionTextView).setVisibility(GONE);
+                    }
+                });
 
             }
         }
@@ -276,9 +273,7 @@ public class NewRecordActivity extends AppCompatActivity {
 
     public void delete(View v)
     {
-        adapter.open();
-        adapter.delete(id);
-        adapter.close();
+        viewModel.deleteRecord(id);
         finish();
     }
 
@@ -291,18 +286,8 @@ public class NewRecordActivity extends AppCompatActivity {
         String feelings = feelingsEditText.getText().toString();
         String actions = actionsEditText.getText().toString();
 
-        /*
-        //поле с мыслью не должно быть пустым
-        if(thought.length() == 0)
-        {
-            Toast.makeText(this, getString(R.string.newrecord_toast_empty), Toast.LENGTH_LONG).show();
-            return;
-        } */
-
-        //разбор искажений
-
         short intensity = (short)intensitySeekBar.getProgress();
-        short dist = 0x0;
+        int dist = 0x0;
 
         if(allOrNothingCheckBox.isChecked()) { dist|=Record.ALL_OR_NOTHING;}
         if(overgeneralizingCheckBox.isChecked()) { dist|=Record.OVERGENERALIZING;}
@@ -315,24 +300,30 @@ public class NewRecordActivity extends AppCompatActivity {
         if(labelingCheckBox.isChecked()) { dist|=Record.LABELING;}
         if(personCheckBox.isChecked()) { dist|=Record.PERSONALIZATION;}
 
-        adapter.open();
-        if(id>0)
-        {
-            adapter.open();
-            Record old = adapter.getEvent(id);
-            //нужно сохранить время изначальной записи
-            Record record = new Record(id, situation, thought,disput, emotion, feelings, actions, intensity, dist, old.getDateTime().getTime());
-            adapter.update(record);
+        if(id > 0) {
+            viewModel.updateRecord(id,
+                    situation,
+                    thought,
+                    disput,
+                    emotion,
+                    dist,
+                    feelings,
+                    actions,
+                    intensity);
+        } else {
+            viewModel.addRecord(new DbRecord(
+                    null,
+                    situation,
+                    thought,
+                    disput,
+                    emotion,
+                    dist,
+                    feelings,
+                    actions,
+                    intensity,
+                    new Date()
+            ));
         }
-        else
-        {
-            Date current = new Date();
-         //   Toast.makeText(this, current.toString(), Toast.LENGTH_SHORT).show();
-            Record record = new Record(id, situation, thought,disput, emotion, feelings, actions, intensity, dist, current.getTime());
-          //  long dt = record.getDateTime().getTime();
-            adapter.insert(record);
-        }
-        adapter.close();
         finish();
     }
 
