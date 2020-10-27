@@ -25,10 +25,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    ListView listView;
     TextView welcomeTextView;
-    RecordAdapter recordAdapter;
     boolean activity_flag = false;
 
     RecordsViewModel vm;
@@ -39,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        listView = findViewById(R.id.listView);
         welcomeTextView = findViewById(R.id.welcomeTextView);
 
-//        listView.setOnItemLongClickListener(listener);
         vm = new ViewModelProvider(this).get(RecordsViewModel.class);
         vm.getAllRecords().observe(this, dbRecords -> {
             if (!dbRecords.isEmpty()) {
@@ -55,58 +50,13 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
         });
-    }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-//        showRecords();
-    }
-
-    ListView.OnItemLongClickListener listener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            Record record = recordAdapter.getItem(position);
-            if(record!=null)
-            {
-                activity_flag = true;
-                Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
-                newRecordIntent.putExtra("ID",record.getId());
-                startActivity(newRecordIntent);
-            }
-            return true;
-        }
-
-    };
-
-    public void showRecords()
-    {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int ordering;
-        if (prefs.getBoolean("desc_ordering",false))
-            ordering=DateBaseHelper.ORDER_DESC;
-        else
-            ordering=DateBaseHelper.ORDER_ASC;
-
-        DateBaseAdapter adapter = new DateBaseAdapter(this);
-        adapter.open();
-        List<Record> records = adapter.getRecords(ordering);
-        adapter.close();
-
-        if(records.isEmpty())
-        {
-            welcomeTextView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            welcomeTextView.setVisibility(View.INVISIBLE);
-        }
-
-        recordAdapter = new RecordAdapter(this,R.layout.list_item,records);
-        listView.setAdapter(recordAdapter);
-
+        vm.getNewRecordNavigated().observe(this, aLong -> {
+            activity_flag = true;
+            Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);
+            newRecordIntent.putExtra("ID", aLong);
+            startActivity(newRecordIntent);
+        });
     }
 
     @Override
