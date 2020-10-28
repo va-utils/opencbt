@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView welcomeTextView;
-    boolean activity_flag = false;
+    //boolean activity_flag = false;
 
     RecordsViewModel vm;
 
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         welcomeTextView = findViewById(R.id.welcomeTextView);
 
         vm = new ViewModelProvider(this).get(RecordsViewModel.class);
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         vm.getNewRecordNavigated().observe(this, aLong -> {
-            activity_flag = true;
+           // activity_flag = true;
             Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);
             newRecordIntent.putExtra("ID", aLong);
             startActivity(newRecordIntent);
@@ -76,15 +77,16 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about)
         {
-            activity_flag = true;
-            Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
-            startActivity(aboutIntent);
+            //activity_flag = true;
+            //Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+            //startActivity(aboutIntent);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,new AboutFragment()).addToBackStack(null).commit();
             return true;
         }
 
         if (id == R.id.action_html)
         {
-            activity_flag = true;
+            //activity_flag = true;
             Intent pdfIntent = new Intent(MainActivity.this, SaveHTMLActivity.class);
             startActivity(pdfIntent);
             return true;
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(id == R.id.action_settings)
         {
-            activity_flag = true;
+        //    activity_flag = true;
             Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(id == R.id.action_newrecord)
         {
-            activity_flag = true;
+          //  activity_flag = true;
             Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
             startActivity(newRecordIntent);
         }
@@ -112,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNewRecord(View v)
     {
-        activity_flag = true;
+       // activity_flag = true;
         Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
         startActivity(newRecordIntent);
     }
 
-    @Override
+    /*@Override
     protected void onUserLeaveHint()
     {
         if(activity_flag)
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            finish();
+          //  finish();
         }
         super.onUserLeaveHint();
     }
@@ -135,5 +137,5 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed()
     {
         finish();
-    }
+    }*/
 }

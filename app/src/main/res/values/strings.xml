@@ -26,7 +26,7 @@
     <string name="adapter_feelsing">Ощущения: %1$s</string>
     <string name="adapter_actions">Действия: %1$s</string>
     <string name="adapter_disput">Ответ: %1$s</string>
-    <string name="adapter_intensity">Дискомфорт: %1$d%%</string>
+    <string name="adapter_intensity">Дискомфорт: <b>%1$d%%</b></string>
     <string name="adapter_empty">Вы создали пустую запись. Хотите продолжить заполнение?</string>
 
     <string name="newrecord_text_emptysituation">Поле \"Ситуация\" не заполнено</string>
@@ -67,7 +67,7 @@
     <string name="title_newrecord">Запись в дневник</string>
 
     <string name="app_version">Версия: %1$s (%2$s)</string>
-    <string name="app_author">Вяличкин В.А. 2020</string>
+    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2020</string>
     <string name="title_activity_settings">Настройки</string>
 
     <string name="pref_columns">Что записываем в дневник? (предлагается заполнить для новых записей)</string>
@@ -116,4 +116,6 @@
 <b>Когнитивные искажения.</b>
 Когнитивные искажения - это шаблоны мышления, приводящие к возникновению или усилению депрессивных и тревожных состояний.\n
     </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
