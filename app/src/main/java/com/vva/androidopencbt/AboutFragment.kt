@@ -31,7 +31,7 @@ class AboutFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(false);
+        //setHasOptionsMenu();
     }
 
     var listener = View.OnClickListener {view -> when(view.id)
