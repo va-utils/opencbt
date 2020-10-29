@@ -26,7 +26,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView welcomeTextView;
-    //boolean activity_flag = false;
 
     RecordsViewModel vm;
 
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         vm.getNewRecordNavigated().observe(this, aLong -> {
-           // activity_flag = true;
             Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);
             newRecordIntent.putExtra("ID", aLong);
             startActivity(newRecordIntent);
@@ -75,34 +73,27 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about)
-        {
-            //activity_flag = true;
-            //Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
-            //startActivity(aboutIntent);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,new AboutFragment()).addToBackStack(null).commit();
+        if (id == R.id.action_about) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container,new AboutFragment())
+                    .addToBackStack("test")
+                    .commit();
             return true;
         }
 
-        if (id == R.id.action_html)
-        {
-            //activity_flag = true;
+        if (id == R.id.action_html) {
             Intent pdfIntent = new Intent(MainActivity.this, SaveHTMLActivity.class);
             startActivity(pdfIntent);
             return true;
         }
 
-        if(id == R.id.action_settings)
-        {
-        //    activity_flag = true;
+        if(id == R.id.action_settings) {
             Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
         }
 
-        if(id == R.id.action_newrecord)
-        {
-          //  activity_flag = true;
+        if(id == R.id.action_newrecord) {
             Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
             startActivity(newRecordIntent);
         }
@@ -112,30 +103,15 @@ public class MainActivity extends AppCompatActivity {
 
     //-----
 
-    public void addNewRecord(View v)
-    {
-       // activity_flag = true;
+    public void addNewRecord(View v) {
         Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
         startActivity(newRecordIntent);
     }
 
-    /*@Override
-    protected void onUserLeaveHint()
-    {
-        if(activity_flag)
-        {
-            activity_flag = false;
-        }
-        else
-        {
-          //  finish();
-        }
-        super.onUserLeaveHint();
-    }
-
     @Override
-    public void onBackPressed()
-    {
-        finish();
-    }*/
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
 }

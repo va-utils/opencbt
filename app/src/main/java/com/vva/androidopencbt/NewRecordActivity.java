@@ -179,16 +179,16 @@ public class NewRecordActivity extends AppCompatActivity {
                     if (record.getDistortions() != 0 || prefs.getBoolean("enable_distortions", true)) {
                         int dist = record.getDistortions();
                         //---сделать разбор dist и отобразить CheckBox-ы
-                        allOrNothingCheckBox.setChecked((dist & Record.ALL_OR_NOTHING) != 0);
-                        overgeneralizingCheckBox.setChecked((dist & Record.OVERGENERALIZING) != 0);
-                        filteringCheckBox.setChecked((dist & Record.FILTERING) != 0);
-                        disqualCheckBox.setChecked((dist & Record.DISQUAL_POSITIVE) != 0);
-                        jumpCheckBox.setChecked((dist & Record.JUMP_CONCLUSION) != 0);
-                        magnMinCheckBox.setChecked((dist & Record.MAGN_AND_MIN) != 0);
-                        emoReasonCheckBox.setChecked((dist & Record.EMOTIONAL_REASONING) != 0);
-                        mustCheckBox.setChecked((dist & Record.MUST_STATEMENTS) != 0);
-                        labelingCheckBox.setChecked((dist & Record.LABELING) != 0);
-                        personCheckBox.setChecked((dist & Record.PERSONALIZATION) != 0);
+                        allOrNothingCheckBox.setChecked((dist & DbRecord.ALL_OR_NOTHING) != 0);
+                        overgeneralizingCheckBox.setChecked((dist & DbRecord.OVERGENERALIZING) != 0);
+                        filteringCheckBox.setChecked((dist & DbRecord.FILTERING) != 0);
+                        disqualCheckBox.setChecked((dist & DbRecord.DISQUAL_POSITIVE) != 0);
+                        jumpCheckBox.setChecked((dist & DbRecord.JUMP_CONCLUSION) != 0);
+                        magnMinCheckBox.setChecked((dist & DbRecord.MAGN_AND_MIN) != 0);
+                        emoReasonCheckBox.setChecked((dist & DbRecord.EMOTIONAL_REASONING) != 0);
+                        mustCheckBox.setChecked((dist & DbRecord.MUST_STATEMENTS) != 0);
+                        labelingCheckBox.setChecked((dist & DbRecord.LABELING) != 0);
+                        personCheckBox.setChecked((dist & DbRecord.PERSONALIZATION) != 0);
                     } else {
                         allOrNothingCheckBox.setVisibility(GONE);
                         overgeneralizingCheckBox.setVisibility(GONE);
@@ -289,16 +289,16 @@ public class NewRecordActivity extends AppCompatActivity {
         short intensity = (short)intensitySeekBar.getProgress();
         int dist = 0x0;
 
-        if(allOrNothingCheckBox.isChecked()) { dist|=Record.ALL_OR_NOTHING;}
-        if(overgeneralizingCheckBox.isChecked()) { dist|=Record.OVERGENERALIZING;}
-        if(filteringCheckBox.isChecked()) { dist|=Record.FILTERING;}
-        if(disqualCheckBox.isChecked()) { dist|=Record.DISQUAL_POSITIVE;}
-        if(jumpCheckBox.isChecked()) { dist|=Record.JUMP_CONCLUSION;}
-        if(magnMinCheckBox.isChecked()) { dist|=Record.MAGN_AND_MIN;}
-        if(emoReasonCheckBox.isChecked()) { dist|=Record.EMOTIONAL_REASONING;}
-        if(mustCheckBox.isChecked()) { dist|=Record.MUST_STATEMENTS;}
-        if(labelingCheckBox.isChecked()) { dist|=Record.LABELING;}
-        if(personCheckBox.isChecked()) { dist|=Record.PERSONALIZATION;}
+        if(allOrNothingCheckBox.isChecked()) { dist |= DbRecord.ALL_OR_NOTHING;}
+        if(overgeneralizingCheckBox.isChecked()) { dist |= DbRecord.OVERGENERALIZING;}
+        if(filteringCheckBox.isChecked()) { dist |= DbRecord.FILTERING;}
+        if(disqualCheckBox.isChecked()) { dist |= DbRecord.DISQUAL_POSITIVE;}
+        if(jumpCheckBox.isChecked()) { dist |= DbRecord.JUMP_CONCLUSION;}
+        if(magnMinCheckBox.isChecked()) { dist |= DbRecord.MAGN_AND_MIN;}
+        if(emoReasonCheckBox.isChecked()) { dist |= DbRecord.EMOTIONAL_REASONING;}
+        if(mustCheckBox.isChecked()) { dist |= DbRecord.MUST_STATEMENTS;}
+        if(labelingCheckBox.isChecked()) { dist |= DbRecord.LABELING;}
+        if(personCheckBox.isChecked()) { dist |= DbRecord.PERSONALIZATION;}
 
         if(id > 0) {
             viewModel.updateRecord(id,
