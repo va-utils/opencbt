@@ -19,7 +19,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
 
     fun getAllRecords() = db.databaseDao.getAll()
 
-    fun getAllRecordsOrdered(order : String) = db.databaseDao.getAllOrdered(order)
+    fun getAllRecordsOrdered(order : Int) = db.databaseDao.getAllOrdered(order)
 
     fun getRecordById(id: Long) = db.databaseDao.getById(id)
 

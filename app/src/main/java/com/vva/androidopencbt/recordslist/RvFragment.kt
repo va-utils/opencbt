@@ -28,8 +28,8 @@ class RvFragment: Fragment() {
             }
         })
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val orderby = if (prefs.getBoolean("desc_ordering", true)) "DESC" else "ASC"
-        viewModel./*getAllRecoяrds()*/getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, Observer {
+        val orderby = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
+        viewModel./*getAllRecords()*/getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, Observer {
             dataAdapter.submitList(it)
         })
         rv.adapter = dataAdapter
