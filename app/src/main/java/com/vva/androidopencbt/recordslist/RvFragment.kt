@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
@@ -26,8 +27,9 @@ class RvFragment: Fragment() {
                 viewModel.navigateToRecord(it.id ?: 0)
             }
         })
-        
-        viewModel.getAllRecords().observe(viewLifecycleOwner, Observer {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val orderby = if (prefs.getBoolean("desc_ordering", true)) "DESC" else "ASC"
+        viewModel./*getAllRecoяrds()*/getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, Observer {
             dataAdapter.submitList(it)
         })
         rv.adapter = dataAdapter
