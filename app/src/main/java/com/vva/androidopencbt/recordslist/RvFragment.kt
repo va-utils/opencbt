@@ -34,16 +34,22 @@ class RvFragment: Fragment() {
             }
         })
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val orderby = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel.getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, {
+        val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
+        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 dataAdapter.submitList(it)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-                rv.scrollToPosition(0) //??
+                viewModel.listUpdated()
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
+            }
+        })
+
+        viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                rv.smoothScrollToPosition(0)
             }
         })
         rv.adapter = dataAdapter
