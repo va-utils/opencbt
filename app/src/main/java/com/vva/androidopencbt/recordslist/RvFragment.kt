@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
@@ -40,7 +41,8 @@ class RvFragment: Fragment() {
                 dataAdapter.submitList(it)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-                rv.scrollToPosition(0) //??
+                val layoutManager = rv.layoutManager as LinearLayoutManager
+                layoutManager.scrollToPositionWithOffset(0,0) //??
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
