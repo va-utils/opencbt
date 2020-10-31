@@ -37,19 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         welcomeTextView = findViewById(R.id.welcomeTextView);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new RvFragment())
+                .commit();
 
         vm = new ViewModelProvider(this).get(RecordsViewModel.class);
-        vm.getAllRecords().observe(this, dbRecords -> {
-            if (!dbRecords.isEmpty()) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new RvFragment())
-                        .commit();
-            } else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new WelcomeFragment())
-                        .commit();
-            }
-        });
 
         vm.getNewRecordNavigated().observe(this, aLong -> {
             Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);

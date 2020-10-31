@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,10 +19,13 @@ class RvFragment: Fragment() {
     private lateinit var ll: ConstraintLayout
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
+    private lateinit var welcomeTv: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as ConstraintLayout
         rv = ll.findViewById(R.id.rv)
+        welcomeTv = ll.findViewById(R.id.welcomeTextView)
+
         dataAdapter = RecordsAdapter(RecordListener {
             it?.let {
                 viewModel.navigateToRecord(it.id ?: 0)
@@ -29,8 +33,15 @@ class RvFragment: Fragment() {
         })
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val orderby = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel./*getAllRecords()*/getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, Observer {
-            dataAdapter.submitList(it)
+        viewModel.getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, {
+            if (it.isNotEmpty()) {
+                dataAdapter.submitList(it)
+                welcomeTv.visibility = View.GONE
+                rv.visibility = View.VISIBLE
+            } else {
+                welcomeTv.visibility = View.VISIBLE
+                rv.visibility = View.GONE
+            }
         })
         rv.adapter = dataAdapter
         

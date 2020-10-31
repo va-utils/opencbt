@@ -36,7 +36,7 @@ class AboutFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setHasOptionsMenu()
+        setHasOptionsMenu(true)
     }
 
     var listener = View.OnClickListener {view -> when(view.id) {
@@ -58,13 +58,13 @@ class AboutFragment : Fragment() {
     private fun openGitHub() {
         //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show()
         val github: Uri = Uri.parse("https://github.com/va-utils/opencbt")
-        val webIntent: Intent = Intent(Intent.ACTION_VIEW, github)
+        val webIntent = Intent(Intent.ACTION_VIEW, github)
         activity?.startActivity(webIntent)
     }
 
     private fun getCBTInfo() {
         val cbt: Uri = Uri.parse("https://github.com/va-utils/opencbt/wiki")
-        val webIntent: Intent = Intent(Intent.ACTION_VIEW, cbt)
+        val webIntent = Intent(Intent.ACTION_VIEW, cbt)
         activity?.startActivity(webIntent)
     }
 
