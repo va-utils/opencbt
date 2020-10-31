@@ -11,7 +11,7 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter(val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
@@ -111,6 +111,8 @@ class RecordsAdapter(val listener: RecordListener): ListAdapter<DbRecord, Record
             }
         }
     }
+
+
 
     class DiffCallback: DiffUtil.ItemCallback<DbRecord>() {
         override fun areItemsTheSame(oldItem: DbRecord, newItem: DbRecord): Boolean {

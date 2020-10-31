@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
@@ -35,17 +34,22 @@ class RvFragment: Fragment() {
             }
         })
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val orderby = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel.getAllRecordsOrdered(orderby).observe(viewLifecycleOwner, {
+        val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
+        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 dataAdapter.submitList(it)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-                val layoutManager = rv.layoutManager as LinearLayoutManager
-                layoutManager.scrollToPositionWithOffset(0,0) //??
+                viewModel.listUpdated()
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
+            }
+        })
+
+        viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                rv.smoothScrollToPosition(0)
             }
         })
         rv.adapter = dataAdapter
