@@ -45,7 +45,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                         distortionTextView.visibility = View.GONE
                         return@let
                     }
-
+                    distortionTextView.visibility = View.VISIBLE
                     val builder = StringBuilder()
                     if (it.and(DbRecord.ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
                     if (it.and(DbRecord.OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")

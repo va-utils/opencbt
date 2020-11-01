@@ -49,7 +49,8 @@ class RvFragment: Fragment() {
 
         viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
             if (!it) {
-                rv.smoothScrollToPosition(0)
+                if(orderBy==0) //только если сперва более ранние
+                    rv.smoothScrollToPosition(0)
             }
         })
         rv.adapter = dataAdapter
