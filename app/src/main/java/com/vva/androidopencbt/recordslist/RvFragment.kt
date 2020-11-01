@@ -49,12 +49,12 @@ class RvFragment: Fragment() {
 
         viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
             if (!it) {
-                if(orderBy==0) //только если сперва более ранние
+                if(orderBy==0)
                     rv.smoothScrollToPosition(0)
             }
         })
         rv.adapter = dataAdapter
-        
+
         return ll
     }
 }
