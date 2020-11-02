@@ -32,15 +32,23 @@ class RvFragment: Fragment() {
             it?.let {
                 viewModel.navigateToRecord(it.id ?: 0)
             }
+        }, ScrollListener {
+            viewModel.listUpdated()
+//            if (it == 0) {
+//                rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
+//            } else {
+//                rv.smoothScrollToPosition(0)
+//            }
         })
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
         viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
-                dataAdapter.submitList(it)
+                dataAdapter.updateList(it, orderBy)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-                viewModel.listUpdated()
+//                viewModel.listUpdated()
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
