@@ -8,6 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import android.view.View;
@@ -25,8 +30,6 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-    TextView welcomeTextView;
-
     RecordsViewModel vm;
 
     @Override
@@ -34,22 +37,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        welcomeTextView = findViewById(R.id.welcomeTextView);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         vm = new ViewModelProvider(this).get(RecordsViewModel.class);
-        vm.getAllRecords().observe(this, dbRecords -> {
-            if (!dbRecords.isEmpty()) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new RvFragment())
-                        .commit();
-            } else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new WelcomeFragment())
-                        .commit();
-            }
-        });
+//        vm.getAllRecords().observe(this, dbRecords -> {
+//            if (!dbRecords.isEmpty()) {
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, new RvFragment())
+//                        .commit();
+//            } else {
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, new WelcomeFragment())
+//                        .commit();
+//            }
+//        });
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.myNavHostFragment);
+        NavController controller = navHostFragment.getNavController();
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(controller.getGraph()).build();
+        NavigationUI.setupWithNavController(toolbar, controller, appBarConfiguration);
 
         vm.getNewRecordNavigated().observe(this, aLong -> {
             Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);
@@ -78,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container,new AboutFragment())
                     .addToBackStack("test")
                     .commit();
+
             return true;
         }
 
