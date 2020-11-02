@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
 
 class RecordsViewModel(application: Application): AndroidViewModel(application) {
     private val db = CbdDatabase.getInstance(application)
@@ -17,7 +18,13 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val newRecordNavigated: LiveData<Long>
         get() = _newRecordNavigated
 
+    private val _recordsListUpdated = MutableLiveData<Boolean>()
+    val recordsListUpdated: LiveData<Boolean>
+        get() = _recordsListUpdated
+
     fun getAllRecords() = db.databaseDao.getAll()
+
+    fun getAllRecordsOrdered(order : Int) = db.databaseDao.getAllOrdered(order)
 
     fun getRecordById(id: Long) = db.databaseDao.getById(id)
 
@@ -70,6 +77,14 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
 
     fun navigateToRecord(id: Long) {
         _newRecordNavigated.value = id
+    }
+
+    fun listUpdated() {
+        _recordsListUpdated.value = true
+        uiScope.launch {
+            delay(TimeUnit.SECONDS.toMillis(1))
+            _recordsListUpdated.value = false
+        }
     }
 
     override fun onCleared() {

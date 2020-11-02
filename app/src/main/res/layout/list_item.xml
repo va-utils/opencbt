@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:clickable="true"
+    android:padding="10dp"
+    android:background="?android:selectableItemBackground"
+    android:focusable="true">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,14 +15,6 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"
         android:textSize="13sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/emotionTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:textSize="12sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,6 +32,14 @@
         android:id="@+id/distortionTextView"
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/emotionTextView"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
         android:textSize="12sp" />
 
     <LinearLayout
