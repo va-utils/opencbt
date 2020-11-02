@@ -11,13 +11,27 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter(private val listener: RecordListener, private val scrollListener: ScrollListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+    private var order: Int = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
         holder.bind(getItem(position), listener)
+    }
+
+    override fun onCurrentListChanged(previousList: MutableList<DbRecord>, currentList: MutableList<DbRecord>) {
+        super.onCurrentListChanged(previousList, currentList)
+        if (currentList.size > previousList.size) {
+            scrollListener.scroll(order)
+        }
+    }
+
+    fun updateList(list: List<DbRecord>, order: Int) {
+        submitList(list)
+        this.order = order
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -127,4 +141,8 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
 
 class RecordListener(val clickListener: (record: DbRecord?) -> Unit) {
     fun onClick(record: DbRecord) = clickListener(record)
+}
+
+class ScrollListener(val scrollListener: (orderBy: Int) -> Unit) {
+    fun scroll(orderBy: Int) = scrollListener(orderBy)
 }
