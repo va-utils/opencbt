@@ -69,6 +69,7 @@ public class SaveHTMLActivity extends AppCompatActivity {
         adapter.close();
 
         StringBuilder forHtml = new StringBuilder();
+        forHtml.append("<!DOCTYPE html>");
         forHtml.append("<html><head><meta content='text/html; charset=utf-8'>");
         forHtml.append("<title>Дневник</title></head>");
         forHtml.append("<body>");
