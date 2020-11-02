@@ -33,6 +33,7 @@ class RvFragment: Fragment() {
                 viewModel.navigateToRecord(it.id ?: 0)
             }
         }, ScrollListener {
+            viewModel.listUpdated()
 //            viewModel.listUpdated()
 //            if (it == 0) {
 //                rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
@@ -48,7 +49,6 @@ class RvFragment: Fragment() {
                 dataAdapter.updateList(it, orderBy)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-                viewModel.listUpdated()
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
