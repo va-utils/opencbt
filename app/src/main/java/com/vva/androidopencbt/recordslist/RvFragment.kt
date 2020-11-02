@@ -33,7 +33,7 @@ class RvFragment: Fragment() {
                 viewModel.navigateToRecord(it.id ?: 0)
             }
         }, ScrollListener {
-            viewModel.listUpdated()
+//            viewModel.listUpdated()
 //            if (it == 0) {
 //                rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
 //            } else {
@@ -48,7 +48,7 @@ class RvFragment: Fragment() {
                 dataAdapter.updateList(it, orderBy)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
-//                viewModel.listUpdated()
+                viewModel.listUpdated()
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
@@ -57,8 +57,11 @@ class RvFragment: Fragment() {
 
         viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
             if (!it) {
-                if(orderBy==0)
+                if (orderBy == 0) {
                     rv.smoothScrollToPosition(0)
+                } else {
+                    rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
+                }
             }
         })
         rv.adapter = dataAdapter

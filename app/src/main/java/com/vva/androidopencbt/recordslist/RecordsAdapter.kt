@@ -24,7 +24,7 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
 
     override fun onCurrentListChanged(previousList: MutableList<DbRecord>, currentList: MutableList<DbRecord>) {
         super.onCurrentListChanged(previousList, currentList)
-        if (currentList.size > previousList.size) {
+        if (currentList.size > previousList.size && previousList.isNotEmpty()) {
             scrollListener.scroll(order)
         }
     }
