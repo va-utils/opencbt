@@ -4,6 +4,7 @@
     <string name="action_ordering">Поменять порядок записей</string>
     <string name="action_settings">Настройки</string>
     <string name="action_html">Отправить дневник</string>
+    <string name="action_statistics">Статистика</string>
     <string name="action_about">О приложении</string>
 
     <string name="action_help">Справка</string>
@@ -128,5 +129,5 @@
         <i>Более подробно с когнитивными искажениями можно ознакомиться в книгах Дэвида Бернса, Мэтью Маккея, работах Аарона Бека.</i>
     </string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Скоро здесь будет статистика использования</string>
 </resources>
