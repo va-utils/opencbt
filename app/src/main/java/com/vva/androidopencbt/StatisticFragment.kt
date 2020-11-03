@@ -44,6 +44,7 @@ class StatisticFragment : Fragment() {
 
         countTextView = ll.findViewById(R.id.countTextView)
         avgintensityTextView = ll.findViewById(R.id.avgintensityTextView);
+        
 
         return ll
     }

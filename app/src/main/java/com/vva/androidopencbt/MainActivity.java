@@ -73,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if( id == R.id.action_statistics)
+        {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatisticFragment()).addToBackStack("test").commit();
+            return true;
+        }
+
         if (id == R.id.action_html) {
             Intent pdfIntent = new Intent(MainActivity.this, SaveHTMLActivity.class);
             startActivity(pdfIntent);
