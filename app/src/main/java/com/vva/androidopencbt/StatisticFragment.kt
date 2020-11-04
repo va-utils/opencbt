@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import java.util.*
 
@@ -46,7 +47,13 @@ class StatisticFragment : Fragment() {
         countTextView = ll.findViewById(R.id.countTextView)
         avgintensityTextView = ll.findViewById(R.id.avgintensityTextView);
 
-        countTextView.setText(getString(R.string.stat_total,viewModel.getAllRecordsCount()));
+        viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
+            countTextView.text = getString(R.string.stat_total,it)
+        })
+
+        viewModel.getAverageIntensity().observe(viewLifecycleOwner, {
+            avgintensityTextView.text = getString(R.string.stat_intesity,it)
+        })
 
         return ll
     }

@@ -18,10 +18,10 @@ interface RecordDao {
     fun getRecordById(id: Long): DbRecord
 
     @Query(DbContract.Diary.GET_AVERAGE_INTENSITY)
-    fun getAverageIntensity() : Double
+    fun getAverageIntensity() : LiveData<Double>
 
     @Query(DbContract.Diary.GET_ALL_COUNT)
-    fun getAllCount() : Int
+    fun getAllCount() : LiveData<Int>
 
     @Update
     fun updateRecord(record: DbRecord)
