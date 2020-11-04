@@ -1,4 +1,4 @@
-package com.vva.androidopencbt
+package com.vva.androidopencbt.statistic
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -13,20 +13,16 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
     private var vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
-    private val _recordListCounted = MutableLiveData<Int>()
-    val recordListCounted : LiveData<Int>
-    get() { return _recordListCounted}
-
-    private val _averageIntensityCalculated = MutableLiveData<Double>()
-    val averageIntesityCalculated : LiveData<Double>
-    get() { return _averageIntensityCalculated}
-
-
     fun getAllRecordsCount() = db.databaseDao.getAllCount();
 
     fun getAverageIntensity() = db.databaseDao.getAverageIntensity();
 
+    fun getOldestRecordDate() = db.databaseDao.getOldestDate();
+
+    fun getLatestRecordDate() = db.databaseDao.getLatestDate();
+
     override fun onCleared() {
+        vmJob.cancel()
         super.onCleared()
     }
 }

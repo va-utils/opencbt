@@ -129,8 +129,14 @@
         <i>Более подробно с когнитивными искажениями можно ознакомиться в книгах Дэвида Бернса, Мэтью Маккея, работах Аарона Бека.</i>
     </string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Скоро здесь будет статистика использования</string>
+    <string name="stat_application">Статистика использования:</string>
 
     <string name="stat_total">Всего записей: %1$d</string>
+    <string name="stat_old">Самая старая: %1$s</string>
+    <string name="stat_latest">Самая свежая: %1$s</string>
+
+    <string name="stat_distortions">Когнитивные искажения:</string>
+
+
     <string name="stat_intesity">Средний уровень дискомфорта: %1$f</string>
 </resources>

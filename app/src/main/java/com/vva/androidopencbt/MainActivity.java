@@ -1,27 +1,20 @@
 package com.vva.androidopencbt;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.vva.androidopencbt.db.DbRecord;
 import com.vva.androidopencbt.recordslist.RvFragment;
-
-import java.util.List;
+import com.vva.androidopencbt.statistic.StatisticFragment;
+import com.vva.androidopencbt.statistic.StatisticViewModel;
 
 
 public class MainActivity extends AppCompatActivity {
