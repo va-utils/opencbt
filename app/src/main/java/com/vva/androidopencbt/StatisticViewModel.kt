@@ -8,7 +8,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val db = CbdDatabase.getInstance(application)
 
-    fun getAllRecordsCount() = db.databaseDao.getAllCount()
+    fun getAllRecordsCount() : Int = db.databaseDao.getAllCount() //сделать асихн
 
     fun getAverageIntensity() = db.databaseDao.getAverageIntensity()
 

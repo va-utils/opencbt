@@ -130,4 +130,6 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Скоро здесь будет статистика использования</string>
+
+    <string name="stat_total">Всего записей: %1$d</string>
 </resources>

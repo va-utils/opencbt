@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,6 +45,8 @@ class StatisticFragment : Fragment() {
 
         countTextView = ll.findViewById(R.id.countTextView)
         avgintensityTextView = ll.findViewById(R.id.avgintensityTextView);
+
+        countTextView.setText(getString(R.string.stat_total,viewModel.getAllRecordsCount()));
 
         return ll
     }

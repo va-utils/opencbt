@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TextView welcomeTextView;
 
     RecordsViewModel vm;
+    StatisticViewModel sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
             newRecordIntent.putExtra("ID", aLong);
             startActivity(newRecordIntent);
         });
+
+        //---statistics
+
+        sm = new ViewModelProvider(this).get(StatisticViewModel.class);
     }
 
     @Override
@@ -75,7 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
         if( id == R.id.action_statistics)
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new StatisticFragment()).addToBackStack("test").commit();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.container, new StatisticFragment()).
+                    addToBackStack("test")
+                    .commit();
             return true;
         }
 
