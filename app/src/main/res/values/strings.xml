@@ -139,4 +139,5 @@
 
 
     <string name="stat_intesity">Средний уровень дискомфорта: %1$f</string>
+    <string name="add_new_record">Add new record</string>
 </resources>

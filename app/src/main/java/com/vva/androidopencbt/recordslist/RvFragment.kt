@@ -3,6 +3,7 @@ package com.vva.androidopencbt.recordslist
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,7 @@ import java.lang.IllegalStateException
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
-    private lateinit var ll: ConstraintLayout
+    private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
@@ -42,7 +43,7 @@ class RvFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        ll = inflater.inflate(R.layout.rv_layout, container, false) as ConstraintLayout
+        ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
 
