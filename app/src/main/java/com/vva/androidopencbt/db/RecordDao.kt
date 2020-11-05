@@ -29,6 +29,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_MAX_DATE)
     fun getLatestDate() : LiveData<Long>
 
+    @Query(DbContract.Diary.GET_DISTORTION_COL)
+    fun getDistList() : List<Int>
+
     @Update
     fun updateRecord(record: DbRecord)
 
