@@ -74,21 +74,20 @@ class StatisticFragment : Fragment() {
             Toast.makeText(requireContext(), e.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
-
-       /* viewModel.distortions.observe(viewLifecycleOwner,{
+        viewModel.distortions.observe(viewLifecycleOwner,{
             val b : StringBuilder = StringBuilder()
-            b.append(getString(R.string.dist_all_or_nothing)).append(":").append(it[0]).appendLine()
-            b.append(getString(R.string.dist_overgeneralizing)).append(":").append(it[1]).appendLine()
-            b.append(getString(R.string.dist_filtering)).append(":").append(it[2]).appendLine()
-            b.append(getString(R.string.dist_disqual_positive)).append(":").append(it[3]).appendLine()
-            b.append(getString(R.string.dist_jump_conclusion)).append(":").append(it[4]).appendLine()
-            b.append(getString(R.string.dist_magn_and_min)).append(":").append(it[5]).appendLine()
-            b.append(getString(R.string.dist_emotional_reasoning)).append(":").append(it[6]).appendLine()
-            b.append(getString(R.string.dist_must_statement)).append(":").append(it[7]).appendLine()
-            b.append(getString(R.string.dist_labeling)).append(":").append(it[8]).appendLine()
-            b.append(getString(R.string.dist_personalistion)).append(":").append(it[9]).appendLine()
+            b.append(getString(R.string.dist_all_or_nothing)).append(": ").append(it[0]).appendLine()
+            b.append(getString(R.string.dist_overgeneralizing)).append(": ").append(it[1]).appendLine()
+            b.append(getString(R.string.dist_filtering)).append(": ").append(it[2]).appendLine()
+            b.append(getString(R.string.dist_disqual_positive)).append(": ").append(it[3]).appendLine()
+            b.append(getString(R.string.dist_jump_conclusion)).append(": ").append(it[4]).appendLine()
+            b.append(getString(R.string.dist_magn_and_min)).append(": ").append(it[5]).appendLine()
+            b.append(getString(R.string.dist_emotional_reasoning)).append(": ").append(it[6]).appendLine()
+            b.append(getString(R.string.dist_must_statement)).append(": ").append(it[7]).appendLine()
+            b.append(getString(R.string.dist_labeling)).append(": ").append(it[8]).appendLine()
+            b.append(getString(R.string.dist_personalistion)).append(": ").append(it[9]).appendLine()
             distortionsTextView.text = b.toString()
-        })*/
+        })
         return ll
     }
 }

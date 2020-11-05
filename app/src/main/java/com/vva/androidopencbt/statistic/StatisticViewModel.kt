@@ -38,7 +38,8 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
                         i++;
                     }
                 }
-                _distortions.value = servArray
+                uiScope.launch { _distortions.value = servArray }
+
             }
         }
     }
