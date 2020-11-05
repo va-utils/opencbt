@@ -10,19 +10,24 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 
 class AboutFragment : Fragment() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        view.findViewById<Toolbar>(R.id.about_toolbar).setupWithNavController(navController, appBarConfiguration)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
         val v : View = inflater.inflate(R.layout.fragment_about, container, false)
-        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val toolbar = requireActivity().findViewById(R.id.toolbar) as Toolbar
-        toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
+
         val versionTextView : TextView = v.findViewById(R.id.versionTextView)
         val sendButton : Button = v.findViewById(R.id.sendButton)
         val webSiteButton : Button = v.findViewById(R.id.websiteButton)

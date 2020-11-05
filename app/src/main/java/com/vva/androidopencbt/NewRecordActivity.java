@@ -116,10 +116,6 @@ public class NewRecordActivity extends AppCompatActivity {
                 deleteButton.setVisibility(View.VISIBLE);
                 //---
 
-//                adapter.open();
-//                Record record = adapter.getEvent(id);
-//                adapter.close();
-
                 viewModel.getRecordById(id).observe(this, record -> {
                     if (record == null)
                         return;

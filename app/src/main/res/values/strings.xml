@@ -139,4 +139,5 @@
     <string name="stat_distortions">Когнитивные искажения:</string>
     <string name="stat_emptydiary">Дневник пока еще пуст. Начните вести его, прежде чем смотреть статистику</string>
     <string name="stat_intesity">Средний уровень дискомфорта: %1$.2f%%</string>
+    <string name="add_new_record">Add new record</string>
 </resources>

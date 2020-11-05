@@ -1,30 +1,49 @@
 package com.vva.androidopencbt.recordslist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+import java.lang.IllegalStateException
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
-    private lateinit var ll: ConstraintLayout
+    private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        view.findViewById<Toolbar>(R.id.rv_toolbar).setupWithNavController(navController, appBarConfiguration)
+        view.findViewById<Toolbar>(R.id.rv_toolbar).menu.forEach { menuItem ->
+            menuItem.setOnMenuItemClickListener {
+                return@setOnMenuItemClickListener NavigationUI.onNavDestinationSelected(it, requireView().findNavController()) || super.onOptionsItemSelected(it)
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        ll = inflater.inflate(R.layout.rv_layout, container, false) as ConstraintLayout
+        ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
 
@@ -34,12 +53,6 @@ class RvFragment: Fragment() {
             }
         }, ScrollListener {
             viewModel.listUpdated()
-//            viewModel.listUpdated()
-//            if (it == 0) {
-//                rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
-//            } else {
-//                rv.smoothScrollToPosition(0)
-//            }
         })
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())

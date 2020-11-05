@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getDateTimeString
 import java.util.*
@@ -17,15 +19,20 @@ import java.util.*
 class StatisticFragment : Fragment() {
 
     private lateinit var countTextView : TextView
-    private lateinit var avgintensityTextView: TextView
-    private lateinit var oldestTextView : TextView;
-    private lateinit var latestTextView : TextView;
     private lateinit var distortionsTextView : TextView;
+    private lateinit var avgIntensityTextView: TextView
+    private lateinit var oldestTextView : TextView
+    private lateinit var latestTextView : TextView
     private lateinit var ll : LinearLayout
     private val viewModel: StatisticViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        view.findViewById<Toolbar>(R.id.statistic_toolbar).setupWithNavController(navController, appBarConfiguration)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -36,16 +43,16 @@ class StatisticFragment : Fragment() {
         countTextView = ll.findViewById(R.id.countTextView)
         oldestTextView = ll.findViewById(R.id.oldestTextView);
         latestTextView = ll.findViewById(R.id.latestTextView);
-        avgintensityTextView = ll.findViewById(R.id.avgintensityTextView);
+        avgIntensityTextView = ll.findViewById(R.id.avgintensityTextView);
         distortionsTextView = ll.findViewById(R.id.distortionTextView)
 
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
-            if(it!=null)
+            if(it != null)
                 countTextView.text = getString(R.string.stat_total,it);
         })
 
         viewModel.getAverageIntensity().observe(viewLifecycleOwner, {
-            avgintensityTextView.text = getString(R.string.stat_intesity,(it ?: 0.0))
+            avgIntensityTextView.text = getString(R.string.stat_intesity,(it ?: 0.0))
         })
 
         viewModel.getOldestRecordDate().observe(viewLifecycleOwner, {
@@ -81,6 +88,7 @@ class StatisticFragment : Fragment() {
             b.append(getString(R.string.dist_personalistion)).append(": ").append(it[9]).appendLine()
             distortionsTextView.text = b.toString()
         })
+
         return ll
     }
 }
