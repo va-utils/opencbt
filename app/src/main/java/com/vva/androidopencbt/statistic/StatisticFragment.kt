@@ -65,14 +65,7 @@ class StatisticFragment : Fragment() {
             latestTextView.text = getString(R.string.stat_latest, s/*Date(it).getDateTimeString()*/)
         })
 
-        try
-        {
-            viewModel.getDistortionsTop();
-        }
-        catch (e:Exception)
-        {
-            Toast.makeText(requireContext(), e.localizedMessage, Toast.LENGTH_SHORT).show()
-        }
+        viewModel.getDistortionsTop();
 
         viewModel.distortions.observe(viewLifecycleOwner,{
             val b : StringBuilder = StringBuilder()
