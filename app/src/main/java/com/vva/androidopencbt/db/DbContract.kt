@@ -24,6 +24,12 @@ object DbContract {
         const val GET_RECORD_BY_ID = ("SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
         const val GET_ALL_SQL_ORDERED = ("SELECT * FROM $TABLE_NAME ORDER BY CASE WHEN :order = 0 THEN $COLUMN_DATETIME END DESC, CASE WHEN :order = 1 THEN $COLUMN_DATETIME END ASC");
 
+        //---statistic
+
+        const val GET_ALL_COUNT = ("SELECT COUNT(*) FROM $TABLE_NAME")
+        const val GET_AVERAGE_INTENSITY = ("SELECT avg($COLUMN_INTENSITY) FROM $TABLE_NAME")
+        const val GET_MIN_DATE = ("SELECT MIN($COLUMN_DATETIME) FROM $TABLE_NAME")
+        const val GET_MAX_DATE = ("SELECT MAX($COLUMN_DATETIME) FROM $TABLE_NAME")
     }
 }
 

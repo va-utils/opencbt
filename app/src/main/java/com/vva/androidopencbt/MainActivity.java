@@ -1,69 +1,51 @@
 package com.vva.androidopencbt;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.preference.PreferenceManager;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.vva.androidopencbt.db.DbRecord;
 import com.vva.androidopencbt.recordslist.RvFragment;
-
-import java.util.List;
+import com.vva.androidopencbt.statistic.StatisticFragment;
+import com.vva.androidopencbt.statistic.StatisticViewModel;
 
 
 public class MainActivity extends AppCompatActivity {
+    TextView welcomeTextView;
+
     RecordsViewModel vm;
+    StatisticViewModel sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        welcomeTextView = findViewById(R.id.welcomeTextView);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new RvFragment())
+                .commit();
 
         vm = new ViewModelProvider(this).get(RecordsViewModel.class);
-//        vm.getAllRecords().observe(this, dbRecords -> {
-//            if (!dbRecords.isEmpty()) {
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.container, new RvFragment())
-//                        .commit();
-//            } else {
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.container, new WelcomeFragment())
-//                        .commit();
-//            }
-//        });
-
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.myNavHostFragment);
-        NavController controller = navHostFragment.getNavController();
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(controller.getGraph()).build();
-        NavigationUI.setupWithNavController(toolbar, controller, appBarConfiguration);
 
         vm.getNewRecordNavigated().observe(this, aLong -> {
             Intent newRecordIntent = new Intent(MainActivity.this, NewRecordActivity.class);
             newRecordIntent.putExtra("ID", aLong);
             startActivity(newRecordIntent);
         });
+
+        //---statistics
+
+        sm = new ViewModelProvider(this).get(StatisticViewModel.class);
     }
 
     @Override
@@ -86,7 +68,15 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container,new AboutFragment())
                     .addToBackStack("test")
                     .commit();
+            return true;
+        }
 
+        if( id == R.id.action_statistics)
+        {
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.container, new StatisticFragment()).
+                    addToBackStack("test")
+                    .commit();
             return true;
         }
 

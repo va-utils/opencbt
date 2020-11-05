@@ -1,78 +1,71 @@
 package com.vva.androidopencbt.recordslist
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vva.androidopencbt.*
+import com.vva.androidopencbt.R
+import com.vva.androidopencbt.RecordsViewModel
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
     private lateinit var ll: ConstraintLayout
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
+    private lateinit var welcomeTv: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as ConstraintLayout
         rv = ll.findViewById(R.id.rv)
+        welcomeTv = ll.findViewById(R.id.welcomeTextView)
+
         dataAdapter = RecordsAdapter(RecordListener {
             it?.let {
                 viewModel.navigateToRecord(it.id ?: 0)
             }
+        }, ScrollListener {
+            viewModel.listUpdated()
+//            viewModel.listUpdated()
+//            if (it == 0) {
+//                rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
+//            } else {
+//                rv.smoothScrollToPosition(0)
+//            }
         })
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, {
-            dataAdapter.submitList(it)
+        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()) {
+                dataAdapter.updateList(it, orderBy)
+                welcomeTv.visibility = View.GONE
+                rv.visibility = View.VISIBLE
+            } else {
+                welcomeTv.visibility = View.VISIBLE
+                rv.visibility = View.GONE
+            }
+        })
+
+        viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                if (orderBy == 0) {
+                    rv.smoothScrollToPosition(0)
+                } else {
+                    rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
+                }
+            }
         })
         rv.adapter = dataAdapter
-        
+
         return ll
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_main, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AboutFragment())
-                    .addToBackStack("test")
-                    .commit()
-            return true
-        }
-
-        if (id == R.id.action_html) {
-            val pdfIntent = Intent(requireContext(), SaveHTMLActivity::class.java)
-            startActivity(pdfIntent)
-            return true
-        }
-
-        if (id == R.id.action_settings) {
-            val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
-            startActivity(settingsIntent)
-            return true
-        }
-
-        if (id == R.id.action_newrecord) {
-            val newRecordIntent = Intent(requireContext(), NewRecordActivity::class.java)
-            startActivity(newRecordIntent)
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }
