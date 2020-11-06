@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vva.androidopencbt.db.CbdDatabase
 import kotlinx.coroutines.*
+import java.util.*
 
 class StatisticViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -16,6 +17,34 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
     private val _distortions = MutableLiveData<IntArray>()
     val distortions: LiveData<IntArray>
         get() = _distortions
+
+    private val _timesOfDay = MutableLiveData<IntArray>()
+    val timesOfDay: LiveData<IntArray>
+        get() = _timesOfDay
+
+    fun getTimeOfDay()
+    {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                val list : List<Long> = db.databaseDao.getDateTimeList();
+                val servArray : IntArray = IntArray(4)
+                for (n in list)
+                {
+                    val c : Calendar = GregorianCalendar(Locale.getDefault())
+                    c.timeInMillis = n
+                    when(c.get(Calendar.HOUR_OF_DAY))
+                    {
+                        in 0..5   ->  servArray[0]++
+                        in 6..11  ->  servArray[1]++
+                        in 12..17 ->  servArray[2]++
+                        in 18..23 ->  servArray[3]++
+                    }
+                }
+                uiScope.launch { _timesOfDay.value = servArray }
+            }
+        }
+    }
 
     fun getDistortionsTop()
     {

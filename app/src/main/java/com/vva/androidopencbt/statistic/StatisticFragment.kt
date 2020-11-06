@@ -23,6 +23,7 @@ class StatisticFragment : Fragment() {
     private lateinit var avgIntensityTextView: TextView
     private lateinit var oldestTextView : TextView
     private lateinit var latestTextView : TextView
+    private lateinit var timeOfDayTextView : TextView
     private lateinit var ll : LinearLayout
     private val viewModel: StatisticViewModel by activityViewModels()
 
@@ -45,6 +46,7 @@ class StatisticFragment : Fragment() {
         latestTextView = ll.findViewById(R.id.latestTextView);
         avgIntensityTextView = ll.findViewById(R.id.avgintensityTextView);
         distortionsTextView = ll.findViewById(R.id.distortionTextView)
+        timeOfDayTextView = ll.findViewById(R.id.timeOfDayTextView)
 
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
             if(it != null)
@@ -75,6 +77,7 @@ class StatisticFragment : Fragment() {
         viewModel.getDistortionsTop();
 
         viewModel.distortions.observe(viewLifecycleOwner,{
+            //TODO : перенесу все это в ресурсы, незачем строить строку
             val b : StringBuilder = StringBuilder()
             b.append(getString(R.string.dist_all_or_nothing)).append(": ").append(it[0]).appendLine()
             b.append(getString(R.string.dist_overgeneralizing)).append(": ").append(it[1]).appendLine()
@@ -88,6 +91,12 @@ class StatisticFragment : Fragment() {
             b.append(getString(R.string.dist_personalistion)).append(": ").append(it[9]).appendLine()
             distortionsTextView.text = b.toString()
         })
+
+        viewModel.getTimeOfDay();
+        viewModel.timesOfDay.observe(viewLifecycleOwner,
+                {
+                    timeOfDayTextView.text = getString(R.string.stat_timeofday,it[0],it[1],it[2],it[3])
+                })
 
         return ll
     }

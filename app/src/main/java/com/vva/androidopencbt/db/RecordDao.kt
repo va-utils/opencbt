@@ -32,6 +32,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_DISTORTION_COL)
     fun getDistList() : List<Int>
 
+    @Query(DbContract.Diary.GET_DATETIME_COL)
+    fun getDateTimeList() : List<Long>
+
     @Update
     fun updateRecord(record: DbRecord)
 
