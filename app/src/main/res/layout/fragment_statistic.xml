@@ -36,6 +36,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/countTextView"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeOfDayTextView"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,10 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/latestTextView"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/timeOfDayTextView"/>
+
 
     <TextView
         android:layout_width="match_parent"

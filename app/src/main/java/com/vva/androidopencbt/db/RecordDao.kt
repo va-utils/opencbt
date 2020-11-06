@@ -35,6 +35,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_DATETIME_COL)
     fun getDateTimeList() : List<Long>
 
+    @Query(DbContract.Diary.GET_RECORDS_FOR_PERIOD)
+    fun getRecordsForPeriod (t1 : Long, t2 : Long) : List<DbRecord>
+
     @Update
     fun updateRecord(record: DbRecord)
 

@@ -32,6 +32,10 @@ object DbContract {
         const val GET_MAX_DATE = ("SELECT MAX($COLUMN_DATETIME) FROM $TABLE_NAME")
         const val GET_DISTORTION_COL = ("SELECT $COLUMN_DISTORTIONS FROM $TABLE_NAME")
         const val GET_DATETIME_COL = ("SELECT $COLUMN_DATETIME FROM $TABLE_NAME")
+
+        //---send diary
+
+        const val GET_RECORDS_FOR_PERIOD = ("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATETIME > :t1 AND $COLUMN_DATETIME < :t2")
     }
 }
 
