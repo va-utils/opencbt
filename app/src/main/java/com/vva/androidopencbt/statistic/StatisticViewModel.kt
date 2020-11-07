@@ -27,6 +27,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
         uiScope.launch {
             withContext(Dispatchers.IO)
             {
+
                 val list : List<Long> = db.databaseDao.getDateTimeList();
                 val servArray : IntArray = IntArray(4)
                 for (n in list)
