@@ -26,6 +26,10 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     val isHtmlFileReady: LiveData<Boolean>
         get() = _isHtmlFileReady
 
+    fun htmlFileShared() {
+        _isHtmlFileReady.value = false
+    }
+
     fun makeHtmlExportFile(context: Context) {
         _isHtmlExportInProgress.value = true
         _isHtmlFileReady.value = false
@@ -39,9 +43,6 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
             withContext(Dispatchers.IO) {
                 saveStringToFile(exportString, htmlFileName)
             }
-
-            _isHtmlFileReady.value = true
-            _isHtmlExportInProgress.value = false
         }
     }
 

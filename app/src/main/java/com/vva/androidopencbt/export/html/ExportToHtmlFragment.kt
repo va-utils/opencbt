@@ -3,6 +3,7 @@ package com.vva.androidopencbt.export.html
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,10 +57,12 @@ class ExportToHtmlFragment: Fragment() {
                 forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
                 forSendIntent.setDataAndType(uri, "application/html")
                 // Toast.makeText(this, uri.getPath(), Toast.LENGTH_SHORT).show();
-                // Toast.makeText(this, uri.getPath(), Toast.LENGTH_SHORT).show();
+//                 Toast.makeText(this, uri.getPath(), Toast.LENGTH_SHORT).show();
+                Log.d("GGG", "SEND")
                 val pm: PackageManager = requireActivity().packageManager
                 if (forSendIntent.resolveActivity(pm) != null) {
                     startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+                    viewModel.htmlFileShared()
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
                 }
