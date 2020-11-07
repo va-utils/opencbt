@@ -35,7 +35,7 @@ object DbContract {
 
         //---send diary
 
-        const val GET_RECORDS_FOR_PERIOD = ("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATETIME > :t1 AND $COLUMN_DATETIME < :t2")
+        const val GET_RECORDS_FOR_PERIOD = ("SELECT * FROM $TABLE_NAME WHERE $COLUMN_DATETIME >= :t1 AND $COLUMN_DATETIME <= :t2")
     }
 }
 

@@ -86,8 +86,8 @@
         Дневник будет оформлен в виде таблицы.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
     <string name="savehtml_button_save">Отправить дневник</string>
     <string name="savehtml_button_send">Отправить по почте</string>
-    <string name="savehtml_text_startdate">Начальная дата</string>
-    <string name="savehtml_text_enddate">Конечная дата</string>
+    <string name="savehtml_text_startdate">Начало периода:</string>
+    <string name="savehtml_text_enddate">Конец периода:</string>
     <string name="savehtml_text_share">Выберите приложение, через которое хотите отправить дневник:</string>
     <string name="savehtml_error">Не удалось отправить дневник.</string>
 
