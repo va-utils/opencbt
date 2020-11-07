@@ -6,11 +6,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.vva.androidopencbt.R
+import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getShortDateTime
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.util.*
 
 class ExportViewModel(application: Application) : AndroidViewModel(application) {
     val htmlFileName = "CBT_diary.html"
@@ -19,6 +21,33 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
     private val _isHtmlExportInProgress = MutableLiveData<Boolean>()
+
+    //---для периода
+    private val _beginDate = MutableLiveData<Long>()
+    val beginDate: LiveData<Long>
+        get() = _beginDate
+
+    private val _endDate = MutableLiveData<Long>()
+    val endDate: LiveData<Long>
+        get() = _endDate
+    //--------------
+
+    fun initDate()
+    {
+        _beginDate.value = (Date()).beginOfMonth().time
+        _endDate.value = (Date()).time
+    }
+
+    fun setBeginDate(d : Date)
+    {
+        _beginDate.value = d.time
+    }
+
+    fun setEndDate(d : Date)
+    {
+        _endDate.value = d.time
+    }
+
     val isHtmlExportInProgress: LiveData<Boolean>
         get() = _isHtmlExportInProgress
 
@@ -35,7 +64,8 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _isHtmlFileReady.value = false
         uiScope.launch {
             val records = withContext(Dispatchers.IO) {
-                dao.getAllList()
+                //dao.getAllList()
+                dao.getRecordsForPeriod(beginDate.value!!,endDate.value!!)
             }
             val exportString = withContext(Dispatchers.Default) {
                 makeHtmlString(records, context)
