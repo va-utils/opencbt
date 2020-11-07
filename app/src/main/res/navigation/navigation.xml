@@ -21,8 +21,8 @@
             android:id="@+id/action_rvFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
         <action
-            android:id="@+id/action_rvFragment_to_saveHTMLActivity"
-            app:destination="@id/saveHTMLActivity" />
+            android:id="@+id/action_rvFragment_to_exportToHtmlFragment"
+            app:destination="@id/exportToHtmlFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -42,9 +42,8 @@
         android:name="com.vva.androidopencbt.NewRecordActivity"
         android:label="@string/title_newrecord"
         tools:layout="@layout/activity_new_record" />
-    <activity
-        android:id="@+id/saveHTMLActivity"
-        android:name="com.vva.androidopencbt.SaveHTMLActivity"
-        android:label="@string/savehtml_button_save"
-        tools:layout="@layout/activity_save_html" />
+    <fragment
+        android:id="@+id/exportToHtmlFragment"
+        android:name="com.vva.androidopencbt.export.html.ExportToHtmlFragment"
+        android:label="ExportToHtmlFragment" />
 </navigation>

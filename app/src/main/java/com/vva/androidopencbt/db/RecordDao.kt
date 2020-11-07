@@ -8,6 +8,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_ALL_SQL)
     fun getAll(): LiveData<List<DbRecord>>
 
+    @Query(DbContract.Diary.GET_ALL_SQL)
+    fun getAllList(): List<DbRecord>
+
     @Query(DbContract.Diary.GET_ALL_SQL_ORDERED)
     fun getAllOrdered(order : Int) : LiveData<List<DbRecord>>
 
