@@ -43,9 +43,7 @@ class ExportToHtmlFragment: Fragment() {
         }
 
         viewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
-            if (!it) {
 
-            }
         })
 
         viewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
@@ -56,9 +54,7 @@ class ExportToHtmlFragment: Fragment() {
                 forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
                 forSendIntent.setDataAndType(uri, "application/html")
-                // Toast.makeText(this, uri.getPath(), Toast.LENGTH_SHORT).show();
-//                 Toast.makeText(this, uri.getPath(), Toast.LENGTH_SHORT).show();
-                Log.d("GGG", "SEND")
+
                 val pm: PackageManager = requireActivity().packageManager
                 if (forSendIntent.resolveActivity(pm) != null) {
                     startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
