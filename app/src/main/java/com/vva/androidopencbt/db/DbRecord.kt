@@ -1,6 +1,8 @@
 package com.vva.androidopencbt.db
 
+import android.content.Context
 import androidx.room.*
+import com.vva.androidopencbt.R
 import java.util.*
 
 @Entity(tableName = DbContract.Diary.TABLE_NAME)
@@ -37,6 +39,29 @@ data class DbRecord(
         @ColumnInfo(name = DbContract.Diary.COLUMN_DATETIME)
         var datetime: Date? = null
 ) {
+    fun getDistortionsString(context: Context): String {
+        val builder = StringBuilder()
+        val res = context.resources
+        this.distortions?.let {
+            if (it.and(ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
+            if (it.and(OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")
+            if (it.and(FILTERING) != 0) builder.append(res.getString(R.string.dist_filtering)).append(", ")
+            if (it.and(DISQUAL_POSITIVE) != 0) builder.append(res.getString(R.string.dist_disqual_positive)).append(", ")
+            if (it.and(JUMP_CONCLUSION) != 0) builder.append(res.getString(R.string.dist_jump_conclusion)).append(", ")
+            if (it.and(MAGN_AND_MIN) != 0) builder.append(res.getString(R.string.dist_magn_and_min)).append(", ")
+            if (it.and(EMOTIONAL_REASONING) != 0) builder.append(res.getString(R.string.dist_emotional_reasoning)).append(", ")
+            if (it.and(MUST_STATEMENTS) != 0) builder.append(res.getString(R.string.dist_must_statement)).append(", ")
+            if (it.and(LABELING) != 0) builder.append(res.getString(R.string.dist_labeling)).append(", ")
+            if (it.and(PERSONALIZATION) != 0) builder.append(res.getString(R.string.dist_personalistion)).append(", ")
+        }
+
+        return if (builder.length > 2) {
+            builder.substring(0, builder.length - 2).toString()
+        } else {
+            ""
+        }
+    }
+
     companion object {
         //---список когнитивных искажений
         const val ALL_OR_NOTHING: Int = 0x1

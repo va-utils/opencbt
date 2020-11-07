@@ -80,7 +80,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                 forHtml.append("<td>").append(record.intensity).append("</td>")
                 forHtml.append("<td>").append(record.feelings).append("</td>")
                 forHtml.append("<td>").append(record.actions).append("</td>")
-                forHtml.append("<td>").append(getDistortionsString(record, context)).append("</td>")
+                forHtml.append("<td>").append(record.getDistortionsString(context)).append("</td>")
                 forHtml.append("<td>").append(record.rational).append("</td>")
                 forHtml.append("</tr>")
             }
@@ -93,28 +93,28 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun getDistortionsString(record: DbRecord, context: Context): String {
-        val builder = StringBuilder()
-        val res = context.resources
-        record.distortions?.let {
-            if (it.and(DbRecord.ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
-            if (it.and(DbRecord.OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")
-            if (it.and(DbRecord.FILTERING) != 0) builder.append(res.getString(R.string.dist_filtering)).append(", ")
-            if (it.and(DbRecord.DISQUAL_POSITIVE) != 0) builder.append(res.getString(R.string.dist_disqual_positive)).append(", ")
-            if (it.and(DbRecord.JUMP_CONCLUSION) != 0) builder.append(res.getString(R.string.dist_jump_conclusion)).append(", ")
-            if (it.and(DbRecord.MAGN_AND_MIN) != 0) builder.append(res.getString(R.string.dist_magn_and_min)).append(", ")
-            if (it.and(DbRecord.EMOTIONAL_REASONING) != 0) builder.append(res.getString(R.string.dist_emotional_reasoning)).append(", ")
-            if (it.and(DbRecord.MUST_STATEMENTS) != 0) builder.append(res.getString(R.string.dist_must_statement)).append(", ")
-            if (it.and(DbRecord.LABELING) != 0) builder.append(res.getString(R.string.dist_labeling)).append(", ")
-            if (it.and(DbRecord.PERSONALIZATION) != 0) builder.append(res.getString(R.string.dist_personalistion)).append(", ")
-        }
-
-        return if (builder.length > 2) {
-            builder.substring(0, builder.length - 2).toString()
-        } else {
-            ""
-        }
-    }
+//    private fun getDistortionsString(record: DbRecord, context: Context): String {
+//        val builder = StringBuilder()
+//        val res = context.resources
+//        record.distortions?.let {
+//            if (it.and(DbRecord.ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
+//            if (it.and(DbRecord.OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")
+//            if (it.and(DbRecord.FILTERING) != 0) builder.append(res.getString(R.string.dist_filtering)).append(", ")
+//            if (it.and(DbRecord.DISQUAL_POSITIVE) != 0) builder.append(res.getString(R.string.dist_disqual_positive)).append(", ")
+//            if (it.and(DbRecord.JUMP_CONCLUSION) != 0) builder.append(res.getString(R.string.dist_jump_conclusion)).append(", ")
+//            if (it.and(DbRecord.MAGN_AND_MIN) != 0) builder.append(res.getString(R.string.dist_magn_and_min)).append(", ")
+//            if (it.and(DbRecord.EMOTIONAL_REASONING) != 0) builder.append(res.getString(R.string.dist_emotional_reasoning)).append(", ")
+//            if (it.and(DbRecord.MUST_STATEMENTS) != 0) builder.append(res.getString(R.string.dist_must_statement)).append(", ")
+//            if (it.and(DbRecord.LABELING) != 0) builder.append(res.getString(R.string.dist_labeling)).append(", ")
+//            if (it.and(DbRecord.PERSONALIZATION) != 0) builder.append(res.getString(R.string.dist_personalistion)).append(", ")
+//        }
+//
+//        return if (builder.length > 2) {
+//            builder.substring(0, builder.length - 2).toString()
+//        } else {
+//            ""
+//        }
+//    }
 
     private suspend fun saveStringToFile(string: String, fileName: String) {
         uiScope.launch {
