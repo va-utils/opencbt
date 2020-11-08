@@ -9,6 +9,7 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
+import com.vva.androidopencbt.endOfDay
 import com.vva.androidopencbt.getShortDateTime
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -35,7 +36,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     fun initDate()
     {
         _beginDate.value = (Date()).beginOfMonth().time
-        _endDate.value = (Date()).time
+        _endDate.value = (Date()).endOfDay().time
     }
 
     fun setBeginDate(d : Date)
@@ -45,7 +46,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setEndDate(d : Date)
     {
-        _endDate.value = d.time
+        _endDate.value = d.endOfDay().time
     }
 
     val isHtmlExportInProgress: LiveData<Boolean>

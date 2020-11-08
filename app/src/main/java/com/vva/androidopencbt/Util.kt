@@ -23,3 +23,12 @@ fun Date.beginOfMonth(): Date
     val d : Date = Date(this.year, this.month, 1)
     return d
 }
+
+fun Date.endOfDay() : Date
+{
+    val d = Date(this.year, this.month, this.date)
+    d.hours=23
+    d.minutes=59
+    d.seconds=59
+    return d
+}
