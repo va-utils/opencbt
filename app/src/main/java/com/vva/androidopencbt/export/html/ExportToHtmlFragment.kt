@@ -19,6 +19,7 @@ import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.getDateString
+import org.joda.time.DateTime
 import java.io.File
 
 class ExportToHtmlFragment: Fragment() {
@@ -28,31 +29,26 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var endEditText : EditText
     private val viewModel: ExportViewModel by activityViewModels()
 
-    private val beginDpListener = DatePickerDialog.OnDateSetListener()
-    { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        val d = Date(year-1900,month,dayOfMonth)
-        viewModel.setBeginDate(d)
+    private val beginDpListener = DatePickerDialog.OnDateSetListener {
+        _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+        viewModel.setBeginDate(DateTime(year, month, dayOfMonth, 0, 0))
     }
 
-    private val endDpListener = DatePickerDialog.OnDateSetListener()
-    { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        val d = Date(year-1900,month,dayOfMonth)
-        viewModel.setEndDate(d)
+    private val endDpListener = DatePickerDialog.OnDateSetListener {
+        _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+        viewModel.setEndDate(DateTime(year, month, dayOfMonth, 23, 59))
     }
 
-    private val onClickListener = View.OnClickListener()
-    {
-        when(it.id)
-        {
-            R.id.startEditText ->
-            {
-                val d : Date = Date(viewModel.beginDate.value!!)
-                DatePickerDialog(requireContext(),beginDpListener,d.year+1900,d.month,d.date).show()
+    private val onClickListener = View.OnClickListener() {
+        when(it.id) {
+            R.id.startEditText -> {
+                val date = viewModel.beginDate.value!!
+                DatePickerDialog(requireContext(), beginDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
             }
-            R.id.endEditText ->
-            {
-                val d : Date = Date(viewModel.endDate.value!!)
-                DatePickerDialog(requireContext(),endDpListener,d.year+1900,d.month,d.date).show()
+
+            R.id.endEditText -> {
+                val date = viewModel.endDate.value!!
+                DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
             }
         }
     }
@@ -82,6 +78,10 @@ class ExportToHtmlFragment: Fragment() {
         viewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
         viewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
+        viewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
+
+        })
+
         viewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
             if (it) {
                 val file = File(requireActivity().filesDir, viewModel.htmlFileName)
@@ -103,4 +103,6 @@ class ExportToHtmlFragment: Fragment() {
 
         return ll
     }
+
+
 }

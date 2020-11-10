@@ -2,8 +2,10 @@ package com.vva.androidopencbt.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import org.joda.time.DateTime
 
 @Dao
+@TypeConverters(Converters::class)
 interface RecordDao {
     @Query(DbContract.Diary.GET_ALL_SQL)
     fun getAll(): LiveData<List<DbRecord>>
@@ -27,11 +29,9 @@ interface RecordDao {
     fun getAllCount() : LiveData<Int>
 
     @Query(DbContract.Diary.GET_MIN_DATE)
-    @TypeConverters(Converters::class)
     fun getOldestDate() : LiveData<DateTime>
 
     @Query(DbContract.Diary.GET_MAX_DATE)
-    @TypeConverters(Converters::class)
     fun getLatestDate() : LiveData<DateTime>
 
     @Query(DbContract.Diary.GET_DISTORTION_COL)
@@ -41,7 +41,7 @@ interface RecordDao {
     fun getDateTimeList() : List<Long>
 
     @Query(DbContract.Diary.GET_RECORDS_FOR_PERIOD)
-    fun getRecordsForPeriod (t1 : Long, t2 : Long) : List<DbRecord>
+    fun getRecordsForPeriod (t1 : DateTime, t2 : DateTime) : List<DbRecord>
 
     @Update
     fun updateRecord(record: DbRecord)

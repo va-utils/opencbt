@@ -3,41 +3,41 @@ package com.vva.androidopencbt.db
 import android.content.Context
 import androidx.room.*
 import com.vva.androidopencbt.R
-import java.util.*
+import org.joda.time.DateTime
 
 @Entity(tableName = DbContract.Diary.TABLE_NAME)
 @TypeConverters(Converters::class)
 data class DbRecord(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = DbContract.Diary.COLUMN_ID)
-        var id: Long? = null,
+        var id: Long = 0L,
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_SITUATION)
-        var situation: String? = null,
+        var situation: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_THOUGHTS)
-        var thoughts: String? = null,
+        var thoughts: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_RATIONAL)
-        var rational: String? = null,
+        var rational: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_EMOTIONS)
-        var emotions: String? = null,
+        var emotions: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_DISTORTIONS)
-        var distortions: Int? = null,
+        var distortions: Int = 0x0,
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_FEELINGS)
-        var feelings: String? = null,
+        var feelings: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_ACTIONS)
-        var actions: String? = null,
+        var actions: String = "",
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_INTENSITY)
-        var intensity: Short? = null,
+        var intensity: Int = 0,
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_DATETIME)
-        var datetime: Date? = null
+        var datetime: DateTime = DateTime()
 ) {
     fun getDistortionsString(context: Context): String {
         val builder = StringBuilder()
@@ -77,14 +77,25 @@ data class DbRecord(
     }
 }
 
+@Suppress("unused")
 class Converters {
     @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+    fun fromTimestamp(value: Long): DateTime {
+        return DateTime(value)
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun dateToTimestamp(date: DateTime): Long {
+        return date.millis
+    }
+
+    @TypeConverter
+    fun dateTimeToSting(date: DateTime): String {
+        return date.toString()
+    }
+
+    @TypeConverter
+    fun stringToDateTime(string: String): DateTime {
+        return DateTime(string)
     }
 }

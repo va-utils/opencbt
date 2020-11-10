@@ -1,18 +1,21 @@
 package com.vva.androidopencbt
 
-import java.text.SimpleDateFormat
-import java.util.*
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
+const val FORMAT_DATE_TIME = "HH:mm dd MMMM yyyy"
+const val FORMAT_DATE = "dd/MM/yyyy"
 
 fun DateTime.getDateTimeString(): String {
-    return DateTimeFormat.forPattern("HH:mm dd MMMM yyyy").print(this)
+    return DateTimeFormat.forPattern(FORMAT_DATE_TIME).print(this)
 }
 
 fun DateTime.getShortDateTime(): String {
-    return DateTimeFormat.forPattern("HH:mm dd/MM/yyyy").print(this)
+    return DateTimeFormat.forPattern(FORMAT_DATE_TIME).print(this)
 }
 
 fun DateTime.getDateString(): String {
-    return DateTimeFormat.forPattern("dd/MM/yyyy").print(this)
+    return DateTimeFormat.forPattern(FORMAT_DATE).print(this)
 }
 
 fun DateTime.beginOfMonth() = DateTime(this.year, this.monthOfYear, 1, 0, 0)

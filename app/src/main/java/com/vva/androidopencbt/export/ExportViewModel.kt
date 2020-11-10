@@ -24,29 +24,21 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private val _isHtmlExportInProgress = MutableLiveData<Boolean>()
 
     //---для периода
-    private val _beginDate = MutableLiveData<Long>()
-    val beginDate: LiveData<Long>
+    private val _beginDate = MutableLiveData(DateTime().beginOfMonth())
+    val beginDate: LiveData<DateTime>
         get() = _beginDate
 
-    private val _endDate = MutableLiveData<Long>()
-    val endDate: LiveData<Long>
+    private val _endDate = MutableLiveData(DateTime().endOfDay())
+    val endDate: LiveData<DateTime>
         get() = _endDate
     //--------------
 
-    fun initDate()
-    {
-        _beginDate.value = (Date()).beginOfMonth().time
-        _endDate.value = (Date()).endOfDay().time
+    fun setBeginDate(dateTime: DateTime) {
+        _beginDate.value = dateTime
     }
 
-    fun setBeginDate(d : Date)
-    {
-        _beginDate.value = d.time
-    }
-
-    fun setEndDate(d : Date)
-    {
-        _endDate.value = d.endOfDay().time
+    fun setEndDate(dateTime: DateTime) {
+        _endDate.value = dateTime
     }
 
     val isHtmlExportInProgress: LiveData<Boolean>
@@ -65,8 +57,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _isHtmlFileReady.value = false
         uiScope.launch {
             val records = withContext(Dispatchers.IO) {
-                //dao.getAllList()
-                dao.getRecordsForPeriod(beginDate.value!!,endDate.value!!)
+                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
             }
             val exportString = withContext(Dispatchers.Default) {
                 makeHtmlString(records, context)

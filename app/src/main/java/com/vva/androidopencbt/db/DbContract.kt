@@ -1,8 +1,9 @@
 package com.vva.androidopencbt.db
 
+@Suppress("unused")
 object DbContract {
     const val DATABASE_NAME = "opencbd_beta9.db" // название бд
-    const val SCHEMA = 1 // версия базы данных
+    const val SCHEMA = 2 // версия базы данных
     const val ORDER_ASC = 0
     const val ORDER_DESC = 1
 

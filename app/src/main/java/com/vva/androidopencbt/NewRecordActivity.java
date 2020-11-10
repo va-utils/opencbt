@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.vva.androidopencbt.db.DbRecord;
 
+import org.joda.time.DateTime;
 import org.w3c.dom.Text;
 
 import java.util.Date;
@@ -308,7 +309,7 @@ public class NewRecordActivity extends AppCompatActivity {
                     intensity);
         } else {
             viewModel.addRecord(new DbRecord(
-                    null,
+                    0L,
                     situation,
                     thought,
                     disput,
@@ -317,7 +318,7 @@ public class NewRecordActivity extends AppCompatActivity {
                     feelings,
                     actions,
                     intensity,
-                    new Date()
+                    new DateTime()
             ));
         }
         finish();

@@ -56,7 +56,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
                      finalDist: Int,
                      feelings: String,
                      actions: String,
-                     intensity: Short) {
+                     intensity: Int) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 db.databaseDao.updateRecord(

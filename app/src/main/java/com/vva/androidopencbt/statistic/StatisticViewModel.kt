@@ -25,13 +25,11 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
     fun getTimeOfDay()
     {
         uiScope.launch {
-            withContext(Dispatchers.IO)
-            {
+            withContext(Dispatchers.IO) {
 
-                val list : List<Long> = db.databaseDao.getDateTimeList();
-                val servArray : IntArray = IntArray(4)
-                for (n in list)
-                {
+                val list : List<Long> = db.databaseDao.getDateTimeList()
+                val servArray = IntArray(4)
+                for (n in list) {
                     val c : Calendar = GregorianCalendar(Locale.getDefault())
                     c.timeInMillis = n
                     when(c.get(Calendar.HOUR_OF_DAY))
@@ -50,8 +48,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
     fun getDistortionsTop()
     {
         uiScope.launch {
-            withContext(Dispatchers.IO)
-            {
+            withContext(Dispatchers.IO) {
                 //сейчас будет мясо
                 val list : List<Int> = db.databaseDao.getDistList()
                 val servArray = IntArray(10)

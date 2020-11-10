@@ -77,5 +77,5 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
-
+    implementation "joda-time:joda-time:2.10.8"
 }
