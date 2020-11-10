@@ -1,11 +1,12 @@
 package com.vva.androidopencbt.db
 
 import android.content.Context
+import android.util.Log
 import androidx.room.RoomDatabase
 import androidx.room.Database
 import androidx.room.Room
 
-@Database(entities = [DbRecord::class], version = DbContract.SCHEMA, exportSchema = false)
+@Database(entities = [DbRecord::class], version = DbContract.SCHEMA)
 abstract class CbdDatabase: RoomDatabase() {
     abstract val databaseDao: RecordDao
 

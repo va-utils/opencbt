@@ -42,7 +42,7 @@ data class DbRecord(
     fun getDistortionsString(context: Context): String {
         val builder = StringBuilder()
         val res = context.resources
-        this.distortions?.let {
+        this.distortions.let {
             if (it.and(ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
             if (it.and(OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")
             if (it.and(FILTERING) != 0) builder.append(res.getString(R.string.dist_filtering)).append(", ")

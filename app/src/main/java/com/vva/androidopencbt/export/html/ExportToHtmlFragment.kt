@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +17,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
-import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.getDateString
 import java.io.File
-import java.util.*
 
 class ExportToHtmlFragment: Fragment() {
     private lateinit var ll: LinearLayout
@@ -82,14 +79,8 @@ class ExportToHtmlFragment: Fragment() {
             viewModel.makeHtmlExportFile(requireContext())
         }
 
-        viewModel.initDate()
-
-        viewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(Date(it).getDateString()) })
-        viewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(Date(it).getDateString()) })
-
-        viewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
-
-        })
+        viewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
+        viewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
         viewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
             if (it) {
@@ -112,6 +103,4 @@ class ExportToHtmlFragment: Fragment() {
 
         return ll
     }
-
-
 }

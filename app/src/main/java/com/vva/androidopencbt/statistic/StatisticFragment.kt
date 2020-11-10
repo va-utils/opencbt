@@ -14,12 +14,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getDateTimeString
-import java.util.*
 
 class StatisticFragment : Fragment() {
 
     private lateinit var countTextView : TextView
-    private lateinit var distortionsTextView : TextView;
+    private lateinit var distortionsTextView : TextView
     private lateinit var avgIntensityTextView: TextView
     private lateinit var oldestTextView : TextView
     private lateinit var latestTextView : TextView
@@ -42,15 +41,15 @@ class StatisticFragment : Fragment() {
         ll = inflater.inflate(R.layout.fragment_statistic, container, false) as LinearLayout
 
         countTextView = ll.findViewById(R.id.countTextView)
-        oldestTextView = ll.findViewById(R.id.oldestTextView);
-        latestTextView = ll.findViewById(R.id.latestTextView);
-        avgIntensityTextView = ll.findViewById(R.id.avgintensityTextView);
+        oldestTextView = ll.findViewById(R.id.oldestTextView)
+        latestTextView = ll.findViewById(R.id.latestTextView)
+        avgIntensityTextView = ll.findViewById(R.id.avgintensityTextView)
         distortionsTextView = ll.findViewById(R.id.distortionTextView)
         timeOfDayTextView = ll.findViewById(R.id.timeOfDayTextView)
 
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
             if(it != null)
-                countTextView.text = getString(R.string.stat_total,it);
+                countTextView.text = getString(R.string.stat_total,it)
         })
 
         viewModel.getAverageIntensity().observe(viewLifecycleOwner, {
@@ -58,23 +57,17 @@ class StatisticFragment : Fragment() {
         })
 
         viewModel.getOldestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = if(it==null)
-                "---"
-            else
-                Date(it).getDateTimeString()
+            val s : String = it?.getDateTimeString() ?: "---"
 
             oldestTextView.text = getString(R.string.stat_old,s /*Date(it).getDateTimeString()*/)
         })
 
         viewModel.getLatestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = if(it==null)
-                "---"
-            else
-                Date(it).getDateTimeString()
+            val s : String = it?.getDateTimeString() ?: "---"
             latestTextView.text = getString(R.string.stat_latest, s/*Date(it).getDateTimeString()*/)
         })
 
-        viewModel.getDistortionsTop();
+        viewModel.getDistortionsTop()
 
         viewModel.distortions.observe(viewLifecycleOwner,{
             //TODO : перенесу все это в ресурсы, незачем строить строку
@@ -92,7 +85,7 @@ class StatisticFragment : Fragment() {
             distortionsTextView.text = b.toString()
         })
 
-        viewModel.getTimeOfDay();
+        viewModel.getTimeOfDay()
         viewModel.timesOfDay.observe(viewLifecycleOwner,
                 {
                     timeOfDayTextView.text = getString(R.string.stat_timeofday,it[0],it[1],it[2],it[3])

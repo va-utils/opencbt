@@ -1,16 +1,15 @@
 package com.vva.androidopencbt.recordslist
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,10 +17,8 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
-import java.lang.IllegalStateException
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
@@ -49,7 +46,7 @@ class RvFragment: Fragment() {
 
         dataAdapter = RecordsAdapter(RecordListener {
             it?.let {
-                viewModel.navigateToRecord(it.id ?: 0)
+                viewModel.navigateToRecord(it.id)
             }
         }, ScrollListener {
             viewModel.listUpdated()
@@ -57,7 +54,7 @@ class RvFragment: Fragment() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, Observer {
+        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 dataAdapter.updateList(it, orderBy)
                 welcomeTv.visibility = View.GONE
@@ -68,7 +65,7 @@ class RvFragment: Fragment() {
             }
         })
 
-        viewModel.recordsListUpdated.observe(viewLifecycleOwner, Observer {
+        viewModel.recordsListUpdated.observe(viewLifecycleOwner, {
             if (!it) {
                 if (orderBy == 0) {
                     rv.smoothScrollToPosition(0)

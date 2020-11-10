@@ -5,16 +5,16 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.vva.androidopencbt.R
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.endOfDay
 import com.vva.androidopencbt.getShortDateTime
 import kotlinx.coroutines.*
+import org.joda.time.DateTime
 import java.io.IOException
-import java.util.*
 
+@Suppress("unused")
 class ExportViewModel(application: Application) : AndroidViewModel(application) {
     val htmlFileName = "CBT_diary.html"
     private val dao = CbdDatabase.getInstance(application).databaseDao
@@ -104,7 +104,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
             //---заполнение таблицы строками
             for (record in records) {
                 forHtml.append("<tr>")
-                forHtml.append("<td>").append(record.datetime?.getShortDateTime()).append("</td>")
+                forHtml.append("<td>").append(record.datetime.getShortDateTime()).append("</td>")
                 forHtml.append("<td>").append(record.situation).append("</td>")
                 forHtml.append("<td>").append(record.thoughts).append("</td>")
                 forHtml.append("<td>").append(record.emotions).append("</td>")
@@ -123,29 +123,6 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
             forHtml.toString()
         }
     }
-
-//    private fun getDistortionsString(record: DbRecord, context: Context): String {
-//        val builder = StringBuilder()
-//        val res = context.resources
-//        record.distortions?.let {
-//            if (it.and(DbRecord.ALL_OR_NOTHING) != 0) builder.append(res.getString(R.string.dist_all_or_nothing)).append(", ")
-//            if (it.and(DbRecord.OVERGENERALIZING) != 0) builder.append(res.getString(R.string.dist_overgeneralizing)).append(", ")
-//            if (it.and(DbRecord.FILTERING) != 0) builder.append(res.getString(R.string.dist_filtering)).append(", ")
-//            if (it.and(DbRecord.DISQUAL_POSITIVE) != 0) builder.append(res.getString(R.string.dist_disqual_positive)).append(", ")
-//            if (it.and(DbRecord.JUMP_CONCLUSION) != 0) builder.append(res.getString(R.string.dist_jump_conclusion)).append(", ")
-//            if (it.and(DbRecord.MAGN_AND_MIN) != 0) builder.append(res.getString(R.string.dist_magn_and_min)).append(", ")
-//            if (it.and(DbRecord.EMOTIONAL_REASONING) != 0) builder.append(res.getString(R.string.dist_emotional_reasoning)).append(", ")
-//            if (it.and(DbRecord.MUST_STATEMENTS) != 0) builder.append(res.getString(R.string.dist_must_statement)).append(", ")
-//            if (it.and(DbRecord.LABELING) != 0) builder.append(res.getString(R.string.dist_labeling)).append(", ")
-//            if (it.and(DbRecord.PERSONALIZATION) != 0) builder.append(res.getString(R.string.dist_personalistion)).append(", ")
-//        }
-//
-//        return if (builder.length > 2) {
-//            builder.substring(0, builder.length - 2).toString()
-//        } else {
-//            ""
-//        }
-//    }
 
     private suspend fun saveStringToFile(string: String, fileName: String) {
         uiScope.launch {

@@ -52,9 +52,9 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
                 onClickListener.onClick(record)
             }
 
-            dateTextView.text = record.datetime?.getDateTimeString()
+            dateTextView.text = record.datetime.getDateTimeString()
             record.apply {
-                distortions?.let {
+                distortions.let {
                     if (it == 0x0) {
                         distortionTextView.visibility = View.GONE
                         return@let
@@ -75,48 +75,48 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
                     distortionTextView.text = builder.substring(0, builder.length - 2).toString()
                 }
 
-                if (situation?.isEmpty() == true) {
+                if (situation.isEmpty()) {
                     situationTextView.visibility = View.GONE
                 } else {
                     situationTextView.visibility = View.VISIBLE
                     situationTextView.text = res.getString(R.string.adapter_situation, situation)
                 }
 
-                if (intensity?.toInt() == 0) {
+                if (intensity == 0) {
                     intensityTextView.visibility = View.GONE
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
                 }
 
-                if (thoughts?.isEmpty() == true) {
+                if (thoughts.isEmpty()) {
                     thoughtTextView.visibility = View.GONE
                 } else {
                     thoughtTextView.text = res.getString(R.string.adapter_thought, thoughts)
                 }
 
-                if (emotions?.isEmpty() == true) {
+                if (emotions.isEmpty()) {
                     emotionTextView.visibility = View.GONE
                 } else {
                     emotionTextView.visibility = View.VISIBLE
                     emotionTextView.text = res.getString(R.string.adapter_emotions, emotions)
                 }
 
-                if (feelings?.isEmpty() == true) {
+                if (feelings.isEmpty()) {
                     feelingsTextView.visibility = View.GONE
                 } else {
                     feelingsTextView.visibility = View.VISIBLE
                     feelingsTextView.text = res.getString(R.string.adapter_feelsing, feelings)
                 }
 
-                if (actions?.isEmpty() == true) {
+                if (actions.isEmpty()) {
                     actionsTextView.visibility = View.GONE
                 } else {
                     actionsTextView.visibility = View.VISIBLE
                     actionsTextView.text = res.getString(R.string.adapter_actions, actions)
                 }
 
-                if (rational?.isEmpty() == true) {
+                if (rational.isEmpty()) {
                     disputTextView.visibility = View.GONE
                 } else {
                     disputTextView.visibility = View.VISIBLE

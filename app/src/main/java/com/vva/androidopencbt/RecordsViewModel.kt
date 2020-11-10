@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.vva.androidopencbt
 
 import android.app.Application

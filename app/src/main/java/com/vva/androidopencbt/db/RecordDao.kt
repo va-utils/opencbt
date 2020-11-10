@@ -27,10 +27,12 @@ interface RecordDao {
     fun getAllCount() : LiveData<Int>
 
     @Query(DbContract.Diary.GET_MIN_DATE)
-    fun getOldestDate() : LiveData<Long>
+    @TypeConverters(Converters::class)
+    fun getOldestDate() : LiveData<DateTime>
 
     @Query(DbContract.Diary.GET_MAX_DATE)
-    fun getLatestDate() : LiveData<Long>
+    @TypeConverters(Converters::class)
+    fun getLatestDate() : LiveData<DateTime>
 
     @Query(DbContract.Diary.GET_DISTORTION_COL)
     fun getDistList() : List<Int>
