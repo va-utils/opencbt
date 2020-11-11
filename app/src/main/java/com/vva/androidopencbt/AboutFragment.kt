@@ -28,14 +28,14 @@ class AboutFragment : Fragment() {
 
         val v : View = inflater.inflate(R.layout.fragment_about, container, false)
 
-        val versionTextView : TextView = v.findViewById(R.id.versionTextView)
+        val aboutTextView : TextView = v.findViewById(R.id.aboutTextView)
         val sendButton : Button = v.findViewById(R.id.sendButton)
         val webSiteButton : Button = v.findViewById(R.id.websiteButton)
         val cbdButton : Button = v.findViewById(R.id.cbdButton)
         sendButton.setOnClickListener(listener)
         webSiteButton.setOnClickListener(listener)
         cbdButton.setOnClickListener(listener)
-        versionTextView.text = getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.BUILD_TYPE)
+        aboutTextView.text = getString(R.string.app_author, BuildConfig.VERSION_NAME, BuildConfig.BUILD_TYPE)
         return v
     }
 
