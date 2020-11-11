@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -34,7 +35,15 @@ class RvFragment: Fragment() {
         view.findViewById<Toolbar>(R.id.rv_toolbar).setupWithNavController(navController, appBarConfiguration)
         view.findViewById<Toolbar>(R.id.rv_toolbar).menu.forEach { menuItem ->
             menuItem.setOnMenuItemClickListener {
-                return@setOnMenuItemClickListener NavigationUI.onNavDestinationSelected(it, requireView().findNavController()) || super.onOptionsItemSelected(it)
+//                return@setOnMenuItemClickListener NavigationUI.onNavDestinationSelected(it, requireView().findNavController()) || super.onOptionsItemSelected(it)
+                val navOptions = NavOptions.Builder()
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left)
+                        .setPopExitAnim(R.anim.slide_out_right)
+                        .build()
+                findNavController().navigate(it.itemId, null, navOptions)
+                return@setOnMenuItemClickListener  super.onOptionsItemSelected(it)
             }
         }
     }
