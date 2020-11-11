@@ -15,14 +15,13 @@ abstract class CbdDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: CbdDatabase? = null
 
-        private val MIGRATION_1_2 = object: Migration(1, 2) {
+        val MIGRATION_1_2 = object: Migration(1, 2) {
             private val oldSuffix = "_old"
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 try {
                     database.beginTransaction()
                     with(DbContract.Diary) {
-                        database.execSQL("ALTER TABLE $TABLE_NAME RENAME TO $TABLE_NAME$oldSuffix")
                         database.execSQL("UPDATE $TABLE_NAME SET " +
                                 "$COLUMN_SITUATION = '' WHERE $COLUMN_SITUATION IS NULL")
                         database.execSQL("UPDATE $TABLE_NAME SET " +
@@ -41,8 +40,9 @@ abstract class CbdDatabase: RoomDatabase() {
                                 "$COLUMN_DISTORTIONS = '' WHERE $COLUMN_DISTORTIONS IS NULL")
                         database.execSQL("UPDATE $TABLE_NAME SET " +
                                 "$COLUMN_DATETIME = 0 WHERE $COLUMN_DATETIME IS NULL")
+                        database.execSQL("ALTER TABLE $TABLE_NAME RENAME TO $TABLE_NAME$oldSuffix")
                         database.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_NAME(" +
-                                "$COLUMN_ID INTEGER PRIMARY KEY NOT NULL," +
+                                "$COLUMN_ID INTEGER PRIMARY KEY NOT NULL, " +
                                 "$COLUMN_SITUATION TEXT NOT NULL, " +
                                 "$COLUMN_THOUGHTS TEXT NOT NULL, " +
                                 "$COLUMN_RATIONAL TEXT NOT NULL, " +

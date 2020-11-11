@@ -15,14 +15,14 @@
             android:id="@+id/action_rvFragment_to_statisticFragment"
             app:destination="@id/statisticFragment" />
         <action
-            android:id="@+id/action_rvFragment_to_newRecordActivity"
-            app:destination="@id/newRecordActivity" />
-        <action
             android:id="@+id/action_rvFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
         <action
             android:id="@+id/action_rvFragment_to_exportToHtmlFragment"
             app:destination="@id/exportToHtmlFragment" />
+        <action
+            android:id="@+id/action_rvFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -37,13 +37,17 @@
         android:id="@+id/settingsActivity"
         android:name="com.vva.androidopencbt.SettingsActivity"
         android:label="@string/title_activity_settings" />
-    <activity
-        android:id="@+id/newRecordActivity"
-        android:name="com.vva.androidopencbt.NewRecordActivity"
-        android:label="@string/title_newrecord"
-        tools:layout="@layout/activity_new_record" />
     <fragment
         android:id="@+id/exportToHtmlFragment"
         android:name="com.vva.androidopencbt.export.html.ExportToHtmlFragment"
         android:label="ExportToHtmlFragment" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.vva.androidopencbt.recorddetails.DetailsFragment"
+        android:label="@string/title_newrecord" >
+        <argument
+            android:name="recordKey"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
 </navigation>

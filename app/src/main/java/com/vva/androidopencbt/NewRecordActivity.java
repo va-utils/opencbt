@@ -283,7 +283,7 @@ public class NewRecordActivity extends AppCompatActivity {
         String feelings = feelingsEditText.getText().toString();
         String actions = actionsEditText.getText().toString();
 
-        short intensity = (short)intensitySeekBar.getProgress();
+        int intensity = (short)intensitySeekBar.getProgress();
         int dist = 0x0;
 
         if(allOrNothingCheckBox.isChecked()) { dist |= DbRecord.ALL_OR_NOTHING;}

@@ -22,6 +22,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_RECORD_BY_ID)
     fun getRecordById(id: Long): DbRecord
 
+    @Query(DbContract.Diary.GET_RECORD_BY_ID)
+    fun getRecordLiveDataById(id: Long): LiveData<DbRecord>
+
     @Query(DbContract.Diary.GET_AVERAGE_INTENSITY)
     fun getAverageIntensity() : LiveData<Double>
 
