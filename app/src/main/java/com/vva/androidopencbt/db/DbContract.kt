@@ -4,8 +4,8 @@ package com.vva.androidopencbt.db
 object DbContract {
     const val DATABASE_NAME = "opencbd_beta9.db" // название бд
     const val SCHEMA = 2 // версия базы данных
-    const val ORDER_ASC = 0
-    const val ORDER_DESC = 1
+    const val ORDER_DESC = 0
+    const val ORDER_ASC = 1
 
     object Diary {
         const val TABLE_NAME = "diary" // название таблицы в бд

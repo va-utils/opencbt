@@ -54,18 +54,17 @@ class RvFragment: Fragment() {
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
 
         dataAdapter = RecordsAdapter(RecordListener {
-            it?.let {
-                viewModel.navigateToRecord(it.id)
-            }
+            viewModel.navigateToRecord(it.id)
         }, ScrollListener {
             viewModel.listUpdated()
         })
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
-        viewModel.getAllRecordsOrdered(orderBy).observe(viewLifecycleOwner, {
+        viewModel.getAllRecords().observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 dataAdapter.updateList(it, orderBy)
+//                dataAdapter.submitList(it)
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
             } else {

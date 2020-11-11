@@ -6,7 +6,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.preference.PreferenceManager
 import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -15,6 +18,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     private val db = CbdDatabase.getInstance(application)
     private var vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
 
     private val _newRecordNavigated = MutableLiveData<Long>()
     val newRecordNavigated: LiveData<Long>
@@ -24,9 +28,23 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val recordsListUpdated: LiveData<Boolean>
         get() = _recordsListUpdated
 
-    fun getAllRecords() = db.databaseDao.getAll()
+    private val _isDescOrder = MutableLiveData(prefs.getBoolean("desc_ordering", false))
+    val isDescOrder: LiveData<Boolean>
+        get() = _isDescOrder
 
-    fun getAllRecordsOrdered(order : Int) = db.databaseDao.getAllOrdered(order)
+    private val records: LiveData<List<DbRecord>> = Transformations.switchMap(_isDescOrder) {
+        isDesc ->
+
+        return@switchMap if (isDesc) {
+            db.databaseDao.getAllOrdered(DbContract.ORDER_DESC)
+        } else {
+            db.databaseDao.getAllOrdered(DbContract.ORDER_ASC)
+        }
+    }
+
+    fun getAllRecords() = records //db.databaseDao.getAll()
+
+//    fun getAllRecordsOrdered(order : Int) = records //db.databaseDao.getAllOrdered(order)
 
     fun getRecordById(id: Long) = db.databaseDao.getById(id)
 
@@ -79,6 +97,10 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
 
     fun navigateToRecord(id: Long) {
         _newRecordNavigated.value = id
+    }
+
+    fun setOrder(order: Boolean) {
+        _isDescOrder.value = order
     }
 
     fun listUpdated() {

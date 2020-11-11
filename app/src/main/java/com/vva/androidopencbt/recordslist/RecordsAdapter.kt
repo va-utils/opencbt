@@ -139,7 +139,7 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
     }
 }
 
-class RecordListener(val clickListener: (record: DbRecord?) -> Unit) {
+class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
     fun onClick(record: DbRecord) = clickListener(record)
 }
 

@@ -144,4 +144,5 @@
     <string name="stat_timeofday">
         Добавлены ночью (0-6): %1$d\nДобавлены утром (6-12): %2$d\nДобавлены днем  (12-18): %3$d\nДобавлены вечером (18-24): %4$d
     </string>
+    <string name="title_export_to">Экспорт дневника</string>
 </resources>
