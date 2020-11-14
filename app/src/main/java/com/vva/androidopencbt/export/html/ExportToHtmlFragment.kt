@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.export.ExportViewModel
@@ -27,27 +28,27 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var exportBtn: Button
     private lateinit var startEditText : EditText
     private lateinit var endEditText : EditText
-    private val viewModel: ExportViewModel by activityViewModels()
+    private val exportViewModel: ExportViewModel by activityViewModels()
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        viewModel.setBeginDate(DateTime(year, month, dayOfMonth, 0, 0))
+        exportViewModel.setBeginDate(DateTime(year, month, dayOfMonth, 0, 0))
     }
 
     private val endDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        viewModel.setEndDate(DateTime(year, month, dayOfMonth, 23, 59))
+        exportViewModel.setEndDate(DateTime(year, month, dayOfMonth, 23, 59))
     }
 
     private val onClickListener = View.OnClickListener() {
         when(it.id) {
             R.id.startEditText -> {
-                val date = viewModel.beginDate.value!!
+                val date = exportViewModel.beginDate.value!!
                 DatePickerDialog(requireContext(), beginDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
             }
 
             R.id.endEditText -> {
-                val date = viewModel.endDate.value!!
+                val date = exportViewModel.endDate.value!!
                 DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
             }
         }
@@ -72,29 +73,41 @@ class ExportToHtmlFragment: Fragment() {
         //--
         exportBtn = ll.findViewById(R.id.saveHTMLButton)
         exportBtn.setOnClickListener {
-            viewModel.makeHtmlExportFile(requireContext())
+            exportViewModel.makeExportFile(requireContext())
         }
 
-        viewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
-        viewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
+        exportViewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
+        exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
-        viewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
+        exportViewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
 
         })
 
-        viewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
+        exportViewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val fileType = when (prefs.getString("default_export", "HTML")) {
+                "JSON" -> {
+                   "application/json"
+                }
+                "HTML" -> {
+                    "application/html"
+                }
+                else -> {
+                    throw IllegalArgumentException("No such format")
+                }
+            }
             if (it) {
-                val file = File(requireActivity().filesDir, viewModel.htmlFileName)
+                val file = File(requireActivity().filesDir, exportViewModel.fileName)
                 val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
                 val forSendIntent = Intent(Intent.ACTION_SEND)
                 forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                forSendIntent.setDataAndType(uri, "application/html")
+                forSendIntent.setDataAndType(uri, fileType)
 
                 val pm: PackageManager = requireActivity().packageManager
                 if (forSendIntent.resolveActivity(pm) != null) {
                     startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
-                    viewModel.htmlFileShared()
+                    exportViewModel.htmlFileShared()
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
                 }

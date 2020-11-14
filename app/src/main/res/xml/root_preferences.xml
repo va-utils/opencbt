@@ -63,7 +63,16 @@
             app:defaultValue="true"
             app:key="enable_rational"
             app:title="@string/pref_disput" />
-
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="Экспорт" >
+        <ListPreference
+            app:key="default_export"
+            app:entries="@array/export_settings_entries"
+            app:entryValues="@array/export_settings_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="HTML"
+            app:title="Формат по умолчанию" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
+import com.google.gson.Gson
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
@@ -14,9 +16,14 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import java.io.IOException
 
+private const val FILE_NAME_PREFIX = "CBT_diary"
+
 @Suppress("unused")
 class ExportViewModel(application: Application) : AndroidViewModel(application) {
-    val htmlFileName = "CBT_diary.html"
+    private var _fileName = ""
+    val fileName: String
+        get() = _fileName
+
     private val dao = CbdDatabase.getInstance(application).databaseDao
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
@@ -52,9 +59,24 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _isHtmlFileReady.value = false
     }
 
+    fun makeExportFile(context: Context) {
+        when (PreferenceManager.getDefaultSharedPreferences(context).getString("default_export", "HTML")) {
+            "JSON" -> {
+                makeJsonExportFile()
+            }
+            "HTML" -> {
+                makeHtmlExportFile(context)
+            }
+            else -> {
+                throw IllegalArgumentException("No such format")
+            }
+        }
+    }
+
     fun makeHtmlExportFile(context: Context) {
         _isHtmlExportInProgress.value = true
         _isHtmlFileReady.value = false
+        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.html"
         uiScope.launch {
             val records = withContext(Dispatchers.IO) {
                 dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
@@ -63,7 +85,24 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                 makeHtmlString(records, context)
             }
             withContext(Dispatchers.IO) {
-                saveStringToFile(exportString, htmlFileName)
+                saveStringToFile(exportString, fileName)
+            }
+        }
+    }
+
+    fun makeJsonExportFile() {
+        _isHtmlExportInProgress.value = true
+        _isHtmlFileReady.value = false
+        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.json"
+        uiScope.launch {
+            val records = withContext(Dispatchers.IO) {
+                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+            }
+            val exportString = withContext(Dispatchers.Default) {
+                Gson().toJson(records)
+            }
+            withContext(Dispatchers.IO) {
+                saveStringToFile(exportString, fileName)
             }
         }
     }

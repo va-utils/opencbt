@@ -78,4 +78,8 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     implementation "joda-time:joda-time:2.10.8"
+
+    implementation "app.futured.donut:library:$futured_donut_version"
+
+    implementation "com.google.code.gson:gson:2.8.6"
 }
