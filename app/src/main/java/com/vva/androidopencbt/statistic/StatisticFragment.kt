@@ -23,6 +23,12 @@ class StatisticFragment : Fragment() {
     private lateinit var oldestTextView : TextView
     private lateinit var latestTextView : TextView
     private lateinit var timeOfDayTextView : TextView
+
+    //----new stat
+    //private lateinit var userActiveGraph : CurveGraphView
+
+
+    //----
     private lateinit var ll : LinearLayout
     private val viewModel: StatisticViewModel by activityViewModels()
 
@@ -46,6 +52,8 @@ class StatisticFragment : Fragment() {
         avgIntensityTextView = ll.findViewById(R.id.avgintensityTextView)
         distortionsTextView = ll.findViewById(R.id.distortionTextView)
         timeOfDayTextView = ll.findViewById(R.id.timeOfDayTextView)
+
+        
 
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
             if(it != null)
@@ -83,6 +91,8 @@ class StatisticFragment : Fragment() {
             b.append(getString(R.string.dist_labeling)).append(": ").append(it[8]).appendLine()
             b.append(getString(R.string.dist_personalistion)).append(": ").append(it[9]).appendLine()
             distortionsTextView.text = b.toString()
+
+
         })
 
         viewModel.getTimeOfDay()
