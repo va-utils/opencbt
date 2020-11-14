@@ -55,12 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="@string/app_author"/>
+        android:layout_gravity="bottom|center"
+        android:id="@+id/aboutTextView" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:id="@+id/versionTextView"/>
     </LinearLayout>
 </LinearLayout>
