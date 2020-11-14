@@ -1,6 +1,7 @@
 package com.vva.androidopencbt.settings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -64,6 +66,13 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             viewModel.setOrder(newValue)
 
             newValue
+        }
+
+        (findPreference<ListPreference>("default_export") as ListPreference).setOnPreferenceChangeListener {
+            preference, newValue ->
+
+            Log.d("SETTINGGS", newValue.toString())
+            true
         }
     }
 

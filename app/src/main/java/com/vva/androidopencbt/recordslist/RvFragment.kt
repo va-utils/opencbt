@@ -43,7 +43,7 @@ class RvFragment: Fragment() {
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
                 findNavController().navigate(it.itemId, null, navOptions)
-                return@setOnMenuItemClickListener  super.onOptionsItemSelected(it)
+                return@setOnMenuItemClickListener super.onOptionsItemSelected(it)
             }
         }
     }
