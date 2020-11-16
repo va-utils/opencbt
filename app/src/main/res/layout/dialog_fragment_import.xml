@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/progress_motion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/import_progress_scene" >
+
+    <ProgressBar
+        android:id="@+id/import_pb"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/import_tv_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="0/100" />
+
+    <TextView
+        android:id="@+id/import_tv_total_imported"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Итого импортировано: 100" />
+
+    <TextView
+        android:id="@+id/import_tv_total_dublicated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Дубликатов пропущено: 50" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
