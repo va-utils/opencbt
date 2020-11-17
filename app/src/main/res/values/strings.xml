@@ -45,6 +45,7 @@
     <string name="dist_must_statement">Долженствования</string>
     <string name="dist_labeling">Ярлыки</string>
     <string name="dist_personalistion">Персонализация</string>
+    <string name="dist_empty">Не заполнено</string>
 
     <string name="newrecord_toast_empty">Поле для автоматической мысли обязательно для заполнения</string>
 
@@ -130,18 +131,19 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="stat_application">Статистика использования:</string>
 
-    <string name="stat_total">Всего записей: %1$d</string>
-    <string name="stat_old">Самая старая: %1$s</string>
-    <string name="stat_latest">Самая свежая: %1$s</string>
+    <string name="stat_total">Всего записей:</string>
+    <string name="stat_old">Самая старая:</string>
+    <string name="stat_latest">Самая свежая:</string>
 
     <string name="stat_psy">Психология</string>
     <string name="stat_distortions">Когнитивные искажения:</string>
     <string name="stat_emptydiary">Дневник пока еще пуст. Начните вести его, прежде чем смотреть статистику</string>
-    <string name="stat_intesity">Средний уровень дискомфорта: %1$.2f%%</string>
+    <string name="stat_intesity">Средний уровень дискомфорта: </string>
     <string name="add_new_record">Add new record</string>
 
-    <string name="stat_timeofday">
-        Добавлены ночью (0-6): %1$d\nДобавлены утром (6-12): %2$d\nДобавлены днем  (12-18): %3$d\nДобавлены вечером (18-24): %4$d
-    </string>
+    <string name="stat_night">Добавлены ночью (0-6):</string>
+    <string name="stat_morning">Добавлены утром (6-12):</string>
+    <string name="stat_day">Добавлены днем (12-18):</string>
+    <string name="stat_evening">Добавлены вечером (18-24):</string>
     <string name="title_export_to">Экспорт дневника</string>
 </resources>
