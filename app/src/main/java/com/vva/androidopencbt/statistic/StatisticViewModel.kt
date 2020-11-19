@@ -52,13 +52,13 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
                 //сейчас будет мясо
                 val list : List<Int> = db.databaseDao.getDistList()
                 val servArray = IntArray(11)
-                val distArray : Array<Int> = arrayOf(0x1,0x2,0x4,0x8,0x10,0x20,0x40,0x80,0x100,0x200,0x00)
+                val distArray : Array<Int> = arrayOf(0x1,0x2,0x4,0x8,0x10,0x20,0x40,0x80,0x100,0x200)
 
                 //обход столбца из БД
                 for (n in list) {
                     var i = 0
                     //обход каждой записи на тему искажений
-                    while(i<11) {
+                    while(i<10) {
                         if(((n.and(distArray[i]))!=0)) {
                             servArray[i]++
                         }

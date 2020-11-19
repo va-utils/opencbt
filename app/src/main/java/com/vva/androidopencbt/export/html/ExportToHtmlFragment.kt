@@ -32,24 +32,24 @@ class ExportToHtmlFragment: Fragment() {
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        exportViewModel.setBeginDate(DateTime(year, month, dayOfMonth, 0, 0))
+        exportViewModel.setBeginDate(DateTime(year, month+1, dayOfMonth, 0, 0))
     }
 
     private val endDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        exportViewModel.setEndDate(DateTime(year, month, dayOfMonth, 23, 59))
+        exportViewModel.setEndDate(DateTime(year, month+1, dayOfMonth, 23, 59))
     }
 
     private val onClickListener = View.OnClickListener() {
         when(it.id) {
             R.id.startEditText -> {
                 val date = exportViewModel.beginDate.value!!
-                DatePickerDialog(requireContext(), beginDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
+                DatePickerDialog(requireContext(), beginDpListener, date.year, date.monthOfYear-1, date.dayOfMonth).show()
             }
 
             R.id.endEditText -> {
                 val date = exportViewModel.endDate.value!!
-                DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear, date.dayOfMonth).show()
+                DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear-1, date.dayOfMonth).show()
             }
         }
     }

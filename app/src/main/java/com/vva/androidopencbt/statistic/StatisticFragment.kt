@@ -18,6 +18,7 @@ import app.futured.donut.DonutProgressView
 import app.futured.donut.DonutSection
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getDateTimeString
+import com.vva.androidopencbt.getStatsDateTime
 import kotlinx.android.synthetic.main.fragment_statistic.*
 import kotlinx.android.synthetic.main.fragment_statistic.view.*
 
@@ -44,7 +45,7 @@ class StatisticFragment : Fragment() {
     private lateinit var mustTv : TextView
     private lateinit var labelingTv : TextView
     private lateinit var personTv : TextView
-    private lateinit var emptyTv : TextView
+  //  private lateinit var emptyTv : TextView
     //графики
     private lateinit var timeDonut : DonutProgressView
     private lateinit var distortionsDonut : DonutProgressView
@@ -76,7 +77,7 @@ class StatisticFragment : Fragment() {
         dayTv = ll.findViewById(R.id.dayTv)
         eveningTv = ll.findViewById(R.id.eveningTv)
 
-        distortionsDonut = ll.findViewById(R.id.distortionDonut)
+        distortionsDonut = ll.findViewById(R.id.distortionsDonut)
         allOrNothingTv = ll.findViewById(R.id.allOrNothingTv)
         overgeneralizingTv = ll.findViewById(R.id.overgeneralizingTv)
         filteringTv = ll.findViewById(R.id.filteringTv)
@@ -87,7 +88,7 @@ class StatisticFragment : Fragment() {
         mustTv = ll.findViewById(R.id.mustTv)
         labelingTv = ll.findViewById(R.id.labelingTv)
         personTv = ll.findViewById(R.id.personTv)
-        emptyTv = ll.findViewById(R.id.emptyTv)
+     //   emptyTv = ll.findViewById(R.id.emptyTv)
 
         intensityTv = ll.findViewById(R.id.intensityTv)
 
@@ -106,12 +107,12 @@ class StatisticFragment : Fragment() {
         })
 
         viewModel.getOldestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = it?.getDateTimeString() ?: "---"
+            val s : String = it?.getStatsDateTime() ?: "---"
             oldTv.text = s
         })
 
         viewModel.getLatestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = it?.getDateTimeString() ?: "---"
+            val s : String = it?.getStatsDateTime() ?: "---"
             latestTv.text = s
         })
 
@@ -129,7 +130,7 @@ class StatisticFragment : Fragment() {
             mustTv.text = it[7].toString()
             labelingTv.text = it[8].toString()
             personTv.text = it[9].toString()
-            emptyTv.text = it[10].toString()
+            //emptyTv.text = it[10].toString()
 
             //отобразить на donut
             val list : List<DonutSection> = listOf(
@@ -143,10 +144,9 @@ class StatisticFragment : Fragment() {
                     DonutSection(getString(R.string.dist_must_statement), resources.getColor(R.color.colorMust),it[7].toFloat()),
                     DonutSection(getString(R.string.dist_labeling), resources.getColor(R.color.colorLabeling),it[8].toFloat()),
                     DonutSection(getString(R.string.dist_personalistion), resources.getColor(R.color.colorPerson),it[9].toFloat()))
-                    DonutSection("Не заполнено", resources.getColor(R.color.colorEmpty),it[10].toFloat())
 
        //     distortionDonut.cap = it.sum().toFloat()
-            distortionDonut.submitData(list)
+            distortionsDonut.submitData(list)
 
         })
 
