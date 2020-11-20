@@ -103,7 +103,7 @@ class StatisticFragment : Fragment() {
         })
 
         viewModel.getAverageIntensity().observe(viewLifecycleOwner, {
-                intensityTv.text  = it.toString() ?: "0.0"
+                intensityTv.text  = if(it!=null) String.format("%1.2f%%",it) else "0.0"
         })
 
         viewModel.getOldestRecordDate().observe(viewLifecycleOwner, {
