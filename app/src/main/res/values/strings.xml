@@ -146,4 +146,7 @@
     <string name="stat_day">Добавлены днем (12-18):</string>
     <string name="stat_evening">Добавлены вечером (18-24):</string>
     <string name="title_export_to">Экспорт дневника</string>
+
+    <string name="export_html">Таблица дневника (HTML)</string>
+    <string name="export_json">Резервая копия (JSON)</string>
 </resources>

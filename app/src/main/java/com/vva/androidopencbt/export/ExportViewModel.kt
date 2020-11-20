@@ -40,6 +40,16 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         get() = _endDate
     //--------------
 
+    private val _defaultFormat = MutableLiveData<String>()
+
+    fun getDefaultFormat(context: Context) : LiveData<String>
+    {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val df = prefs.getString("default_export","HTML")
+        _defaultFormat.value = df
+        return _defaultFormat
+    }
+
     fun setBeginDate(dateTime: DateTime) {
         _beginDate.value = dateTime
     }

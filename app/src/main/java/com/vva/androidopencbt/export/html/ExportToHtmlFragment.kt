@@ -28,6 +28,8 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var exportBtn: Button
     private lateinit var startEditText : EditText
     private lateinit var endEditText : EditText
+    private lateinit var htmlRb : RadioButton
+    private lateinit var jsonRb : RadioButton
     private val exportViewModel: ExportViewModel by activityViewModels()
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
@@ -75,6 +77,18 @@ class ExportToHtmlFragment: Fragment() {
         exportBtn.setOnClickListener {
             exportViewModel.makeExportFile(requireContext())
         }
+
+        htmlRb = ll.findViewById(R.id.htmlRb)
+        jsonRb = ll.findViewById(R.id.jsonRb)
+
+        exportViewModel.getDefaultFormat(requireContext()).observe(viewLifecycleOwner,
+                {
+                    when(it)
+                    {
+                        "JSON" -> jsonRb.isChecked = true
+                        "HTML" -> htmlRb.isChecked = true
+                    }
+                })
 
         exportViewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
         exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
