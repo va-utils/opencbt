@@ -30,6 +30,7 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var endEditText : EditText
     private lateinit var htmlRb : RadioButton
     private lateinit var jsonRb : RadioButton
+    private lateinit var exportWelcomeTv : TextView
     private val exportViewModel: ExportViewModel by activityViewModels()
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
@@ -78,17 +79,37 @@ class ExportToHtmlFragment: Fragment() {
             exportViewModel.makeExportFile(requireContext())
         }
 
+        exportWelcomeTv = ll.findViewById(R.id.exportWelcomeTv)
         htmlRb = ll.findViewById(R.id.htmlRb)
         jsonRb = ll.findViewById(R.id.jsonRb)
 
-        exportViewModel.getDefaultFormat(requireContext()).observe(viewLifecycleOwner,
+        val rg = ll.findViewById<RadioGroup>(R.id.exportRg)
+        rg.setOnCheckedChangeListener{
+            g : RadioGroup, id : Int ->
+            when(id)
+            {
+                R.id.jsonRb -> exportViewModel.setFormat("JSON")
+                R.id.htmlRb -> exportViewModel.setFormat("HTML")
+            }
+        }
+
+        exportViewModel.format.observe(viewLifecycleOwner,
                 {
                     when(it)
                     {
-                        "JSON" -> jsonRb.isChecked = true
-                        "HTML" -> htmlRb.isChecked = true
+                        "JSON" ->
+                        {
+                            jsonRb.isChecked = true
+                            exportWelcomeTv.text = getString(R.string.savejson_welcome)
+                        }
+                        "HTML" ->
+                        {
+                            htmlRb.isChecked = true
+                            exportWelcomeTv.text = getString(R.string.savehtml_welcome)
+                        }
                     }
                 })
+
 
         exportViewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
         exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })

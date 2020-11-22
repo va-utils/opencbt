@@ -40,14 +40,14 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         get() = _endDate
     //--------------
 
-    private val _defaultFormat = MutableLiveData<String>()
+    private val _format = MutableLiveData<String>(PreferenceManager.getDefaultSharedPreferences(application.applicationContext).getString("default_export","HTML"))
 
-    fun getDefaultFormat(context: Context) : LiveData<String>
+    val format : LiveData<String>
+    get() = _format
+
+    fun setFormat(s : String)
     {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val df = prefs.getString("default_export","HTML")
-        _defaultFormat.value = df
-        return _defaultFormat
+        _format.value = s
     }
 
     fun setBeginDate(dateTime: DateTime) {
@@ -70,7 +70,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun makeExportFile(context: Context) {
-        when (PreferenceManager.getDefaultSharedPreferences(context).getString("default_export", "HTML")) {
+        when (format.value/*PreferenceManager.getDefaultSharedPreferences(context).getString("default_export", "HTML")*/) {
             "JSON" -> {
                 makeJsonExportFile()
             }

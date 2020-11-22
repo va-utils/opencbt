@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
+            android:id="@+id/exportWelcomeTv"
             android:text="@string/savehtml_welcome"/>
 
         <TableLayout
@@ -75,9 +76,18 @@
         </TableLayout>
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/exportRg"
+            android:layout_gravity="fill_horizontal"
+            android:gravity="center"
+            android:paddingBottom="5dp"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_text_format"/>
 
             <RadioButton
                 android:layout_width="wrap_content"

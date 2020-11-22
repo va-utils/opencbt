@@ -84,6 +84,8 @@
 
     <string name="savehtml_welcome">Вы можете отправить свой дневник на электронную почту или в мессенджер, например, для того, чтобы передать его специалисту.
         Дневник будет оформлен в виде таблицы.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
+
+
     <string name="savehtml_button_save">Отправить дневник</string>
     <string name="savehtml_button_send">Отправить по почте</string>
     <string name="savehtml_text_startdate">Начало периода:</string>
@@ -141,12 +143,17 @@
     <string name="stat_intesity">Средний уровень дискомфорта: </string>
     <string name="add_new_record">Add new record</string>
 
-    <string name="stat_night">Добавлены ночью (0-6):</string>
-    <string name="stat_morning">Добавлены утром (6-12):</string>
-    <string name="stat_day">Добавлены днем (12-18):</string>
-    <string name="stat_evening">Добавлены вечером (18-24):</string>
+    <string name="stat_night">Добавлены ночью (0–6):</string>
+    <string name="stat_morning">Добавлены утром (6–12):</string>
+    <string name="stat_day">Добавлены днем (12–18):</string>
+    <string name="stat_evening">Добавлены вечером (18–24):</string>
     <string name="title_export_to">Экспорт дневника</string>
 
-    <string name="export_html">Таблица дневника (HTML)</string>
-    <string name="export_json">Резервая копия (JSON)</string>
+    <string name="export_html">HTML</string>
+    <string name="export_json">JSON</string>
+    <string name="export_text_format">Формат:</string>
+
+    <string name="savejson_welcome">Вы можете отправить резервную копию своего дневника на электронную почту или в мессенджер,
+        например, для того, чтобы сохранить его у себя на компьютере и восстановить в дальнейшем на этом или другом устройстве.
+        Дневник будет сохранен в формате JSON.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
 </resources>
