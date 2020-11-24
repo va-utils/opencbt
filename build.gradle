@@ -16,7 +16,7 @@ buildscript {
         // in the individual module build.gradle files
         def nav_version = "2.3.1"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 }
 

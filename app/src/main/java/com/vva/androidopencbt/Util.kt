@@ -1,5 +1,11 @@
 package com.vva.androidopencbt
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -26,3 +32,17 @@ fun DateTime.getDateString(): String {
 fun DateTime.beginOfMonth() = DateTime(this.year, this.monthOfYear, 1, 0, 0)
 
 fun DateTime.endOfDay() = DateTime(this.year, this.monthOfYear, this.dayOfMonth, 23, 59)
+
+object DateTimeAsTimestampSerializer: KSerializer<DateTime> {
+    override val descriptor: SerialDescriptor
+        get() = PrimitiveSerialDescriptor("date", PrimitiveKind.LONG)
+
+    override fun deserialize(decoder: Decoder): DateTime {
+        val timestamp = decoder.decodeLong()
+        return DateTime(timestamp)
+    }
+
+    override fun serialize(encoder: Encoder, value: DateTime) {
+        encoder.encodeLong(value.millis)
+    }
+}

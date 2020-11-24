@@ -53,5 +53,5 @@ interface RecordDao {
     fun deleteRecord(record: DbRecord)
 
     @Insert
-    fun addRecord(dbRecord: DbRecord)
+    fun addRecord(dbRecord: DbRecord): Long
 }

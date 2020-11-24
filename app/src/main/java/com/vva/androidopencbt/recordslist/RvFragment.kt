@@ -1,23 +1,25 @@
 package com.vva.androidopencbt.recordslist
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
@@ -35,14 +37,24 @@ class RvFragment: Fragment() {
         view.findViewById<Toolbar>(R.id.rv_toolbar).setupWithNavController(navController, appBarConfiguration)
         view.findViewById<Toolbar>(R.id.rv_toolbar).menu.forEach { menuItem ->
             menuItem.setOnMenuItemClickListener {
-//                return@setOnMenuItemClickListener NavigationUI.onNavDestinationSelected(it, requireView().findNavController()) || super.onOptionsItemSelected(it)
                 val navOptions = NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_right)
                         .setExitAnim(R.anim.slide_out_left)
                         .setPopEnterAnim(R.anim.slide_in_left)
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
-                findNavController().navigate(it.itemId, null, navOptions)
+                when (val id = it.itemId) {
+                    R.id.openDocumentPicker -> {
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            type = "application/json"
+                            addCategory(Intent.CATEGORY_DEFAULT)
+                        }
+                        startActivityForResult(intent, 0x33)
+                    }
+                    else -> {
+                        findNavController().navigate(id, null, navOptions)
+                    }
+                }
                 return@setOnMenuItemClickListener super.onOptionsItemSelected(it)
             }
         }
@@ -64,7 +76,7 @@ class RvFragment: Fragment() {
         viewModel.getAllRecords().observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 dataAdapter.updateList(it, orderBy)
-//                dataAdapter.submitList(it)
+
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
             } else {
@@ -84,6 +96,44 @@ class RvFragment: Fragment() {
         })
         rv.adapter = dataAdapter
 
+        viewModel.importInAction.observe(viewLifecycleOwner) {
+            if (it == null)
+                return@observe
+            else if (!it) {
+                if (viewModel.importData.value == null) {
+                    Toast.makeText(requireContext(), "Ошибки при чтении файла", Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.importData.value.let { list ->
+                        if (list?.isEmpty()!!) {
+                            Toast.makeText(requireContext(), "Нет данных для импорта", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Snackbar.make(ll, "Импортировано ${list.size} записей", Snackbar.LENGTH_SHORT)
+                                    .setAction("Отмена") { _ ->
+                                        list.forEach { id ->
+                                            viewModel.deleteRecord(id)
+                                        }
+                                    }.show()
+                        }
+                    }
+                }
+                viewModel.doneImporting()
+            }
+        }
+
         return ll
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 0x33 && resultCode == Activity.RESULT_OK) {
+            data?.data?.also {
+                requireActivity().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                viewModel.importRecordsFromFile(it, requireContext())
+            }
+        }
     }
 }

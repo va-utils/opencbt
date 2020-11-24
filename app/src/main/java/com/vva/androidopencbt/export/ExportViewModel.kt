@@ -6,13 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.endOfDay
 import com.vva.androidopencbt.getShortDateTime
 import kotlinx.coroutines.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
 import java.io.IOException
 
@@ -109,7 +110,9 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                 dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
             }
             val exportString = withContext(Dispatchers.Default) {
-                Gson().toJson(records)
+//                GsonBuilder()
+//                Gson().toJson(records)
+                Json.encodeToString(records)
             }
             withContext(Dispatchers.IO) {
                 saveStringToFile(exportString, fileName)

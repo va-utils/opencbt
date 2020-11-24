@@ -2,14 +2,19 @@ package com.vva.androidopencbt.db
 
 import android.content.Context
 import androidx.room.*
+import com.vva.androidopencbt.DateTimeAsTimestampSerializer
 import com.vva.androidopencbt.R
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.joda.time.DateTime
 
+@Serializable
 @Entity(tableName = DbContract.Diary.TABLE_NAME)
 @TypeConverters(Converters::class)
 data class DbRecord(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = DbContract.Diary.COLUMN_ID)
+        @Transient
         var id: Long = 0L,
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_SITUATION)
@@ -37,6 +42,7 @@ data class DbRecord(
         var intensity: Int = 0,
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_DATETIME)
+        @Serializable(with = DateTimeAsTimestampSerializer::class)
         var datetime: DateTime = DateTime()
 ) {
     fun getDistortionsString(context: Context): String {
@@ -74,6 +80,22 @@ data class DbRecord(
         const val MUST_STATEMENTS: Int = 0x80
         const val LABELING: Int = 0x100
         const val PERSONALIZATION: Int = 0x200
+    }
+
+    fun equalsIgnoreId(record: DbRecord): Boolean {
+        if (this === record) return true
+
+        if (situation != record.situation) return false
+        if (thoughts != record.thoughts) return false
+        if (rational != record.rational) return false
+        if (emotions != record.emotions) return false
+        if (distortions != record.distortions) return false
+        if (feelings != record.feelings) return false
+        if (actions != record.actions) return false
+        if (intensity != record.intensity) return false
+        if (datetime != record.datetime) return false
+
+        return true
     }
 }
 

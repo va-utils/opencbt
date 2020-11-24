@@ -71,7 +71,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         (findPreference<ListPreference>("default_export") as ListPreference).setOnPreferenceChangeListener {
             preference, newValue ->
 
-            Log.d("SETTINGGS", newValue.toString())
             true
         }
     }

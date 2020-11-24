@@ -10,14 +10,14 @@
     </Transition>
     <ConstraintSet android:id="@+id/start" >
         <Constraint
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/import_pb"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="54dp" />
         <Constraint
             android:layout_width="wrap_content"
@@ -32,7 +32,9 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             motion:layout_constraintStart_toStartOf="@+id/import_pb"
-            motion:layout_constraintTop_toBottomOf="@+id/import_tv_counter" />
+            motion:layout_constraintTop_toBottomOf="@+id/import_tv_counter"
+            android:layout_marginTop="16dp"
+            motion:layout_constraintEnd_toEndOf="@+id/import_pb" />
         <Constraint
             android:id="@+id/import_tv_total_dublicated"
             android:layout_width="wrap_content"
@@ -40,19 +42,22 @@
             android:visibility="invisible"
             motion:layout_constraintStart_toStartOf="@+id/import_tv_total_imported"
             motion:layout_constraintTop_toBottomOf="@+id/import_tv_total_imported"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            motion:layout_constraintEnd_toEndOf="@+id/import_tv_total_imported" />
 
     </ConstraintSet>
     <ConstraintSet android:id="@+id/end" >
         <Constraint
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toTopOf="parent"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:id="@+id/import_pb"
             motion:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp" />
         <Constraint
             android:layout_height="wrap_content"
@@ -67,7 +72,10 @@
             motion:layout_constraintStart_toStartOf="@+id/import_tv_total_imported"
             motion:layout_constraintTop_toBottomOf="@+id/import_tv_total_imported"
             android:layout_marginTop="8dp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            motion:layout_constraintEnd_toEndOf="@+id/import_tv_total_imported" />
         <Constraint
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +89,8 @@
             android:id="@+id/import_tv_total_imported"
             motion:layout_constraintStart_toStartOf="@+id/import_pb"
             motion:layout_constraintTop_toBottomOf="@+id/import_tv_counter"
-            android:layout_marginTop="8dp"
-            android:visibility="visible" />
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            motion:layout_constraintEnd_toEndOf="@+id/import_pb" />
     </ConstraintSet>
 </MotionScene>
