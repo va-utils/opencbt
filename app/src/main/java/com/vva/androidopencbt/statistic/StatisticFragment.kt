@@ -1,15 +1,18 @@
 package com.vva.androidopencbt.statistic
 
-import android.graphics.Color
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Bundle
+import android.util.AttributeSet
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,10 +20,7 @@ import androidx.navigation.ui.setupWithNavController
 import app.futured.donut.DonutProgressView
 import app.futured.donut.DonutSection
 import com.vva.androidopencbt.R
-import com.vva.androidopencbt.getDateTimeString
 import com.vva.androidopencbt.getStatsDateTime
-import kotlinx.android.synthetic.main.fragment_statistic.*
-import kotlinx.android.synthetic.main.fragment_statistic.view.*
 
 class StatisticFragment : Fragment() {
 
@@ -134,16 +134,16 @@ class StatisticFragment : Fragment() {
 
             //отобразить на donut
             val list : List<DonutSection> = listOf(
-                    DonutSection(getString(R.string.dist_all_or_nothing), resources.getColor(R.color.colorAllOrNothing),it[0].toFloat()),
-                    DonutSection(getString(R.string.dist_overgeneralizing), resources.getColor(R.color.colorOvergeneralizing),it[1].toFloat()),
-                    DonutSection(getString(R.string.dist_filtering), resources.getColor(R.color.colorFiltering),it[2].toFloat()),
-                    DonutSection(getString(R.string.dist_disqual_positive), resources.getColor(R.color.colorDisqual),it[3].toFloat()),
-                    DonutSection(getString(R.string.dist_jump_conclusion), resources.getColor(R.color.colorJump),it[4].toFloat()),
-                    DonutSection(getString(R.string.dist_magn_and_min), resources.getColor(R.color.colorMagnMin),it[5].toFloat()),
-                    DonutSection(getString(R.string.dist_emotional_reasoning), resources.getColor(R.color.colorEmotional),it[6].toFloat()),
-                    DonutSection(getString(R.string.dist_must_statement), resources.getColor(R.color.colorMust),it[7].toFloat()),
-                    DonutSection(getString(R.string.dist_labeling), resources.getColor(R.color.colorLabeling),it[8].toFloat()),
-                    DonutSection(getString(R.string.dist_personalistion), resources.getColor(R.color.colorPerson),it[9].toFloat()))
+                    DonutSection(getString(R.string.dist_all_or_nothing), ContextCompat.getColor(requireContext(), R.color.colorAllOrNothing), it[0].toFloat()),
+                    DonutSection(getString(R.string.dist_overgeneralizing), ContextCompat.getColor(requireContext(), R.color.colorOvergeneralizing), it[1].toFloat()),
+                    DonutSection(getString(R.string.dist_filtering), ContextCompat.getColor(requireContext(), R.color.colorFiltering), it[2].toFloat()),
+                    DonutSection(getString(R.string.dist_disqual_positive), ContextCompat.getColor(requireContext(), R.color.colorDisqual), it[3].toFloat()),
+                    DonutSection(getString(R.string.dist_jump_conclusion), ContextCompat.getColor(requireContext(), R.color.colorJump), it[4].toFloat()),
+                    DonutSection(getString(R.string.dist_magn_and_min), ContextCompat.getColor(requireContext(), R.color.colorMagnMin),it[5].toFloat()),
+                    DonutSection(getString(R.string.dist_emotional_reasoning), ContextCompat.getColor(requireContext(), R.color.colorEmotional),it[6].toFloat()),
+                    DonutSection(getString(R.string.dist_must_statement), ContextCompat.getColor(requireContext(), R.color.colorMust),it[7].toFloat()),
+                    DonutSection(getString(R.string.dist_labeling), ContextCompat.getColor(requireContext(), R.color.colorLabeling),it[8].toFloat()),
+                    DonutSection(getString(R.string.dist_personalistion), ContextCompat.getColor(requireContext(), R.color.colorPerson),it[9].toFloat()))
 
        //     distortionDonut.cap = it.sum().toFloat()
             distortionsDonut.submitData(list)
@@ -158,15 +158,46 @@ class StatisticFragment : Fragment() {
                     dayTv.text = it[2].toString()
                     eveningTv.text = it[3].toString()
 
-                    var list = listOf(
-                            DonutSection("Night",resources.getColor(R.color.colorNight),it[0].toFloat()),
-                            DonutSection("Morning",resources.getColor(R.color.colorMorning),it[1].toFloat()),
-                            DonutSection("Day",resources.getColor(R.color.colorDay),it[2].toFloat()),
-                            DonutSection("Evening",resources.getColor(R.color.colorEvening),it[3].toFloat()),
+                    val list = listOf(
+                            DonutSection("Night", ContextCompat.getColor(requireContext(), R.color.colorNight),it[0].toFloat()),
+                            DonutSection("Morning", ContextCompat.getColor(requireContext(), R.color.colorMorning),it[1].toFloat()),
+                            DonutSection("Day", ContextCompat.getColor(requireContext(), R.color.colorDay),it[2].toFloat()),
+                            DonutSection("Evening", ContextCompat.getColor(requireContext(), R.color.colorEvening),it[3].toFloat()),
                     )
                     timeDonut.submitData(list)
                 })
 
         return ll
     }
+}
+
+class PointView(context: Context, attrs: AttributeSet): View(context, attrs) {
+    private val radius: Float
+    private val customColor: Int
+    private val paint: Paint
+
+    init {
+        context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.PointView,
+                0, 0
+        ).apply {
+            try {
+                radius = getDimension(R.styleable.PointView_pointRadius, 5F)
+                customColor = getColor(R.styleable.PointView_pointColor, 0xFF0000)
+            } finally {
+                recycle()
+            }
+        }
+
+        paint = Paint().apply {
+            this.color = customColor
+        }
+    }
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+
+        canvas?.drawCircle(width / 2F, height / 2F, radius, paint)
+    }
+
 }
