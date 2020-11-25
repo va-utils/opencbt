@@ -5,12 +5,14 @@ package com.vva.androidopencbt
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
@@ -27,6 +29,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     private var vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
     private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
+    var recyclerViewState: Parcelable? = null
 
     private val _newRecordNavigated = MutableLiveData<Long>()
     val newRecordNavigated: LiveData<Long>
@@ -133,9 +136,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
                 val string = BufferedReader(FileReader(fileDescriptor?.fileDescriptor!!)).readLine()
                 list =  Json.decodeFromString(string)
             } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(context, "Ошибка при чтении фйла", Toast.LENGTH_LONG).show()
-//                }
                 list = null
             }
 
@@ -187,5 +187,14 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     override fun onCleared() {
         super.onCleared()
         vmJob.cancel()
+    }
+
+    fun restoreRecyclerView(rv: RecyclerView) {
+        uiScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(5)
+            }
+            rv.layoutManager?.onRestoreInstanceState(recyclerViewState)
+        }
     }
 }

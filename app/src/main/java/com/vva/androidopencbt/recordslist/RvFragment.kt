@@ -3,6 +3,8 @@ package com.vva.androidopencbt.recordslist
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,8 +84,6 @@ class RvFragment: Fragment() {
             }
         })
 
-//        dataAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
         dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 rv.layoutManager?.smoothScrollToPosition(rv, null, positionStart)
@@ -131,5 +131,17 @@ class RvFragment: Fragment() {
                 viewModel.importRecordsFromFile(it, requireContext())
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        viewModel.recyclerViewState = rv.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.restoreRecyclerView(rv)
     }
 }
