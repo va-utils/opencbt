@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.R
@@ -67,15 +68,11 @@ class RvFragment: Fragment() {
 
         dataAdapter = RecordsAdapter(RecordListener {
             viewModel.navigateToRecord(it.id)
-        }, ScrollListener {
-            viewModel.listUpdated()
         })
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val orderBy = if (prefs.getBoolean("desc_ordering", true)) 0 else 1
         viewModel.getAllRecords().observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
-                dataAdapter.updateList(it, orderBy)
+                dataAdapter.submitList(it)
 
                 welcomeTv.visibility = View.GONE
                 rv.visibility = View.VISIBLE
@@ -85,15 +82,14 @@ class RvFragment: Fragment() {
             }
         })
 
-        viewModel.recordsListUpdated.observe(viewLifecycleOwner, {
-            if (!it) {
-                if (orderBy == 0) {
-                    rv.smoothScrollToPosition(0)
-                } else {
-                    rv.adapter?.itemCount?.minus(1)?.let { it1 -> rv.smoothScrollToPosition(it1) }
-                }
+//        dataAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+        dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                rv.layoutManager?.smoothScrollToPosition(rv, null, positionStart)
             }
         })
+
         rv.adapter = dataAdapter
 
         viewModel.importInAction.observe(viewLifecycleOwner) {

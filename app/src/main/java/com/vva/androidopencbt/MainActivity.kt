@@ -17,16 +17,11 @@ class MainActivity : AppCompatActivity() {
         vm = ViewModelProvider(this).get(RecordsViewModel::class.java)
 
         vm.newRecordNavigated.observe(this, { aLong: Long ->
-//            val newRecordIntent = Intent(this@MainActivity, NewRecordActivity::class.java)
-//            newRecordIntent.putExtra("ID", aLong)
-//            startActivity(newRecordIntent)
             findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment().apply { recordKey = aLong })
         })
     }
 
     fun addNewRecord(view: View) {
-//        Intent newRecordIntent = new Intent(MainActivity.this,NewRecordActivity.class);
-//        startActivity(newRecordIntent);
         findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment())
     }
 }
