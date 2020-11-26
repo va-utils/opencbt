@@ -3,8 +3,6 @@ package com.vva.androidopencbt.recordslist
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +17,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.R
@@ -49,7 +45,7 @@ class RvFragment: Fragment() {
                 when (val id = it.itemId) {
                     R.id.openDocumentPicker -> {
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                            type = "application/json"
+                            type = "application/octet-stream"
                             addCategory(Intent.CATEGORY_DEFAULT)
                         }
                         startActivityForResult(intent, 0x33)
