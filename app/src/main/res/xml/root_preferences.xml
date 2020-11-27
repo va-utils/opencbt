@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Настройки отображения">
         <SwitchPreferenceCompat
@@ -73,6 +74,12 @@
             app:useSimpleSummaryProvider="true"
             app:defaultValue="HTML"
             app:title="Формат по умолчанию" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Защита пин-кодом" >
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_pin_protection"
+            app:title="Включить защиту пин-кодом" />
     </PreferenceCategory>
 
 </PreferenceScreen>

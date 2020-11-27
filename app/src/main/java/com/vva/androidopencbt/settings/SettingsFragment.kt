@@ -1,5 +1,6 @@
 package com.vva.androidopencbt.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.amirarcane.lockscreen.activity.EnterPinActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
@@ -73,6 +75,18 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
             true
         }
+
+        findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
+            preference, newValue ->
+            if (newValue as Boolean) {
+                val intent: Intent = EnterPinActivity.getIntent(requireContext(), true)
+                startActivityForResult(intent, 0x100)
+            } else {
+                val intent = Intent(requireContext(), EnterPinActivity::class.java)
+                startActivityForResult(intent, 0x99)
+            }
+            newValue
+        }
     }
 
     var lsnr = Preference.OnPreferenceClickListener { preference ->
@@ -89,5 +103,30 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         }
 
         true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            0x99 -> {
+                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    if (resultCode == EnterPinActivity.RESULT_BACK_PRESSED) {
+                        it.isChecked = true
+                    } else if (resultCode == EnterPinActivity.RESULT_OK) {
+                        it.isChecked = false
+                    }
+                }
+            }
+            0x100 -> {
+                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    if (resultCode == EnterPinActivity.RESULT_OK) {
+                        it.isChecked = true
+                    }
+                    if (resultCode == EnterPinActivity.RESULT_BACK_PRESSED) {
+                        it.isChecked = false
+                    }
+                }
+            }
+        }
     }
 }

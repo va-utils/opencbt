@@ -64,11 +64,12 @@
             android:layout_margin="@dimen/fab_margin"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
+            android:contentDescription="@string/add_new_record"
             android:onClick="addNewRecord"
+            app:backgroundTint="@color/colorEmotions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_action_name"
-            android:contentDescription="@string/add_new_record" />
+            app:srcCompat="@drawable/ic_action_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
