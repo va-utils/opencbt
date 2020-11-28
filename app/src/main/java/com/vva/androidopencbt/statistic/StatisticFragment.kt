@@ -107,12 +107,18 @@ class StatisticFragment : Fragment() {
         })
 
         viewModel.getOldestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = it?.getStatsDateTime() ?: "---"
+            val s = if(it.millis!=0L)
+                it.getStatsDateTime()
+            else
+                "---"
             oldTv.text = s
         })
 
         viewModel.getLatestRecordDate().observe(viewLifecycleOwner, {
-            val s : String = it?.getStatsDateTime() ?: "---"
+            val s = if(it.millis!=0L)
+                it.getStatsDateTime()
+            else
+                "---"
             latestTv.text = s
         })
 
