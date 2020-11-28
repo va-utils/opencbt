@@ -2,6 +2,7 @@ package com.vva.androidopencbt.recordslist
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
@@ -28,6 +30,7 @@ class RvFragment: Fragment() {
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
+    private lateinit var fab : FloatingActionButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -63,7 +66,8 @@ class RvFragment: Fragment() {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
-
+        fab = ll.findViewById(R.id.fab);
+        fab.setColorFilter(Color.argb(255,255,255,255))
         dataAdapter = RecordsAdapter(RecordListener {
             viewModel.navigateToRecord(it.id)
         })
