@@ -16,6 +16,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -254,132 +255,133 @@
 
             <TextView
                 android:id="@+id/textView18"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/dist_all_or_nothing"
                 app:layout_constraintEnd_toStartOf="@+id/allOrNothingTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/allOrNothingPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
             <TextView
                 android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_width="116dp"
+                android:layout_height="19dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_overgeneralizing"
                 app:layout_constraintEnd_toStartOf="@+id/overgeneralizingTv"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/overgeneralizingPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
             <TextView
                 android:id="@+id/textView20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_filtering"
                 app:layout_constraintEnd_toStartOf="@+id/filteringTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/filteringPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_disqual_positive"
                 app:layout_constraintEnd_toStartOf="@+id/disqualTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/disqualPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
             <TextView
                 android:id="@+id/textView22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_jump_conclusion"
                 app:layout_constraintEnd_toStartOf="@+id/jumpTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/jumpPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
             <TextView
                 android:id="@+id/textView23"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
+                android:lines="2"
+                android:singleLine="false"
                 android:text="@string/dist_magn_and_min"
                 app:layout_constraintEnd_toStartOf="@+id/magnMinTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/magnMinPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
             <TextView
                 android:id="@+id/textView24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_emotional_reasoning"
                 app:layout_constraintEnd_toStartOf="@+id/emoReasonTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/emoReasonPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_must_statement"
                 app:layout_constraintEnd_toStartOf="@+id/mustTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/mustPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_labeling"
                 app:layout_constraintEnd_toStartOf="@+id/labelingTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/labelingPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
             <TextView
                 android:id="@+id/textView27"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/dist_personalistion"
                 app:layout_constraintEnd_toStartOf="@+id/personTv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintStart_toEndOf="@+id/personPoint"
                 app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
             <TextView
@@ -399,11 +401,11 @@
                 android:id="@+id/overgeneralizingTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="TextView"
                 android:textColor="@color/colorOvergeneralizing"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textView19"
                 app:layout_constraintTop_toTopOf="@+id/textView19" />
 
@@ -526,6 +528,96 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/allOrNothingPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView18"
+                app:pointColor="@color/colorAllOrNothing"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/overgeneralizingPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView19"
+                app:pointColor="@color/colorOvergeneralizing"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/filteringPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView20"
+                app:pointColor="@color/colorFiltering"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/disqualPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView21"
+                app:pointColor="@color/colorDisqual"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/jumpPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView22"
+                app:pointColor="@color/colorJump"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/magnMinPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView23"
+                app:pointColor="@color/colorMagnMin"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/emoReasonPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView24"
+                app:pointColor="@color/colorEmotional"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/mustPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView25"
+                app:pointColor="@color/colorMust"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/labelingPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView26"
+                app:pointColor="@color/colorLabeling"
+                app:pointRadius="5dp" />
+
+            <com.vva.androidopencbt.statistic.PointView
+                android:id="@+id/personPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/distortionsDonut"
+                app:layout_constraintTop_toTopOf="@+id/textView27"
+                app:pointColor="@color/colorPerson"
+                app:pointRadius="5dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

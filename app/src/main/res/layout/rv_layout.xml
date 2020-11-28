@@ -69,6 +69,7 @@
             app:backgroundTint="@color/colorEmotions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_action_name"
             app:srcCompat="@drawable/ic_action_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
