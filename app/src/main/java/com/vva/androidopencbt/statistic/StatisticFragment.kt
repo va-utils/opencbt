@@ -200,4 +200,8 @@ class PointView(context: Context, attrs: AttributeSet): View(context, attrs) {
         canvas?.drawCircle(width / 2F, height / 2F, radius, paint)
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension((radius*2).toInt(), (radius*2).toInt())
+    }
 }
