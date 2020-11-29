@@ -22,6 +22,11 @@
             app:defaultValue="false"
             app:key="desc_ordering"
             app:title="Сначала новые записи"/>
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="enable_quotes"
+            app:title="@string/pref_quotes"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns">
@@ -74,12 +79,6 @@
             app:useSimpleSummaryProvider="true"
             app:defaultValue="HTML"
             app:title="Формат по умолчанию" />
-    </PreferenceCategory>
-    <PreferenceCategory app:title="@string/stat_psy">
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="enable_quotes"
-            app:title="@string/pref_quotes"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Защита пин-кодом" >

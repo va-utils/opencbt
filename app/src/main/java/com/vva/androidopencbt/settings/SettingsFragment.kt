@@ -70,6 +70,14 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             newValue
         }
 
+        (findPreference<Preference>("enable_quotes") as SwitchPreferenceCompat).setOnPreferenceChangeListener {
+            preference, newValue ->
+            (preference as SwitchPreferenceCompat).isChecked = newValue as Boolean
+            viewModel.setQuotes(newValue)
+
+            newValue
+        }
+
         (findPreference<ListPreference>("default_export") as ListPreference).setOnPreferenceChangeListener {
             preference, newValue ->
 

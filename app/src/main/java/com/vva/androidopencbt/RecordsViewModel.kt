@@ -43,6 +43,10 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isDescOrder: LiveData<Boolean>
         get() = _isDescOrder
 
+    private val _isQuotesEnabled = MutableLiveData(prefs.getBoolean("enable_quotes",true))
+    val isQuotesEnabled : LiveData<Boolean>
+        get() = _isQuotesEnabled
+
     private val records: LiveData<List<DbRecord>> = Transformations.switchMap(_isDescOrder) {
         isDesc ->
 
@@ -118,6 +122,11 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
 
     fun setOrder(order: Boolean) {
         _isDescOrder.value = order
+    }
+
+    fun setQuotes(status : Boolean)
+    {
+        _isQuotesEnabled.value = status
     }
 
     fun listUpdated() {
