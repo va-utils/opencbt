@@ -56,9 +56,10 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 findPreference<Preference>("enable_emotions") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_intensity") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_feelings") as SwitchPreferenceCompat,
-                findPreference<Preference>("enable_actions") as SwitchPreferenceCompat
+                findPreference<Preference>("enable_actions") as SwitchPreferenceCompat,
+                findPreference<Preference>("enable_distortions") as SwitchPreferenceCompat
         )
-        for (i in 0..6) {
+        for (i in 0..7) {
             prefs[i].onPreferenceClickListener = lsnr
         }
 
@@ -99,7 +100,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
     var lsnr = Preference.OnPreferenceClickListener { preference ->
         var flag = false
-        for (i in 0..6) {
+        for (i in 0..7) {
             if (prefs[i].isChecked) {
                 flag = true
                 break
