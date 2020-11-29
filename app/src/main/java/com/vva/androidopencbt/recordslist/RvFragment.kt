@@ -67,7 +67,7 @@ class RvFragment: Fragment() {
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
         fab = ll.findViewById(R.id.fab);
-        fab.setColorFilter(Color.argb(255,255,255,255))
+      //  fab.setColorFilter(Color.argb(255,255,255,255))
         dataAdapter = RecordsAdapter(RecordListener {
             viewModel.navigateToRecord(it.id)
         })

@@ -47,6 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal|fill"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:text="@string/main_text_welcome"
             android:textAlignment="center"
             android:visibility="gone"
@@ -67,6 +69,7 @@
             android:contentDescription="@string/add_new_record"
             android:onClick="addNewRecord"
             app:backgroundTint="@color/colorEmotions"
+            app:tint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_action_name" />
