@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         if (preferences.getBoolean("enable_pin_protection", false)) {
 //            val intent: Intent = EnterPinActivity.getIntent(applicationContext, false)
 //            startActivity(intent)

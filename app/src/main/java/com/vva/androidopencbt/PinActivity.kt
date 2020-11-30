@@ -17,4 +17,6 @@ class PinActivity: AppLockActivity() {
         Log.d(TAG, "pinSuccess")
     }
 
+
+
 }

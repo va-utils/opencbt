@@ -99,6 +99,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 val intent = Intent(requireContext(), PinActivity::class.java)
                 intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK)
                 startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_ENABLE)
+                (p as SwitchPreferenceCompat).isChecked
             } else {
 //                val intent = Intent(requireContext(), EnterPinActivity::class.java)
 //                startActivityForResult(intent, 0x99)
@@ -108,8 +109,9 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 //                (p as SwitchPreferenceCompat).isChecked = false
 //                val lockM = LockManager.getInstance()
 //                lockM.disableAppLock()
+                newValue
             }
-            newValue
+
         }
     }
 
@@ -154,6 +156,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             REQUEST_CODE_LOLLIPIN_ENABLE -> {
                 findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
                     Log.d("LOLLI", resultCode.toString())
+                    Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
                     if (resultCode == -1)
                         it.isChecked = true
 
@@ -161,6 +164,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
             REQUEST_CODE_LOLLIPIN_DISABLE -> {
                 Log.d("LOLLI", resultCode.toString())
+                Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
                 findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
                     if (resultCode == -1)
                         it.isChecked = false
