@@ -156,7 +156,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             REQUEST_CODE_LOLLIPIN_ENABLE -> {
                 findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
                     Log.d("LOLLI", resultCode.toString())
-                    Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
+                   // Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
                     if (resultCode == -1)
                         it.isChecked = true
 
@@ -164,7 +164,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
             REQUEST_CODE_LOLLIPIN_DISABLE -> {
                 Log.d("LOLLI", resultCode.toString())
-                Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
                 findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
                     if (resultCode == -1)
                         it.isChecked = false
