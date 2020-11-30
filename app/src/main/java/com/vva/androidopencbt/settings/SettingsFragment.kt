@@ -19,8 +19,14 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.amirarcane.lockscreen.activity.EnterPinActivity
+import com.github.omadahealth.lollipin.lib.managers.AppLock
+import com.github.omadahealth.lollipin.lib.managers.LockManager
+import com.vva.androidopencbt.PinActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+
+private const val REQUEST_CODE_LOLLIPIN_ENABLE = 0x101
+private const val REQUEST_CODE_LOLLIPIN_DISABLE = 0x102
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
@@ -86,13 +92,22 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         }
 
         findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
-            preference, newValue ->
+            p, newValue ->
             if (newValue as Boolean) {
-                val intent: Intent = EnterPinActivity.getIntent(requireContext(), true)
-                startActivityForResult(intent, 0x100)
+//                val intent: Intent = EnterPinActivity.getIntent(requireContext(), true)
+//                startActivityForResult(intent, 0x100)
+                val intent = Intent(requireContext(), PinActivity::class.java)
+                intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK)
+                startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_ENABLE)
             } else {
-                val intent = Intent(requireContext(), EnterPinActivity::class.java)
-                startActivityForResult(intent, 0x99)
+//                val intent = Intent(requireContext(), EnterPinActivity::class.java)
+//                startActivityForResult(intent, 0x99)
+                val intent = Intent(requireContext(), PinActivity::class.java)
+                intent.putExtra(AppLock.EXTRA_TYPE, AppLock.DISABLE_PINLOCK)
+                startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_DISABLE)
+//                (p as SwitchPreferenceCompat).isChecked = false
+//                val lockM = LockManager.getInstance()
+//                lockM.disableAppLock()
             }
             newValue
         }
@@ -134,6 +149,21 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     if (resultCode == EnterPinActivity.RESULT_BACK_PRESSED) {
                         it.isChecked = false
                     }
+                }
+            }
+            REQUEST_CODE_LOLLIPIN_ENABLE -> {
+                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    Log.d("LOLLI", resultCode.toString())
+                    if (resultCode == -1)
+                        it.isChecked = true
+
+                }
+            }
+            REQUEST_CODE_LOLLIPIN_DISABLE -> {
+                Log.d("LOLLI", resultCode.toString())
+                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    if (resultCode == -1)
+                        it.isChecked = false
                 }
             }
         }

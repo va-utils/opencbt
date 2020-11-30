@@ -35,6 +35,7 @@
         </activity>
         <activity android:name="com.amirarcane.lockscreen.activity.EnterPinActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".PinActivity" />
     </application>
 
 </manifest>

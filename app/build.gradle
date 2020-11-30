@@ -87,5 +87,8 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.0-alpha06"
 
     implementation 'com.amirarcane.lock-screen:lockscreen:2.0.0'
-
+    //Lollipin
+    implementation ('com.github.omadahealth:lollipin:2.1.0@aar') {
+        transitive = true
+    }
 }
