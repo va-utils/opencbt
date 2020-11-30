@@ -43,7 +43,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isDescOrder: LiveData<Boolean>
         get() = _isDescOrder
 
-    private val _isQuotesEnabled = MutableLiveData(prefs.getBoolean("enable_quotes",true))
+    private val _isQuotesEnabled = MutableLiveData(prefs.getBoolean("enable_quotes", true))
     val isQuotesEnabled : LiveData<Boolean>
         get() = _isQuotesEnabled
 
@@ -124,8 +124,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         _isDescOrder.value = order
     }
 
-    fun setQuotes(status : Boolean)
-    {
+    fun setQuotes(status : Boolean) {
         _isQuotesEnabled.value = status
     }
 

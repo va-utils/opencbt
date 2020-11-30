@@ -90,6 +90,10 @@ class RvFragment: Fragment() {
             }
         })
 
+        viewModel.isQuotesEnabled.observe(viewLifecycleOwner) {
+            dataAdapter.quotes = it
+        }
+
         rv.adapter = dataAdapter
 
         viewModel.importInAction.observe(viewLifecycleOwner) {

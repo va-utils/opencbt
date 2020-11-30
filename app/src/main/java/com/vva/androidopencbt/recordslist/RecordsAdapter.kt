@@ -12,16 +12,14 @@ import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
 class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+    var quotes = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener)
-    }
-
-    fun updateList(list: List<DbRecord>, order: Int) {
-        submitList(list)
+        holder.bind(getItem(position), listener, quotes)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -37,7 +35,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean) {
             itemView.setOnClickListener {
                 onClickListener.onClick(record)
             }
@@ -79,10 +77,17 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
                 }
 
-                if (thoughts.isEmpty()) {
-                    thoughtTextView.visibility = View.GONE
-                } else {
-                    thoughtTextView.text = res.getString(R.string.adapter_thought, thoughts)
+                when  {
+                    thoughts.isEmpty() -> {
+                        thoughtTextView.visibility = View.GONE
+                    }
+                    quotes -> {
+                        thoughtTextView.text = res.getString(R.string.adapter_thought, "\"$thoughts\"")
+                    }
+                    else -> {
+                        thoughtTextView.text = res.getString(R.string.adapter_thought, thoughts)
+                    }
+
                 }
 
                 if (emotions.isEmpty()) {
