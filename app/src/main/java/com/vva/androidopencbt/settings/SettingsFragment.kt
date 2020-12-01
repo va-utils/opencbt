@@ -106,9 +106,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 val intent = Intent(requireContext(), PinActivity::class.java)
                 intent.putExtra(AppLock.EXTRA_TYPE, AppLock.DISABLE_PINLOCK)
                 startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_DISABLE)
-//                (p as SwitchPreferenceCompat).isChecked = false
-//                val lockM = LockManager.getInstance()
-//                lockM.disableAppLock()
                 newValue
             }
 
