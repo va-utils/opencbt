@@ -32,7 +32,7 @@ class PinActivity: AppLockActivity() {
         else if (isBackPressedOnce) {
             this.finishAffinity()
         } else {
-            Toast.makeText(this, "Нажмите еще раз для выхода", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pin_back), Toast.LENGTH_SHORT).show()
 
             isBackPressedOnce = true
             uiScope.launch {

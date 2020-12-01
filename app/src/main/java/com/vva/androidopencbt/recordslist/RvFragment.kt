@@ -101,14 +101,14 @@ class RvFragment: Fragment() {
                 return@observe
             else if (!it) {
                 if (viewModel.importData.value == null) {
-                    Toast.makeText(requireContext(), "Ошибки при чтении файла", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.import_error_readfile), Toast.LENGTH_SHORT).show()
                 } else {
                     viewModel.importData.value.let { list ->
                         if (list?.isEmpty()!!) {
-                            Toast.makeText(requireContext(), "Нет данных для импорта", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
                         } else {
                             Snackbar.make(ll, "Импортировано ${list.size} записей", Snackbar.LENGTH_SHORT)
-                                    .setAction("Отмена") { _ ->
+                                    .setAction(getString(R.string.import_cancel)) { _ ->
                                         list.forEach { id ->
                                             viewModel.deleteRecord(id)
                                         }
