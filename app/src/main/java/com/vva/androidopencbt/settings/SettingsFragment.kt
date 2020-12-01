@@ -6,21 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import com.amirarcane.lockscreen.activity.EnterPinActivity
 import com.github.omadahealth.lollipin.lib.managers.AppLock
-import com.github.omadahealth.lollipin.lib.managers.LockManager
 import com.vva.androidopencbt.PinActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
@@ -96,6 +92,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (newValue as Boolean) {
 //                val intent: Intent = EnterPinActivity.getIntent(requireContext(), true)
 //                startActivityForResult(intent, 0x100)
+    //setRecoveryQuestion?
                 val intent = Intent(requireContext(), PinActivity::class.java)
                 intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK)
                 startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_ENABLE)
@@ -167,6 +164,32 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                         it.isChecked = false
                 }
             }
+        }
+
+                //черновик
+        fun setRecoveryQuestion()
+        {
+            val inflater = LayoutInflater.from(requireContext())
+            val cqView = inflater.inflate(R.layout.cq_layout, null)
+            val builder = AlertDialog.Builder(requireContext()).setView(cqView)
+            val spinner = cqView.findViewById<Spinner>(R.id.questionsSpinner)
+            val answerEt = cqView.findViewById<EditText>(R.id.answerEt)
+            val questions = arrayOf(
+            getString(R.string.cquestion_dreams),
+            getString(R.string.cquestion_phone),
+            getString(R.string.cquestion_place))
+            val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,questions)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.adapter = adapter
+
+            builder.setPositiveButton(getString(R.string.cquestion_next)) {
+                        _,_ ->
+                        val pm = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                        pm.edit().putString("recovery_string",answerEt.text.toString())
+                                .putInt("recovery_question",spinner.selectedItemPosition).apply()
+                //вызывать PinActivity?
+                    }
+            builder.show()
         }
     }
 }
