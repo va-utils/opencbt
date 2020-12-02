@@ -364,7 +364,7 @@ class DetailsFragment: Fragment() {
             currentEditText.text = promptEditText.text
             currentEditText.clearFocus()
         }
-        builder.setNegativeButton("Отмена") { dialog, _ -> dialog.cancel() }
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.cancel() }
         val dialog = builder.create()
         try {
             dialog.window!!.setSoftInputMode(

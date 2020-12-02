@@ -171,4 +171,5 @@
     <string name="cquestion_phone">Фирма вашего первого мобильника?</string>
     <string name="cquestion_answer">Ваш ответ:</string>
     <string name="cquestion_next">Продолжить установку</string>
+    <string name="cancel">Отмена</string>
 </resources>

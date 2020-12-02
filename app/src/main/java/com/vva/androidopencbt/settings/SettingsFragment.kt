@@ -189,7 +189,9 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                                 .putInt("recovery_question",spinner.selectedItemPosition).apply()
                 //вызывать PinActivity?
                     }
-            builder.show()
+            builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.cancel() }
+            val dialog = builder.create()
+            dialog.show()
         }
     }
 }
