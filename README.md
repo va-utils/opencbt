@@ -31,5 +31,5 @@
 Приложение: Вяличкин В.А., Тепловодский В.Н.  
 Иконки и дизайн: Матвеева Г.Ю.  
 Помощь и консультирование: Комаров Д.Е.   
-Графическое представление статистики: [futuredapp/donut]https://github.com/futuredapp/donut)
-PIN-код: Lollipin
+Графическое представление статистики: [futuredapp/donut](https://github.com/futuredapp/donut)   
+PIN-код: [Lollipin](https://github.com/omadahealth/LolliPin)
