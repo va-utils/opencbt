@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/situationEditText"
-                    android:lines="2"
+                    android:maxLines="5"
                     android:focusable="false"
                     android:longClickable="false"
                     android:cursorVisible="false"
@@ -71,7 +71,7 @@
                     android:longClickable="false"
                     android:cursorVisible="false"
                     android:onClick="setEditText"
-                    android:lines="2"
+                    android:maxLines="5"
                     android:gravity="top"
                     android:inputType="textMultiLine" />
 
@@ -89,7 +89,7 @@
                     android:longClickable="false"
                     android:cursorVisible="false"
                     android:onClick="setEditText"
-                    android:lines="1"
+                    android:maxLines="5"
                     android:gravity="top"
                     android:inputType="textMultiLine"/>
 
@@ -126,7 +126,7 @@
                     android:longClickable="false"
                     android:cursorVisible="false"
                     android:onClick="setEditText"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:gravity="top"
                     android:inputType="textMultiLine"/>
 
@@ -144,7 +144,7 @@
                     android:longClickable="false"
                     android:cursorVisible="false"
                     android:onClick="setEditText"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:gravity="top"
                     android:inputType="textMultiLine"/>
 
@@ -162,7 +162,7 @@
                     android:longClickable="false"
                     android:cursorVisible="false"
                     android:onClick="setEditText"
-                    android:lines="2"
+                    android:maxLines="5"
                     android:gravity="top"
                     android:inputType="textMultiLine"/>
 
