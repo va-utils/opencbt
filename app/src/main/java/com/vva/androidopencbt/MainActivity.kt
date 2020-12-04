@@ -3,6 +3,8 @@ package com.vva.androidopencbt
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
+import android.hardware.biometrics.BiometricManager
+import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -39,5 +41,13 @@ class MainActivity : AppCompatActivity() {
 
     fun addNewRecord(view: View) {
         findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0x999) {
+            if (resultCode == RESULT_CANCELED)
+                this.finishAffinity()
+        }
     }
 }
