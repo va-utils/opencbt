@@ -1,14 +1,22 @@
 package com.vva.androidopencbt.settings
 
+import android.app.KeyguardManager
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,8 +29,7 @@ import com.vva.androidopencbt.PinActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
-private const val REQUEST_CODE_LOLLIPIN_ENABLE = 0x101
-private const val REQUEST_CODE_LOLLIPIN_DISABLE = 0x102
+private const val REQUEST_CODE_KG_PROTECTION = 0x99
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
@@ -51,7 +58,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        prefs = arrayOf(
+        arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_rational") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_situation") as SwitchPreferenceCompat,
@@ -60,108 +67,57 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 findPreference<Preference>("enable_feelings") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_actions") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_distortions") as SwitchPreferenceCompat
-        )
-        for (i in 0..7) {
-            prefs[i].onPreferenceClickListener = lsnr
+        ).forEach {
+            it.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
+                var flag = false
+                for (i in 0..7) {
+                    if (prefs[i].isChecked) {
+                        flag = true
+                        break
+                    }
+                }
+                if (!flag) {
+                    Toast.makeText(context, getString(R.string.pref_empty), Toast.LENGTH_SHORT).show()
+                    (preference as SwitchPreferenceCompat).isChecked = true
+                }
+
+                true
+            }
         }
 
         (findPreference<Preference>("desc_ordering") as SwitchPreferenceCompat).setOnPreferenceChangeListener {
-            preference, newValue ->
-            (preference as SwitchPreferenceCompat).isChecked = newValue as Boolean
-            viewModel.setOrder(newValue)
+            _, newValue ->
+            viewModel.setOrder(newValue as Boolean)
 
-            newValue
+            true
         }
 
         (findPreference<Preference>("enable_quotes") as SwitchPreferenceCompat).setOnPreferenceChangeListener {
-            preference, newValue ->
-            (preference as SwitchPreferenceCompat).isChecked = newValue as Boolean
-            viewModel.setQuotes(newValue)
-
-            newValue
-        }
-
-        (findPreference<ListPreference>("default_export") as ListPreference).setOnPreferenceChangeListener {
-            preference, newValue ->
+            _, newValue ->
+            viewModel.setQuotes(newValue as Boolean)
 
             true
         }
 
         findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
-            p, newValue ->
-            if (newValue as Boolean) {
-//                val intent: Intent = EnterPinActivity.getIntent(requireContext(), true)
-//                startActivityForResult(intent, 0x100)
-    //setRecoveryQuestion?
-                val intent = Intent(requireContext(), PinActivity::class.java)
-                intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK)
-                startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_ENABLE)
-                (p as SwitchPreferenceCompat).isChecked
-            } else {
-//                val intent = Intent(requireContext(), EnterPinActivity::class.java)
-//                startActivityForResult(intent, 0x99)
-                val intent = Intent(requireContext(), PinActivity::class.java)
-                intent.putExtra(AppLock.EXTRA_TYPE, AppLock.DISABLE_PINLOCK)
-                startActivityForResult(intent, REQUEST_CODE_LOLLIPIN_DISABLE)
-                newValue
+            _, _ ->
+            val km = requireActivity().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            if (km.isKeyguardSecure) {
+                val i = km.createConfirmDeviceCredentialIntent(null, null)
+                startActivityForResult(i, REQUEST_CODE_KG_PROTECTION)
             }
-
+            false
         }
-    }
-
-    var lsnr = Preference.OnPreferenceClickListener { preference ->
-        var flag = false
-        for (i in 0..7) {
-            if (prefs[i].isChecked) {
-                flag = true
-                break
-            }
-        }
-        if (!flag) {
-            Toast.makeText(context, getString(R.string.pref_empty), Toast.LENGTH_SHORT).show()
-            (preference as SwitchPreferenceCompat).isChecked = true
-        }
-
-        true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            0x99 -> {
-                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
-                    if (resultCode == EnterPinActivity.RESULT_BACK_PRESSED) {
-                        it.isChecked = true
-                    } else if (resultCode == EnterPinActivity.RESULT_OK) {
-                        it.isChecked = false
+            REQUEST_CODE_KG_PROTECTION -> {
+                if (resultCode == AppCompatActivity.RESULT_OK) {
+                    findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                        it.isChecked = !it.isChecked
                     }
-                }
-            }
-            0x100 -> {
-                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
-                    if (resultCode == EnterPinActivity.RESULT_OK) {
-                        it.isChecked = true
-                    }
-                    if (resultCode == EnterPinActivity.RESULT_BACK_PRESSED) {
-                        it.isChecked = false
-                    }
-                }
-            }
-            REQUEST_CODE_LOLLIPIN_ENABLE -> {
-                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
-                    Log.d("LOLLI", resultCode.toString())
-                   // Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
-                    if (resultCode == -1)
-                        it.isChecked = true
-
-                }
-            }
-            REQUEST_CODE_LOLLIPIN_DISABLE -> {
-                Log.d("LOLLI", resultCode.toString())
-                //Toast.makeText(requireContext(), resultCode.toString(), Toast.LENGTH_SHORT).show()
-                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
-                    if (resultCode == -1)
-                        it.isChecked = false
                 }
             }
         }
@@ -179,7 +135,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             getString(R.string.cquestion_phone),
             getString(R.string.cquestion_place))
             val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,questions)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
 
             builder.setPositiveButton(getString(R.string.cquestion_next)) {

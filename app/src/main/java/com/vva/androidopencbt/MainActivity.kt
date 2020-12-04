@@ -1,5 +1,7 @@
 package com.vva.androidopencbt
 
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,11 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
-import com.amirarcane.lockscreen.activity.EnterPinActivity
-import com.github.omadahealth.lollipin.lib.managers.AppLock
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 
 
+@Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
     private lateinit var vm: RecordsViewModel
 
@@ -22,14 +23,12 @@ class MainActivity : AppCompatActivity() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         if (preferences.getBoolean("enable_pin_protection", false)) {
-//            val intent: Intent = EnterPinActivity.getIntent(applicationContext, false)
-//            startActivity(intent)
-            val intent = Intent(this, PinActivity::class.java)
-            startActivity(intent)
+            val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            if (km.isKeyguardSecure) {
+                val i = km.createConfirmDeviceCredentialIntent(null, null)
+                startActivityForResult(i, 0x999)
+            }
         }
-//        val intent = Intent(this, PinActivity::class.java)
-//        intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK)
-//        startActivityForResult(intent, 0x11)
 
         vm = ViewModelProvider(this).get(RecordsViewModel::class.java)
 
