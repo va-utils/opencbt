@@ -23,16 +23,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-
+        vm = ViewModelProvider(this).get(RecordsViewModel::class.java)
         if (preferences.getBoolean("enable_pin_protection", false)) {
+            vm.setAuth(false)
             val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure) {
                 val i = km.createConfirmDeviceCredentialIntent(null, null)
                 startActivityForResult(i, 0x999)
             }
         }
-
-        vm = ViewModelProvider(this).get(RecordsViewModel::class.java)
+        else
+        {
+            vm.setAuth(true)
+        }
 
         vm.newRecordNavigated.observe(this, { aLong: Long ->
             findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment().apply { recordKey = aLong })
@@ -48,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0x999) {
             if (resultCode == RESULT_CANCELED)
                 this.finishAffinity()
+            if (resultCode == RESULT_OK)
+                vm.setAuth(true)
         }
     }
 }

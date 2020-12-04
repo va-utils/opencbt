@@ -84,6 +84,10 @@ class RvFragment: Fragment() {
             }
         })
 
+       // viewModel.isAuth.observe(viewLifecycleOwner) {
+       //     rv.visibility = if(it) View.VISIBLE else View.GONE
+       // }
+
         dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 rv.layoutManager?.smoothScrollToPosition(rv, null, positionStart)
@@ -94,7 +98,11 @@ class RvFragment: Fragment() {
             dataAdapter.quotes = it
         }
 
-        rv.adapter = dataAdapter
+        viewModel.isAuth.observe(viewLifecycleOwner)
+        {
+            rv.adapter = if (it) dataAdapter else null
+        }
+        //rv.adapter = dataAdapter
 
         viewModel.importInAction.observe(viewLifecycleOwner) {
             if (it == null)

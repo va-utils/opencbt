@@ -57,6 +57,15 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
+    private val _isAuth = MutableLiveData<Boolean>(false)
+    val isAuth : LiveData<Boolean>
+    get() = _isAuth
+
+    fun setAuth(b : Boolean)
+    {
+        _isAuth.value = b
+    }
+
     private val _importInAction = MutableLiveData<Boolean?>()
     val importInAction: LiveData<Boolean?>
         get() = _importInAction
