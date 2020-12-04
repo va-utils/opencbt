@@ -4,6 +4,7 @@
     <string name="action_ordering">Поменять порядок записей</string>
     <string name="action_settings">Настройки</string>
     <string name="action_html">Отправить дневник</string>
+    <string name="action_statistics">Статистика</string>
     <string name="action_about">О приложении</string>
 
     <string name="action_help">Справка</string>
@@ -44,6 +45,7 @@
     <string name="dist_must_statement">Долженствования</string>
     <string name="dist_labeling">Ярлыки</string>
     <string name="dist_personalistion">Персонализация</string>
+    <string name="dist_empty">Не заполнено</string>
 
     <string name="newrecord_toast_empty">Поле для автоматической мысли обязательно для заполнения</string>
 
@@ -66,8 +68,7 @@
     <string name="title_about">О приложении</string>
     <string name="title_newrecord">Запись в дневник</string>
 
-    <string name="app_version">Версия: %1$s (%2$s)</string>
-    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2020</string>
+    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2020\nВерсия: %1$s (%2$s)</string>
     <string name="title_activity_settings">Настройки</string>
 
     <string name="pref_columns">Что записываем в дневник? (предлагается заполнить для новых записей)</string>
@@ -80,13 +81,16 @@
     <string name="pref_intensity">Уровень дискомфорта</string>
     <string name="pref_distortions">Когнитивные искажения</string>
     <string name="pref_empty">Должно быть выбрано хотя бы одно поле для записи в дневник</string>
+    <string name="pref_quotes">Мысль в кавычках</string>
 
     <string name="savehtml_welcome">Вы можете отправить свой дневник на электронную почту или в мессенджер, например, для того, чтобы передать его специалисту.
         Дневник будет оформлен в виде таблицы.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
+
+
     <string name="savehtml_button_save">Отправить дневник</string>
     <string name="savehtml_button_send">Отправить по почте</string>
-    <string name="savehtml_text_startdate">Начальная дата</string>
-    <string name="savehtml_text_enddate">Конечная дата</string>
+    <string name="savehtml_text_startdate">Начало периода:</string>
+    <string name="savehtml_text_enddate">Конец периода:</string>
     <string name="savehtml_text_share">Выберите приложение, через которое хотите отправить дневник:</string>
     <string name="savehtml_error">Не удалось отправить дневник.</string>
 
@@ -122,11 +126,50 @@
 <b>Поспешные выводы.</b> Склонность делать выводы о будущем или мыслях других людей, не основываясь на фактах.\n
 <b>Преувеличение и преуменьшение.</b> Склонность преувеличивать собственные ошибки, страхи, недостатки и преуменьшать свои положительные стороны и достижения.\n
 <b>Эмоциональное обоснование.</b> Предположение, что эмоции отражают истинный характер вещей. \"Я чувствую себя ничтожеством, значит так оно и есть\"\n
-<b>Долженствования.</b> Утверждения со словом \"должен\"; или \"надо\". Мышление в этом стиле приводит к гневу и разочарованию, когда реальность не оправдывает Ваши ожидания.\n
+<b>Долженствования.</b> Утверждения со словом \"должен\" или \"надо\". Мышление в этом стиле приводит к гневу и разочарованию, когда реальность не оправдывает Ваши ожидания.\n
 <b>Ярлыки.</b> Навешивание на себя или окружающих ярлыков (часто оскорбительных, вроде \"Я неудачник\", \"Я идиот\"). Такой стиль мышления распространяет единичные ошибки на всю Вашу суть.\n
 <b>Персонализация.</b> Склонность принимать на себя ответственность за эмоции, чувства и поведение других людей. Вы переоцениваете свое влияние на окружающих, что может приводить к чувству вины.\n
         <i>Более подробно с когнитивными искажениями можно ознакомиться в книгах Дэвида Бернса, Мэтью Маккея, работах Аарона Бека.</i>
     </string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stat_application">Статистика использования:</string>
+
+    <string name="stat_total">Всего записей:</string>
+    <string name="stat_old">Самая старая:</string>
+    <string name="stat_latest">Самая свежая:</string>
+
+    <string name="stat_psy">Психология</string>
+    <string name="stat_distortions">Когнитивные искажения:</string>
+    <string name="stat_emptydiary">Дневник пока еще пуст. Начните вести его, прежде чем смотреть статистику</string>
+    <string name="stat_intesity">Средний уровень дискомфорта: </string>
+    <string name="add_new_record">Add new record</string>
+
+    <string name="stat_night">Добавлены ночью (0–6):</string>
+    <string name="stat_morning">Добавлены утром (6–12):</string>
+    <string name="stat_day">Добавлены днем (12–18):</string>
+    <string name="stat_evening">Добавлены вечером (18–24):</string>
+    <string name="title_export_to">Экспорт дневника</string>
+    <string name="import_records">Импортировать записи</string>
+
+    <string name="export_html">HTML</string>
+    <string name="export_json">JSON</string>
+    <string name="export_text_format">Формат:</string>
+
+    <string name="savejson_welcome">Вы можете отправить резервную копию своего дневника на электронную почту или в мессенджер,
+        например, для того, чтобы сохранить его у себя на компьютере и восстановить в дальнейшем на этом или другом устройстве.
+        Дневник будет сохранен в формате JSON.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
+
+    <string name="pin_back">Нажмите еще раз для выхода</string>
+    <string name="import_error_readfile">Ошибки при чтении файла</string>
+    <string name="import_nodata">Нет данных для импорта</string>
+    <string name="import_cancel">Отмена</string>
+
+    <string name="cquestion_welcome">Вы собираетесь использовать авторизацию по PIN-коду.
+        На случай, если Вы его забудете, просим заполнить ответ на контрольный вопрос</string>
+    <string name="cquestion_dreams">Кем Вы хотели стать в детстве?</string>
+    <string name="cquestion_place">Ваше любимое место?</string>
+    <string name="cquestion_phone">Фирма вашего первого мобильника?</string>
+    <string name="cquestion_answer">Ваш ответ:</string>
+    <string name="cquestion_next">Продолжить установку</string>
+    <string name="cancel">Отмена</string>
 </resources>

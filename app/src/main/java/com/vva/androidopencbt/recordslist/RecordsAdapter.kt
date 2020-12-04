@@ -11,27 +11,15 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter(private val listener: RecordListener, private val scrollListener: ScrollListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
-    private var order: Int = 0
+class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+    var quotes = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener)
-    }
-
-    override fun onCurrentListChanged(previousList: MutableList<DbRecord>, currentList: MutableList<DbRecord>) {
-        super.onCurrentListChanged(previousList, currentList)
-        if (currentList.size > previousList.size && previousList.isNotEmpty()) {
-            scrollListener.scroll(order)
-        }
-    }
-
-    fun updateList(list: List<DbRecord>, order: Int) {
-        submitList(list)
-        this.order = order
+        holder.bind(getItem(position), listener, quotes)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -47,14 +35,14 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean) {
             itemView.setOnClickListener {
                 onClickListener.onClick(record)
             }
 
-            dateTextView.text = record.datetime?.getDateTimeString()
+            dateTextView.text = record.datetime.getDateTimeString()
             record.apply {
-                distortions?.let {
+                distortions.let {
                     if (it == 0x0) {
                         distortionTextView.visibility = View.GONE
                         return@let
@@ -75,48 +63,55 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
                     distortionTextView.text = builder.substring(0, builder.length - 2).toString()
                 }
 
-                if (situation?.isEmpty() == true) {
+                if (situation.isEmpty()) {
                     situationTextView.visibility = View.GONE
                 } else {
                     situationTextView.visibility = View.VISIBLE
                     situationTextView.text = res.getString(R.string.adapter_situation, situation)
                 }
 
-                if (intensity?.toInt() == 0) {
+                if (intensity == 0) {
                     intensityTextView.visibility = View.GONE
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
                 }
 
-                if (thoughts?.isEmpty() == true) {
-                    thoughtTextView.visibility = View.GONE
-                } else {
-                    thoughtTextView.text = res.getString(R.string.adapter_thought, thoughts)
+                when  {
+                    thoughts.isEmpty() -> {
+                        thoughtTextView.visibility = View.GONE
+                    }
+                    quotes -> {
+                        thoughtTextView.text = res.getString(R.string.adapter_thought, "\"$thoughts\"")
+                    }
+                    else -> {
+                        thoughtTextView.text = res.getString(R.string.adapter_thought, thoughts)
+                    }
+
                 }
 
-                if (emotions?.isEmpty() == true) {
+                if (emotions.isEmpty()) {
                     emotionTextView.visibility = View.GONE
                 } else {
                     emotionTextView.visibility = View.VISIBLE
                     emotionTextView.text = res.getString(R.string.adapter_emotions, emotions)
                 }
 
-                if (feelings?.isEmpty() == true) {
+                if (feelings.isEmpty()) {
                     feelingsTextView.visibility = View.GONE
                 } else {
                     feelingsTextView.visibility = View.VISIBLE
                     feelingsTextView.text = res.getString(R.string.adapter_feelsing, feelings)
                 }
 
-                if (actions?.isEmpty() == true) {
+                if (actions.isEmpty()) {
                     actionsTextView.visibility = View.GONE
                 } else {
                     actionsTextView.visibility = View.VISIBLE
                     actionsTextView.text = res.getString(R.string.adapter_actions, actions)
                 }
 
-                if (rational?.isEmpty() == true) {
+                if (rational.isEmpty()) {
                     disputTextView.visibility = View.GONE
                 } else {
                     disputTextView.visibility = View.VISIBLE
@@ -125,8 +120,6 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
             }
         }
     }
-
-
 
     class DiffCallback: DiffUtil.ItemCallback<DbRecord>() {
         override fun areItemsTheSame(oldItem: DbRecord, newItem: DbRecord): Boolean {
@@ -139,10 +132,6 @@ class RecordsAdapter(private val listener: RecordListener, private val scrollLis
     }
 }
 
-class RecordListener(val clickListener: (record: DbRecord?) -> Unit) {
+class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
     fun onClick(record: DbRecord) = clickListener(record)
-}
-
-class ScrollListener(val scrollListener: (orderBy: Int) -> Unit) {
-    fun scroll(orderBy: Int) = scrollListener(orderBy)
 }

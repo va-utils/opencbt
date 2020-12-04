@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#30658D</color>
+    <color name="colorPrimary">#38709A</color>
     <color name="colorEmotions">#4480AD</color>
-    <color name="colorPrimaryDark">#234763</color>
+    <color name="colorPrimaryDark">#2F5777</color>
     <color name="colorAccent">#4E9AD6</color>
     <color name="colorSeparator">#E7E7E9</color>
+
+    <color name="colorNight">#25306C</color>
+    <color name="colorMorning">#ff9966</color>
+    <color name="colorDay">#4CAF50</color>
+    <color name="colorEvening">#E57373</color>
+
+    <color name="colorAllOrNothing">#CAA06D</color>
+    <color name="colorOvergeneralizing">#8D9CA3</color>
+    <color name="colorFiltering">#E6EE9C</color>
+    <color name="colorDisqual">#F06292</color>
+    <color name="colorJump">#7986CB</color>
+    <color name="colorMagnMin">#FFB74D</color>
+    <color name="colorEmotional">#4FC3F7</color>
+    <color name="colorMust">#E57373</color>
+    <color name="colorLabeling">#BA68C8</color>
+    <color name="colorPerson">#81C784</color>
+    <color name="colorEmpty">#E9EAE2</color>
+
+
 </resources>

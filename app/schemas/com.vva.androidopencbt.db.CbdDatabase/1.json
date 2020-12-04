@@ -1,0 +1,88 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "433f4b37235ebf7f9f34c108c5c64628",
+    "entities": [
+      {
+        "tableName": "diary",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `_situation` TEXT, `_thoughts` TEXT, `_rational` TEXT, `_emotions` TEXT, `_distortions` INTEGER, `_feelings` TEXT, `_actions` TEXT, `_intensity` INTEGER, `_datetime` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "situation",
+            "columnName": "_situation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thoughts",
+            "columnName": "_thoughts",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rational",
+            "columnName": "_rational",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emotions",
+            "columnName": "_emotions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distortions",
+            "columnName": "_distortions",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feelings",
+            "columnName": "_feelings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actions",
+            "columnName": "_actions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "intensity",
+            "columnName": "_intensity",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "datetime",
+            "columnName": "_datetime",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '433f4b37235ebf7f9f34c108c5c64628')"
+    ]
+  }
+}
