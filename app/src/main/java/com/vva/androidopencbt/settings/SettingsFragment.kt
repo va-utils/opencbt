@@ -2,13 +2,8 @@ package com.vva.androidopencbt.settings
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.InputType
-import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +11,12 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.*
-import com.amirarcane.lockscreen.activity.EnterPinActivity
-import com.github.omadahealth.lollipin.lib.managers.AppLock
-import com.vva.androidopencbt.PinActivity
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
@@ -120,34 +111,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     }
                 }
             }
-        }
-
-                //черновик
-        fun setRecoveryQuestion()
-        {
-            val inflater = LayoutInflater.from(requireContext())
-            val cqView = inflater.inflate(R.layout.cq_layout, null)
-            val builder = AlertDialog.Builder(requireContext()).setView(cqView)
-            val spinner = cqView.findViewById<Spinner>(R.id.questionsSpinner)
-            val answerEt = cqView.findViewById<EditText>(R.id.answerEt)
-            val questions = arrayOf(
-            getString(R.string.cquestion_dreams),
-            getString(R.string.cquestion_phone),
-            getString(R.string.cquestion_place))
-            val adapter : ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,questions)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-
-            builder.setPositiveButton(getString(R.string.cquestion_next)) {
-                        _,_ ->
-                        val pm = PreferenceManager.getDefaultSharedPreferences(requireContext())
-                        pm.edit().putString("recovery_string",answerEt.text.toString())
-                                .putInt("recovery_question",spinner.selectedItemPosition).apply()
-                //вызывать PinActivity?
-                    }
-            builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.cancel() }
-            val dialog = builder.create()
-            dialog.show()
         }
     }
 }
