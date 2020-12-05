@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -32,7 +31,7 @@ class SettingsFragmentRoot: Fragment() {
         view.findViewById<Toolbar>(R.id.settings_toolbar).setupWithNavController(navController, appBarConfiguration)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         linearLayout = inflater.inflate(R.layout.fragment_settings, container, false) as LinearLayout
 
         parentFragmentManager.beginTransaction()
@@ -49,7 +48,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        arrayOf(
+        prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_rational") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_situation") as SwitchPreferenceCompat,
@@ -58,7 +57,8 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 findPreference<Preference>("enable_feelings") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_actions") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_distortions") as SwitchPreferenceCompat
-        ).forEach {
+        )
+        prefs.onEach {
             it.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
                 var flag = false
                 for (i in 0..7) {

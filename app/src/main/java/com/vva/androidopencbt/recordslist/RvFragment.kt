@@ -2,7 +2,6 @@ package com.vva.androidopencbt.recordslist
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -66,8 +65,7 @@ class RvFragment: Fragment() {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
-        fab = ll.findViewById(R.id.fab);
-      //  fab.setColorFilter(Color.argb(255,255,255,255))
+        fab = ll.findViewById(R.id.fab)
         dataAdapter = RecordsAdapter(RecordListener {
             viewModel.navigateToRecord(it.id)
         })
@@ -84,10 +82,6 @@ class RvFragment: Fragment() {
             }
         })
 
-       // viewModel.isAuth.observe(viewLifecycleOwner) {
-       //     rv.visibility = if(it) View.VISIBLE else View.GONE
-       // }
-
         dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 rv.layoutManager?.smoothScrollToPosition(rv, null, positionStart)
@@ -98,10 +92,6 @@ class RvFragment: Fragment() {
             dataAdapter.quotes = it
         }
 
-//        viewModel.isAuth.observe(viewLifecycleOwner)
-//        {
-//            rv.adapter = if (it) dataAdapter else null
-//        }
         rv.adapter = dataAdapter
 
         viewModel.importInAction.observe(viewLifecycleOwner) {

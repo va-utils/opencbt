@@ -67,15 +67,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
-    private val _isAuth = MutableLiveData<Boolean>(false)
-    val isAuth : LiveData<Boolean>
-    get() = _isAuth
-
-    fun setAuth(b : Boolean)
-    {
-        _isAuth.value = b
-    }
-
     fun authSuccessful() {
         _isAuthenticated.value = true
     }
@@ -223,7 +214,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     fun restoreRecyclerView(rv: RecyclerView) {
         uiScope.launch {
             withContext(Dispatchers.Default) {
-                delay(5)
+                delay(10)
             }
             rv.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
