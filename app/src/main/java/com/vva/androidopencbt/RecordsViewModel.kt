@@ -47,13 +47,23 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isQuotesEnabled : LiveData<Boolean>
         get() = _isQuotesEnabled
 
-    private val records: LiveData<List<DbRecord>> = Transformations.switchMap(_isDescOrder) {
-        isDesc ->
+    private val _isAuthenticated = MutableLiveData(!prefs.getBoolean("enable_pin_protection", false))
+    val isAuthenticated:LiveData<Boolean>
+        get() = _isAuthenticated
 
-        return@switchMap if (isDesc) {
-            db.databaseDao.getAllOrdered(DbContract.ORDER_DESC)
+    private val records: LiveData<List<DbRecord>> = Transformations.switchMap(isAuthenticated) {
+        return@switchMap if (it) {
+            Transformations.switchMap(_isDescOrder) {
+                isDesc ->
+
+                return@switchMap if (isDesc) {
+                    db.databaseDao.getAllOrdered(DbContract.ORDER_DESC)
+                } else {
+                    db.databaseDao.getAllOrdered(DbContract.ORDER_ASC)
+                }
+            }
         } else {
-            db.databaseDao.getAllOrdered(DbContract.ORDER_ASC)
+            MutableLiveData(emptyList())
         }
     }
 
@@ -64,6 +74,10 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     fun setAuth(b : Boolean)
     {
         _isAuth.value = b
+    }
+
+    fun authSuccessful() {
+        _isAuthenticated.value = true
     }
 
     private val _importInAction = MutableLiveData<Boolean?>()

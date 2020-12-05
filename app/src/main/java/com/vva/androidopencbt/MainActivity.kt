@@ -51,8 +51,10 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0x999) {
             if (resultCode == RESULT_CANCELED)
                 this.finishAffinity()
-            if (resultCode == RESULT_OK)
-                vm.setAuth(true)
+            if (resultCode == RESULT_OK) {
+//                vm.setAuth(true)
+                vm.authSuccessful()
+            }
         }
     }
 }

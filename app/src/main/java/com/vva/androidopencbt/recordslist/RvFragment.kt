@@ -62,7 +62,7 @@ class RvFragment: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
@@ -98,11 +98,11 @@ class RvFragment: Fragment() {
             dataAdapter.quotes = it
         }
 
-        viewModel.isAuth.observe(viewLifecycleOwner)
-        {
-            rv.adapter = if (it) dataAdapter else null
-        }
-        //rv.adapter = dataAdapter
+//        viewModel.isAuth.observe(viewLifecycleOwner)
+//        {
+//            rv.adapter = if (it) dataAdapter else null
+//        }
+        rv.adapter = dataAdapter
 
         viewModel.importInAction.observe(viewLifecycleOwner) {
             if (it == null)
