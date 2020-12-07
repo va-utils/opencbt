@@ -125,7 +125,7 @@
                 style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_feelings"
+                android:hint="@string/newrecord_text_actions"
                 app:layout_constraintEnd_toEndOf="@+id/feelingsInputLayout"
                 app:layout_constraintStart_toStartOf="@+id/feelingsInputLayout"
                 app:layout_constraintTop_toBottomOf="@+id/feelingsInputLayout">
