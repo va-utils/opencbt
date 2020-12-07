@@ -33,12 +33,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         vm.newRecordNavigated.observe(this, { aLong: Long ->
-            findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment().apply { recordKey = aLong })
+//            findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment().apply { recordKey = aLong })
+            findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = aLong })
         })
     }
 
     fun addNewRecord(view: View) {
-        findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment())
+//        findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment())
+        findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

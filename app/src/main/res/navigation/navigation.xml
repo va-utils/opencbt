@@ -43,6 +43,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_rvFragment_to_detailsFragmentMaterial"
+            app:destination="@id/detailsFragmentMaterial"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -70,4 +77,13 @@
         android:id="@+id/settingsFragmentRoot"
         android:name="com.vva.androidopencbt.settings.SettingsFragmentRoot"
         android:label="@string/title_activity_settings" />
+    <fragment
+        android:id="@+id/detailsFragmentMaterial"
+        android:name="com.vva.androidopencbt.recorddetails.DetailsFragmentMaterial"
+        android:label="@string/title_newrecord">
+        <argument
+            android:name="recordKey"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
 </navigation>

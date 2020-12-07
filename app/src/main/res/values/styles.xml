@@ -22,4 +22,20 @@
         <item name="maxLines">2</item>
         <item name="singleLine">false</item>
     </style>
+    <style name="AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
+        <item name="endIconMode">clear_text</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+    <style name="AppTheme.Widget.AppCompat.EditText" parent="Widget.AppCompat.EditText" >
+        <item name="singleLine">false</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">text|textMultiLine|textCapSentences|textAutoComplete</item>
+        <item name="maxLines">4</item>
+    </style>
+    <style name="AppTheme.Widget.Widget.MaterialComponents.CompoundButton.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox" >
+        <item name="useMaterialThemeColors">true</item>
+    </style>
+    <style name="AppTheme.Widget.MaterialComponents.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton" >
+
+    </style>
 </resources>
