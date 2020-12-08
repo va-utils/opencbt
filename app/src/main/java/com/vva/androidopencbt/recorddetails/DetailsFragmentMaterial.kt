@@ -1,9 +1,11 @@
 package com.vva.androidopencbt.recorddetails
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -73,7 +75,7 @@ class DetailsFragmentMaterial: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_details_material, container, false) as LinearLayout
         val args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -97,16 +99,17 @@ class DetailsFragmentMaterial: Fragment() {
             deleteButton.visibility = View.VISIBLE
 
             detailsViewModel.getRecord().observe(viewLifecycleOwner) { record ->
-                proceedString(record.thoughts, "enable_thoughts", thoughtEditText, R.id.nr_thoughtTextView)
-                proceedString(record.rational, "enable_rational", rationalEditText, R.id.nr_rationalTextView)
-                proceedString(record.emotions, "enable_emotions", emotionEditText, R.id.nr_emotionTextView)
-                proceedString(record.situation, "enable_situation", situationEditText, R.id.nr_situationTextView)
-                proceedString(record.feelings, "enable_feelings", feelingsEditText, R.id.nr_feelingsTextView)
-                proceedString(record.actions, "enable_actions", actionsEditText, R.id.nr_actionsTextView)
+                proceedString(record.thoughts, "enable_thoughts", thoughtInputLayout)
+                proceedString(record.rational, "enable_rational", rationalInputLayout)
+                proceedString(record.emotions, "enable_emotions", emotionsInputLayout)
+                proceedString(record.situation, "enable_situation", situationInputLayout)
+                proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
+                proceedString(record.actions, "enable_actions", actionsInputLayout)
 
                 if (record.intensity != 0 || prefs.getBoolean("enable_intensity", true)) {
                     intensitySeekBar.value = record.intensity.toFloat()
                 } else {
+                    ll.findViewById<TextView>(R.id.tvDiscomfortLevel).visibility = View.GONE
                     intensitySeekBar.visibility = View.GONE
                 }
 
@@ -123,16 +126,7 @@ class DetailsFragmentMaterial: Fragment() {
                     labelingCheckBox.isChecked = dist and DbRecord.LABELING != 0
                     personCheckBox.isChecked = dist and DbRecord.PERSONALIZATION != 0
                 } else {
-                    allOrNothingCheckBox.visibility = View.GONE
-                    overgeneralizingCheckBox.visibility = View.GONE
-                    filteringCheckBox.visibility = View.GONE
-                    disqualCheckBox.visibility = View.GONE
-                    jumpCheckBox.visibility = View.GONE
-                    magnMinCheckBox.visibility = View.GONE
-                    emoReasonCheckBox.visibility = View.GONE
-                    mustCheckBox.visibility = View.GONE
-                    labelingCheckBox.visibility = View.GONE
-                    personCheckBox.visibility = View.GONE
+                    hideDistortions()
                 }
             }
         } else {
@@ -152,16 +146,7 @@ class DetailsFragmentMaterial: Fragment() {
                 actionsInputLayout.visibility = View.GONE
 
             if (!prefs.getBoolean("enable_distortions", true)) {
-                allOrNothingCheckBox.visibility = View.GONE
-                overgeneralizingCheckBox.visibility = View.GONE
-                filteringCheckBox.visibility = View.GONE
-                disqualCheckBox.visibility = View.GONE
-                jumpCheckBox.visibility = View.GONE
-                magnMinCheckBox.visibility = View.GONE
-                emoReasonCheckBox.visibility = View.GONE
-                mustCheckBox.visibility = View.GONE
-                labelingCheckBox.visibility = View.GONE
-                personCheckBox.visibility = View.GONE
+                hideDistortions()
             }
         }
 
@@ -193,12 +178,11 @@ class DetailsFragmentMaterial: Fragment() {
         saveButton = ll.findViewById(R.id.save_button)
     }
 
-    private fun proceedString(field: String, prefs_name: String, editText: EditText, nrTv: Int) {
+    private fun proceedString(field: String, prefs_name: String, editText: TextInputLayout) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         if (field.isNotEmpty() || prefs.getBoolean(prefs_name, true)) {
-            editText.setText(field)
+            editText.editText?.setText(field)
         } else {
-            ll.findViewById<View>(nrTv).visibility = View.GONE
             editText.visibility = View.GONE
         }
     }
@@ -267,5 +251,26 @@ class DetailsFragmentMaterial: Fragment() {
                     intensity
             ))
         }
+    }
+
+    private fun hideDistortions() {
+        allOrNothingCheckBox.visibility = View.GONE
+        overgeneralizingCheckBox.visibility = View.GONE
+        filteringCheckBox.visibility = View.GONE
+        disqualCheckBox.visibility = View.GONE
+        jumpCheckBox.visibility = View.GONE
+        magnMinCheckBox.visibility = View.GONE
+        emoReasonCheckBox.visibility = View.GONE
+        mustCheckBox.visibility = View.GONE
+        labelingCheckBox.visibility = View.GONE
+        personCheckBox.visibility = View.GONE
+        ll.findViewById<TextView>(R.id.tvDistortions).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        // Hide keyboard when back pressed
+        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
     }
 }

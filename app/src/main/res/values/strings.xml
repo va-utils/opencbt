@@ -9,15 +9,15 @@
 
     <string name="action_help">Справка</string>
 
-    <string name="newrecord_text_situation">Ситуация при которой возникла мысль:</string>
-    <string name="newrecord_text_thought">Ваша автоматическая мысль:</string>
-    <string name="newrecord_text_rational">Ваш рациональный ответ:</string>
-    <string name="newrecord_text_emotions">Ваши эмоции (что Вы чувствуете?):</string>
-    <string name="newrecord_text_intensity">Отметьте уровень дискомфорта: </string>
-    <string name="newrecord_text_distortions">Отметить искажения:</string>
-    <string name="newrecord_text_feelings">Телесные ощущения:</string>
-    <string name="newrecord_text_actions">Предпринятые действия:</string>
-    <string name="newrecord_button_add">Сохранить в дневник</string>
+    <string name="newrecord_text_situation">Ситуация при которой возникла мысль</string>
+    <string name="newrecord_text_thought">Ваша автоматическая мысль</string>
+    <string name="newrecord_text_rational">Ваш рациональный ответ</string>
+    <string name="newrecord_text_emotions">Ваши эмоции (что Вы чувствуете?)</string>
+    <string name="newrecord_text_intensity">Отметьте уровень дискомфорта </string>
+    <string name="newrecord_text_distortions">Отметьте искажения</string>
+    <string name="newrecord_text_feelings">Телесные ощущения</string>
+    <string name="newrecord_text_actions">Предпринятые действия</string>
+    <string name="newrecord_button_add">Сохранить</string>
     <string name="newrecord_button_delete">Удалить</string>
 
     <string name="adapter_situation">Ситуация: %1$s</string>
