@@ -75,6 +75,13 @@ class DetailsFragmentMaterial: Fragment() {
         }
     }
 
+    /*
+    val listener = View.OnClickListener { v ->
+        (v as EditText).setSelection(v.text.length) //может как-то так? но в конец переходит не сразу, а со второго клика
+    }*/
+
+    //-----
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_details_material, container, false) as LinearLayout
         val args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
@@ -84,6 +91,8 @@ class DetailsFragmentMaterial: Fragment() {
         }
 
         initControls()
+
+
 
         deleteButton.setOnClickListener {
             viewModel.deleteRecord(args.recordKey)
@@ -105,6 +114,16 @@ class DetailsFragmentMaterial: Fragment() {
                 proceedString(record.situation, "enable_situation", situationInputLayout)
                 proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
                 proceedString(record.actions, "enable_actions", actionsInputLayout)
+
+                //vyalichkin----попытки поставить курсор в конец
+                /*
+                thoughtInputLayout.editText?.setOnClickListener(listener);
+                rationalInputLayout.editText?.setOnClickListener(listener);
+                situationInputLayout.editText?.setOnClickListener(listener);
+                emotionsInputLayout.editText?.setOnClickListener(listener);
+                feelingsInputLayout.editText?.setOnClickListener(listener);
+                actionsInputLayout.editText?.setOnClickListener(listener);
+                */
 
                 if (record.intensity != 0 || prefs.getBoolean("enable_intensity", true)) {
                     intensitySeekBar.value = record.intensity.toFloat()
