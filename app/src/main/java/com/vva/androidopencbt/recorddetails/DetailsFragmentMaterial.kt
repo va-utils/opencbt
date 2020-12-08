@@ -1,9 +1,11 @@
 package com.vva.androidopencbt.recorddetails
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -124,17 +126,7 @@ class DetailsFragmentMaterial: Fragment() {
                     labelingCheckBox.isChecked = dist and DbRecord.LABELING != 0
                     personCheckBox.isChecked = dist and DbRecord.PERSONALIZATION != 0
                 } else {
-                    allOrNothingCheckBox.visibility = View.GONE
-                    overgeneralizingCheckBox.visibility = View.GONE
-                    filteringCheckBox.visibility = View.GONE
-                    disqualCheckBox.visibility = View.GONE
-                    jumpCheckBox.visibility = View.GONE
-                    magnMinCheckBox.visibility = View.GONE
-                    emoReasonCheckBox.visibility = View.GONE
-                    mustCheckBox.visibility = View.GONE
-                    labelingCheckBox.visibility = View.GONE
-                    personCheckBox.visibility = View.GONE
-                    ll.findViewById<TextView>(R.id.tvDistortions).visibility = View.GONE
+                    hideDistortions()
                 }
             }
         } else {
@@ -154,16 +146,7 @@ class DetailsFragmentMaterial: Fragment() {
                 actionsInputLayout.visibility = View.GONE
 
             if (!prefs.getBoolean("enable_distortions", true)) {
-                allOrNothingCheckBox.visibility = View.GONE
-                overgeneralizingCheckBox.visibility = View.GONE
-                filteringCheckBox.visibility = View.GONE
-                disqualCheckBox.visibility = View.GONE
-                jumpCheckBox.visibility = View.GONE
-                magnMinCheckBox.visibility = View.GONE
-                emoReasonCheckBox.visibility = View.GONE
-                mustCheckBox.visibility = View.GONE
-                labelingCheckBox.visibility = View.GONE
-                personCheckBox.visibility = View.GONE
+                hideDistortions()
             }
         }
 
@@ -268,5 +251,26 @@ class DetailsFragmentMaterial: Fragment() {
                     intensity
             ))
         }
+    }
+
+    private fun hideDistortions() {
+        allOrNothingCheckBox.visibility = View.GONE
+        overgeneralizingCheckBox.visibility = View.GONE
+        filteringCheckBox.visibility = View.GONE
+        disqualCheckBox.visibility = View.GONE
+        jumpCheckBox.visibility = View.GONE
+        magnMinCheckBox.visibility = View.GONE
+        emoReasonCheckBox.visibility = View.GONE
+        mustCheckBox.visibility = View.GONE
+        labelingCheckBox.visibility = View.GONE
+        personCheckBox.visibility = View.GONE
+        ll.findViewById<TextView>(R.id.tvDistortions).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        // Hide keyboard when back pressed
+        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
     }
 }

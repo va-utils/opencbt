@@ -98,6 +98,7 @@
                 android:id="@+id/tvDiscomfortLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/newrecord_text_intensity" />
 
@@ -181,6 +182,7 @@
                     android:id="@+id/tvDistortions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
                     android:text="@string/newrecord_text_distortions" />
 
                 <CheckBox
