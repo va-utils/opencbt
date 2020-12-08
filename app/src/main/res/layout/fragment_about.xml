@@ -33,21 +33,22 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:id="@+id/sendButton"
-        android:text="@string/about_button_send"/>
+        android:text="@string/about_button_send"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:id="@+id/websiteButton"
         android:text="@string/about_button_website"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:id="@+id/cbdButton"
         android:text="@string/about_button_cbt"/>
 
