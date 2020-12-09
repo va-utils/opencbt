@@ -1,8 +1,10 @@
 package com.vva.androidopencbt.recorddetails
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -172,6 +174,7 @@ class DetailsFragmentMaterial: Fragment() {
         return ll
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initControls() {
         thoughtInputLayout = ll.findViewById(R.id.thoughtInputLayout)
         rationalInputLayout = ll.findViewById(R.id.rationalInputLayout)
@@ -179,6 +182,13 @@ class DetailsFragmentMaterial: Fragment() {
         situationInputLayout = ll.findViewById(R.id.situationsInputLayout)
         feelingsInputLayout = ll.findViewById(R.id.feelingsInputLayout)
         actionsInputLayout = ll.findViewById(R.id.actionsInputLayout)
+
+        thoughtInputLayout.editText?.setOnTouchListener(scrollListener)
+        rationalInputLayout.editText?.setOnTouchListener(scrollListener)
+        emotionsInputLayout.editText?.setOnTouchListener(scrollListener)
+        situationInputLayout.editText?.setOnTouchListener(scrollListener)
+        feelingsInputLayout.editText?.setOnTouchListener(scrollListener)
+        actionsInputLayout.editText?.setOnTouchListener(scrollListener)
 
         intensitySeekBar = ll.findViewById(R.id.intensitySeekBar)
 
@@ -284,6 +294,21 @@ class DetailsFragmentMaterial: Fragment() {
         labelingCheckBox.visibility = View.GONE
         personCheckBox.visibility = View.GONE
         ll.findViewById<TextView>(R.id.tvDistortions).visibility = View.GONE
+    }
+
+    private val scrollListener = View.OnTouchListener {
+        view, event ->
+            view.performClick()
+            if (view.hasFocus()) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when ((event.action).and(MotionEvent.ACTION_MASK)) {
+                    MotionEvent.ACTION_SCROLL -> {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                        return@OnTouchListener true
+                    }
+                }
+            }
+        false
     }
 
     override fun onStop() {
