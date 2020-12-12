@@ -84,6 +84,7 @@ class DetailsFragmentMaterial: Fragment() {
 
     //-----
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_details_material, container, false) as LinearLayout
         val args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
@@ -191,6 +192,7 @@ class DetailsFragmentMaterial: Fragment() {
         actionsInputLayout.editText?.setOnTouchListener(scrollListener)
 
         intensitySeekBar = ll.findViewById(R.id.intensitySeekBar)
+        intensitySeekBar.setLabelFormatter { n -> String.format("%1d%%",n.toInt()) }
 
         allOrNothingCheckBox = ll.findViewById(R.id.allOrNothingCheckBox)
         overgeneralizingCheckBox = ll.findViewById(R.id.overgeneralizingCheckBox)
