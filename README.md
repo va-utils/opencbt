@@ -1,7 +1,7 @@
 # Android OpenCBT
 Приложение для ведения дневника автоматических мыслей из когнитивно-поведенческой терапии.
 
-## Последняя стабильная версия:
+## Последняя стабильная версия
 [Загрузить APK-файл для Android](https://github.com/va-utils/opencbt/releases/download/0.3/OpenCBT.apk)   
 [Список изменений](https://github.com/va-utils/opencbt/releases/tag/0.3)   
 
