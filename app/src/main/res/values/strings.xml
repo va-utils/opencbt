@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android OpenCBT</string>
+    <string name="app_name">OpenCBT</string>
     <string name="action_newrecord">Новая запись</string>
     <string name="action_ordering">Поменять порядок записей</string>
     <string name="action_settings">Настройки</string>
