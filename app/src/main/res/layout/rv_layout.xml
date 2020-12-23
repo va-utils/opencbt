@@ -9,7 +9,6 @@
         android:id="@+id/rv_appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
             app:menu="@menu/menu_main"/>
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -66,11 +64,11 @@
             android:layout_marginBottom="32dp"
             android:contentDescription="@string/add_new_record"
             android:onClick="addNewRecord"
-            app:backgroundTint="@color/colorEmotions"
-            app:tint="@null"
+            app:backgroundTint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_action_name" />
+            app:srcCompat="@drawable/ic_action_name"
+            app:tint="@null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

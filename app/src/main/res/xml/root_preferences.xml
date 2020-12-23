@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Настройки отображения">
@@ -27,6 +27,11 @@
             app:defaultValue="true"
             app:key="enable_quotes"
             app:title="@string/pref_quotes"/>
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_night_theme"
+            app:title="Ночная тема" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns">

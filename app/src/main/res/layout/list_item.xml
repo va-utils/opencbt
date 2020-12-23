@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:clickable="true"
     android:padding="10dp"
@@ -12,9 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dateTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="13sp" />
+        android:textAppearance="?attr/textAppearanceOverline"
+        tools:text="14:35 01 декабря 2020"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,24 +23,23 @@
         android:text="@string/adapter_empty"
         android:visibility="gone"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="12sp" />
+        android:textColor="?attr/colorPrimaryVariant" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/distortionTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="12sp" />
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textColor="?attr/colorPrimaryVariant"
+        tools:text="Расстройства"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/emotionTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:textSize="12sp" />
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textColor="?attr/colorPrimary"
+        tools:text="Эмоции: ЪУЪ" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,38 +52,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:id="@+id/intensityTextView"/>
+            android:id="@+id/intensityTextView"
+            tools:text="Интенсивность невероятная" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:id="@+id/situationTextView"/>
+            android:id="@+id/situationTextView"
+            tools:text="Ситуация"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:id="@+id/thoughtTextView"/>
+            android:id="@+id/thoughtTextView"
+            tools:text="Мысли"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:id="@+id/feelingsTextView"/>
+            android:id="@+id/feelingsTextView"
+            tools:text="Чувства"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:id="@+id/actionsTextView"/>
+            android:id="@+id/actionsTextView"
+            tools:text="Действия"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="false"
             android:textStyle="bold"
-            android:id="@+id/rationalTextView"/>
+            android:id="@+id/rationalTextView"
+            tools:text="Рациональный ответ"/>
 
     </LinearLayout>
 

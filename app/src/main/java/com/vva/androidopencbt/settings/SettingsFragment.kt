@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.*
+import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 
@@ -46,8 +47,10 @@ class SettingsFragmentRoot: Fragment() {
 class SettingsFragmentNew : PreferenceFragmentCompat() {
     private lateinit var prefs: Array<SwitchPreferenceCompat>
     private val viewModel: RecordsViewModel by activityViewModels()
+    private lateinit var preferenceRepository: PreferenceRepository
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,

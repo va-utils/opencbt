@@ -8,6 +8,7 @@ import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
@@ -33,13 +34,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         vm.newRecordNavigated.observe(this, { aLong: Long ->
-//            findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment().apply { recordKey = aLong })
             findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = aLong })
         })
+
+        (application as App).preferenceRepository.isNightThemeLive.observe(this) {
+            if (it) {
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+            }
+        }
     }
 
     fun addNewRecord(view: View) {
-//        findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragment())
         findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
     }
 
