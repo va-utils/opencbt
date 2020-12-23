@@ -10,6 +10,7 @@
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/secondaryColorDark</item>
+        <item name="appBarLayoutStyle">@style/Widget.AppTheme.Light.AppBar</item>
     </style>
     <!--  Base theme for light and night themes  -->
     <style name="Base.Theme.AppTheme" parent="Base.Theme.OpenCBT" >

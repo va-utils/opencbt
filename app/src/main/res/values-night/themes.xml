@@ -11,11 +11,6 @@
         <!-- Status bar color. -->
         <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
-    </style>
-    <style name="PopupTheme" >
-        <item name="android:textColor">@color/purple_200</item>
-        <item name="android:textColorSecondary">@color/primaryLightColorDark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColorPrimary">@color/secondaryColor</item>
+        <item name="appBarLayoutStyle">@style/Widget.AppTheme.Dark.AppBar</item>
     </style>
 </resources>
