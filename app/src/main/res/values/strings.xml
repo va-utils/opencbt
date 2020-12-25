@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android OpenCBT</string>
+    <string name="app_name">OpenCBT</string>
     <string name="action_newrecord">Новая запись</string>
     <string name="action_ordering">Поменять порядок записей</string>
     <string name="action_settings">Настройки</string>
@@ -64,6 +64,7 @@
     <string name="about_button_send">Сообщить о проблеме</string>
     <string name="about_button_website">Сайт приложения</string>
     <string name="about_button_cbt">Узнать больше о КПТ</string>
+    <string name="about_button_versions">Все версии</string>
 
     <string name="title_about">О приложении</string>
     <string name="title_newrecord">Запись в дневник</string>
