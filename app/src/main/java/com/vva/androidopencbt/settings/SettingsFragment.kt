@@ -3,6 +3,7 @@ package com.vva.androidopencbt.settings
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,10 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+        val themeSwitch = findPreference<Preference>("enable_night_theme") as SwitchPreferenceCompat
+        themeSwitch.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+
         prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
                 findPreference<Preference>("enable_rational") as SwitchPreferenceCompat,
