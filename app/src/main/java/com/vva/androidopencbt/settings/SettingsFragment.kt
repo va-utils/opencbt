@@ -54,8 +54,10 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
+
+        /* возможно понадобится
         val themeSwitch = findPreference<Preference>("enable_night_theme") as SwitchPreferenceCompat
-        themeSwitch.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        themeSwitch.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P */
 
         prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
