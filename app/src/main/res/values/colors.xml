@@ -49,4 +49,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!--Подбор цветов для ночной темы-->
+
+    <color name="n_forBack">#161a1f</color>
+
+
 </resources>
