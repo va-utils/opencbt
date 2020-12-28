@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorDark</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondaryColorDark</item>
-        <item name="colorSecondaryVariant">@color/secondaryDarkColorDark</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColorDark</item>
         <item name="android:windowBackground">@color/n_forBack</item>
         <!-- Status bar color. -->
         <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
