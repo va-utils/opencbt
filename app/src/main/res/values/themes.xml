@@ -9,7 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorSecondary">@color/primaryColor</item>
-        <item name="colorSecondaryVariant">@color/primaryLightColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColorDark</item>
         <item name="appBarLayoutStyle">@style/Widget.AppTheme.Light.AppBar</item>
 
 
