@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/distortionTextView"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="?attr/colorSecondary"
         tools:text="Расстройства"/>
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/emotionTextView"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        android:textColor="?attr/colorPrimaryVariant"
+        android:textColor="?attr/colorSecondaryVariant"
         tools:text="Эмоции: ЪУЪ" />
 
     <LinearLayout
