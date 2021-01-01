@@ -92,11 +92,11 @@
             app:title="Формат по умолчанию" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Защита пин-кодом" >
+    <PreferenceCategory app:title="Защита входа" >
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="enable_pin_protection"
-            app:title="Включить защиту пин-кодом" />
+            app:title="Включить защиту входа" />
     </PreferenceCategory>
 
 </PreferenceScreen>
