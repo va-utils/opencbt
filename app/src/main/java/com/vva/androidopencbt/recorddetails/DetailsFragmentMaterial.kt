@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputLayout
 import com.vva.androidopencbt.R
@@ -38,6 +39,7 @@ class DetailsFragmentMaterial: Fragment() {
     private lateinit var feelingsInputLayout: TextInputLayout
     private lateinit var actionsInputLayout: TextInputLayout
     private lateinit var intensitySeekBar: Slider
+    private lateinit var percentsTextView : TextView
     private lateinit var allOrNothingCheckBox: CheckBox
     private lateinit var overgeneralizingCheckBox: CheckBox
     private lateinit var filteringCheckBox: CheckBox
@@ -95,7 +97,12 @@ class DetailsFragmentMaterial: Fragment() {
 
         initControls()
 
-
+        if(prefs.getBoolean("enable_percents",false))
+        {
+            percentsTextView.visibility = View.VISIBLE
+            intensitySeekBar.labelBehavior = LabelFormatter.LABEL_GONE
+            intensitySeekBar.addOnChangeListener {slider, value, fromUser ->  percentsTextView.text = "${value.toInt()}%"}
+        }
 
         deleteButton.setOnClickListener {
             viewModel.deleteRecord(args.recordKey)
@@ -207,6 +214,8 @@ class DetailsFragmentMaterial: Fragment() {
 
         deleteButton = ll.findViewById(R.id.deleteButton)
         saveButton = ll.findViewById(R.id.save_button)
+
+        percentsTextView = ll.findViewById(R.id.percentsTextView)
     }
 
     private fun proceedString(field: String, prefs_name: String, editText: TextInputLayout) {

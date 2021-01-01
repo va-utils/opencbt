@@ -30,6 +30,11 @@
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
+            app:key="enable_percents"
+            app:title="@string/pref_percents"/>
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
             app:key="enable_night_theme"
             app:title="Ночная тема" />
     </PreferenceCategory>

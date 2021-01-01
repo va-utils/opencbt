@@ -83,6 +83,7 @@
     <string name="pref_distortions">Когнитивные искажения</string>
     <string name="pref_empty">Должно быть выбрано хотя бы одно поле для записи в дневник</string>
     <string name="pref_quotes">Мысль в кавычках</string>
+    <string name="pref_percents">Проценты как в 0.3</string>
     <string name="pref_pin_problem">Для использования этой функции, необходимо чтобы в настройках телефона была включена блокировка экрана. Открыть настройки телефона?</string>
     <string name="pref_pin_title">Защита входа</string>
 
