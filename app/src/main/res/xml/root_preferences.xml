@@ -31,6 +31,7 @@
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="enable_percents"
+            app:dependency="enable_intensity"
             app:title="@string/pref_percents"/>
 
         <SwitchPreferenceCompat
