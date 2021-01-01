@@ -168,13 +168,6 @@
     <string name="import_nodata">Нет данных для импорта</string>
     <string name="import_cancel">Отмена</string>
 
-    <string name="cquestion_welcome">Вы собираетесь использовать авторизацию по PIN-коду.
-        На случай, если Вы его забудете, просим заполнить ответ на контрольный вопрос</string>
-    <string name="cquestion_dreams">Кем Вы хотели стать в детстве?</string>
-    <string name="cquestion_place">Ваше любимое место?</string>
-    <string name="cquestion_phone">Фирма вашего первого мобильника?</string>
-    <string name="cquestion_answer">Ваш ответ:</string>
-    <string name="cquestion_next">Продолжить установку</string>
     <string name="cancel">Отмена</string>
 
 </resources>
