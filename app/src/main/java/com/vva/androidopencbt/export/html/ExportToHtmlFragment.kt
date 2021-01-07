@@ -102,6 +102,7 @@ class ExportToHtmlFragment: Fragment() {
 
         exportViewModel.totalDiary.observe(viewLifecycleOwner,
          {
+             totalDiaryCb.isChecked = it
              startEditText.isEnabled = !it
              endEditText.isEnabled = !it
         })
