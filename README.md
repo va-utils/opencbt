@@ -2,8 +2,8 @@
 Приложение для ведения дневника автоматических мыслей из когнитивно-поведенческой терапии.
 
 ## Последняя стабильная версия
-[Загрузить приложение для Android](https://github.com/va-utils/opencbt/releases/download/0.3/OpenCBT.apk)   
-[Список изменений](https://github.com/va-utils/opencbt/releases/tag/0.3)   
+[Загрузить приложение для Android](https://github.com/va-utils/opencbt/releases/download/0.3.1/app-release.apk)   
+[Список изменений](https://github.com/va-utils/opencbt/releases/tag/0.3.1)   
 
 ## Дневник
 Дневник автоматических мыслей — эффективная техника из когнитивно-поведенческой психологии. 
