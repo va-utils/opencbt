@@ -75,6 +75,12 @@
 
         </TableLayout>
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/totalDiaryCb"
+            android:text="@string/savehtml_text_alldiary"/>
+
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -31,6 +32,7 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var htmlRb : RadioButton
     private lateinit var jsonRb : RadioButton
     private lateinit var exportWelcomeTv : TextView
+    private lateinit var totalDiaryCb : CheckBox
     private val exportViewModel: ExportViewModel by activityViewModels()
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
@@ -82,6 +84,11 @@ class ExportToHtmlFragment: Fragment() {
         exportWelcomeTv = ll.findViewById(R.id.exportWelcomeTv)
         htmlRb = ll.findViewById(R.id.htmlRb)
         jsonRb = ll.findViewById(R.id.jsonRb)
+        totalDiaryCb = ll.findViewById(R.id.totalDiaryCb)
+
+        totalDiaryCb.setOnCheckedChangeListener { buttonView, isChecked ->
+            exportViewModel.setTotalDiary(isChecked)
+        }
 
         val rg = ll.findViewById<RadioGroup>(R.id.exportRg)
         rg.setOnCheckedChangeListener{
@@ -92,6 +99,12 @@ class ExportToHtmlFragment: Fragment() {
                 R.id.htmlRb -> exportViewModel.setFormat("HTML")
             }
         }
+
+        exportViewModel.totalDiary.observe(viewLifecycleOwner,
+         {
+             startEditText.isEnabled = !it
+             endEditText.isEnabled = !it
+        })
 
         exportViewModel.format.observe(viewLifecycleOwner,
                 {

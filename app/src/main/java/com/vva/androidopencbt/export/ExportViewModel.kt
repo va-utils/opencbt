@@ -39,6 +39,10 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private val _endDate = MutableLiveData(DateTime().endOfDay())
     val endDate: LiveData<DateTime>
         get() = _endDate
+
+    private val _totalDiary = MutableLiveData(false)
+    val totalDiary : LiveData<Boolean>
+        get() = _totalDiary
     //--------------
 
     private val _format = MutableLiveData<String>(PreferenceManager.getDefaultSharedPreferences(application.applicationContext).getString("default_export","HTML"))
@@ -57,6 +61,11 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setEndDate(dateTime: DateTime) {
         _endDate.value = dateTime
+    }
+
+    fun setTotalDiary(total : Boolean)
+    {
+        _totalDiary.value = total
     }
 
     val isHtmlExportInProgress: LiveData<Boolean>
@@ -90,7 +99,10 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.html"
         uiScope.launch {
             val records = withContext(Dispatchers.IO) {
-                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+                if(_totalDiary.value==false)
+                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+                else
+                    dao.getAllList()
             }
             val exportString = withContext(Dispatchers.Default) {
                 makeHtmlString(records, context)
@@ -107,7 +119,10 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.json"
         uiScope.launch {
             val records = withContext(Dispatchers.IO) {
-                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+                if(_totalDiary.value==false)
+                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+                else
+                    dao.getAllList()
             }
             val exportString = withContext(Dispatchers.Default) {
 //                GsonBuilder()

@@ -83,7 +83,7 @@
     <string name="pref_distortions">Когнитивные искажения</string>
     <string name="pref_empty">Должно быть выбрано хотя бы одно поле для записи в дневник</string>
     <string name="pref_quotes">Мысль в кавычках</string>
-    <string name="pref_percents">Проценты как в 0.3</string>
+    <string name="pref_percents">Проценты всегда</string>
     <string name="pref_pin_problem">Для использования этой функции, необходимо чтобы в настройках телефона была включена блокировка экрана. Открыть настройки телефона?</string>
     <string name="pref_pin_title">Защита входа</string>
 
@@ -95,6 +95,7 @@
     <string name="savehtml_button_send">Отправить по почте</string>
     <string name="savehtml_text_startdate">Начало периода:</string>
     <string name="savehtml_text_enddate">Конец периода:</string>
+    <string name="savehtml_text_alldiary">Дневник полностью</string>
     <string name="savehtml_text_share">Выберите приложение, через которое хотите отправить дневник:</string>
     <string name="savehtml_error">Не удалось отправить дневник.</string>
 
