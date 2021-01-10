@@ -53,5 +53,8 @@
 
     <color name="n_forBack">#161a1f</color>
 
+    <color name="red_high">#cc2418</color>
+    <color name="red_mid">#cc5418</color>
+    <color name="green">#36cc18</color>
 
 </resources>

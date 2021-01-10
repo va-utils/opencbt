@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
@@ -32,6 +34,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
         private val actionsTextView: TextView = itemView.findViewById(R.id.actionsTextView)
         private val distortionTextView: TextView = itemView.findViewById(R.id.distortionTextView)
         private val intensityTextView: TextView = itemView.findViewById(R.id.intensityTextView)
+        private val cardView: MaterialCardView = itemView.findViewById(R.id.card_view)
 
         private val res = itemView.resources
 
@@ -75,6 +78,16 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
+                    cardView.apply {
+                        shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                                .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
+                                .build()
+                    }
+                    itemView.setBackgroundResource(when (intensity) {
+                        in 0..33 -> R.color.green
+                        in 34..66 -> R.color.red_mid
+                        else -> R.color.red_high
+                    })
                 }
 
                 when  {

@@ -14,6 +14,7 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -67,7 +68,8 @@ class RvFragment: Fragment() {
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
         fab = ll.findViewById(R.id.fab)
         dataAdapter = RecordsAdapter(RecordListener {
-            viewModel.navigateToRecord(it.id)
+//            viewModel.navigateToRecord(it.id)
+            findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = it.id })
         })
 
         viewModel.getAllRecords().observe(viewLifecycleOwner, {
