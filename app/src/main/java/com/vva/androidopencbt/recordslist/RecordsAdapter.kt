@@ -79,20 +79,20 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
-
-                    if (indication)
-                        cardView.apply {
-                            shapeAppearanceModel = shapeAppearanceModel.toBuilder()
-                                    .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
-                                    .build()
-                        }
-                        itemView.setBackgroundResource(when (intensity) {
-                            0 -> R.color.intensity_zero
-                            in 1..30 -> R.color.intensity_low
-                            in 31..60 -> R.color.intensity_mid
-                            in 61..90 -> R.color.intensity_mid_high
-                            else -> R.color.intensity_high
-                        })
+                }
+                if (indication) {
+                    cardView.apply {
+                        shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                                .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
+                                .build()
+                    }
+                    itemView.setBackgroundResource(when (intensity) {
+                        0 -> R.color.intensity_zero
+                        in 1..30 -> R.color.intensity_low
+                        in 31..60 -> R.color.intensity_mid
+                        in 61..90 -> R.color.intensity_mid_high
+                        else -> R.color.intensity_high
+                    })
                 }
 
                 when  {
