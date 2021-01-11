@@ -81,6 +81,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
                 }
                 if (indication) {
+                    itemView.setPadding(0, 1, 0, 0)
                     cardView.apply {
                         shapeAppearanceModel = shapeAppearanceModel.toBuilder()
                                 .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
@@ -93,6 +94,8 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                         in 61..90 -> R.color.intensity_mid_high
                         else -> R.color.intensity_high
                     })
+                } else {
+                    itemView.setPadding(0, 0, 0, 0)
                 }
 
                 when  {
