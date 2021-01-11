@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        vm.newRecordNavigated.observe(this, { aLong: Long ->
-            findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = aLong })
-        })
-
         (application as App).preferenceRepository.isNightThemeLive.observe(this) {
             if (it) {
                 delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES

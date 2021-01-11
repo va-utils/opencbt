@@ -11,12 +11,21 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isNightThemeLive: LiveData<Boolean>
         get() = _isNightThemeLive
 
+    private val _isIntensityIndicationEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_INDICATION, false)
+    }
+    val isIntensityIndicationEnabled: LiveData<Boolean>
+        get() = _isIntensityIndicationEnabled
+
     private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener {
                 _, key ->
                 when (key) {
                     PREFERENCE_NIGHT_MODE -> {
                         _isNightThemeLive.value = sharedPreferences.getBoolean(PREFERENCE_NIGHT_MODE, false)
+                    }
+                    PREFERENCE_INTENSITY_INDICATION -> {
+                        _isIntensityIndicationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_INDICATION, false)
                     }
                 }
             }
@@ -27,5 +36,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
 
     companion object {
         private const val PREFERENCE_NIGHT_MODE = "enable_night_theme"
+        private const val PREFERENCE_INTENSITY_INDICATION = "enable_intensity_indication"
     }
 }

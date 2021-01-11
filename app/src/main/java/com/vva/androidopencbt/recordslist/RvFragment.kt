@@ -21,8 +21,10 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.settings.PreferenceRepository
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
@@ -31,6 +33,7 @@ class RvFragment: Fragment() {
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
+    private lateinit var prefs: PreferenceRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -67,10 +70,15 @@ class RvFragment: Fragment() {
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
         fab = ll.findViewById(R.id.fab)
+        prefs = (requireActivity().application as App).preferenceRepository
+
         dataAdapter = RecordsAdapter(RecordListener {
-//            viewModel.navigateToRecord(it.id)
             findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = it.id })
         })
+
+        prefs.isIntensityIndicationEnabled.observe(viewLifecycleOwner) {
+            dataAdapter.intensityIndication = it
+        }
 
         viewModel.getAllRecords().observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {

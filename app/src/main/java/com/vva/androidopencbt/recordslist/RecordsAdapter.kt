@@ -15,13 +15,14 @@ import com.vva.androidopencbt.getDateTimeString
 
 class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false
+    var intensityIndication = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, quotes)
+        holder.bind(getItem(position), listener, quotes, intensityIndication)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -38,7 +39,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean, indication: Boolean) {
             itemView.setOnClickListener {
                 onClickListener.onClick(record)
             }
@@ -78,16 +79,20 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
-                    cardView.apply {
-                        shapeAppearanceModel = shapeAppearanceModel.toBuilder()
-                                .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
-                                .build()
-                    }
-                    itemView.setBackgroundResource(when (intensity) {
-                        in 0..33 -> R.color.green
-                        in 34..66 -> R.color.red_mid
-                        else -> R.color.red_high
-                    })
+
+                    if (indication)
+                        cardView.apply {
+                            shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                                    .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
+                                    .build()
+                        }
+                        itemView.setBackgroundResource(when (intensity) {
+                            0 -> R.color.intensity_zero
+                            in 1..30 -> R.color.intensity_low
+                            in 31..60 -> R.color.intensity_mid
+                            in 61..90 -> R.color.intensity_mid_high
+                            else -> R.color.intensity_high
+                        })
                 }
 
                 when  {

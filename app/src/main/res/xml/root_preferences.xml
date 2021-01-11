@@ -38,6 +38,12 @@
             app:defaultValue="false"
             app:key="enable_night_theme"
             app:title="Ночная тема" />
+
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_intensity_indication"
+            app:title="Индикация интенсивности на главном экране" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns">

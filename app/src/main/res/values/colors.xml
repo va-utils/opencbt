@@ -49,12 +49,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Цвета для индикаци интенсивности на главном экране -->
+    <color name="intensity_high">#D32F2F</color>
+    <color name="intensity_mid_high">#E64A19</color>
+    <color name="intensity_mid">#F57C00</color>
+    <color name="intensity_low">#388E3C</color>
+    <color name="intensity_zero">#64C83C</color>
+
     <!--Подбор цветов для ночной темы-->
 
     <color name="n_forBack">#161a1f</color>
-
-    <color name="red_high">#cc2418</color>
-    <color name="red_mid">#cc5418</color>
-    <color name="green">#36cc18</color>
 
 </resources>
