@@ -17,6 +17,24 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isIntensityIndicationEnabled: LiveData<Boolean>
         get() = _isIntensityIndicationEnabled
 
+    private val _isQuotesEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_QUOTES_ENABLED, false)
+    }
+    val isQuotesEnabled: LiveData<Boolean>
+        get() = _isQuotesEnabled
+
+    private val _isDescOrder = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
+    }
+    val isDescOrder: LiveData<Boolean>
+        get() = _isDescOrder
+
+    private val _isPinEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_ENABLE_PIN, false)
+    }
+    val isPinEnabled: LiveData<Boolean>
+        get() = _isPinEnabled
+
     private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener {
                 _, key ->
@@ -26,6 +44,15 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     }
                     PREFERENCE_INTENSITY_INDICATION -> {
                         _isIntensityIndicationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_INDICATION, false)
+                    }
+                    PREFERENCE_QUOTES_ENABLED -> {
+                        _isQuotesEnabled.value = sharedPreferences.getBoolean(PREFERENCE_QUOTES_ENABLED, false)
+                    }
+                    PREFERENCE_IS_DESC_ORDER -> {
+                        _isDescOrder.value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
+                    }
+                    PREFERENCE_ENABLE_PIN -> {
+                        _isPinEnabled.value = sharedPreferences.getBoolean(PREFERENCE_ENABLE_PIN, false)
                     }
                 }
             }
@@ -37,5 +64,8 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     companion object {
         private const val PREFERENCE_NIGHT_MODE = "enable_night_theme"
         private const val PREFERENCE_INTENSITY_INDICATION = "enable_intensity_indication"
+        private const val PREFERENCE_QUOTES_ENABLED = "enable_quotes"
+        private const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
+        private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
     }
 }

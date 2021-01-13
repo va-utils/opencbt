@@ -13,7 +13,7 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false
     var intensityIndication = false
 
@@ -22,7 +22,7 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, quotes, intensityIndication)
+        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -39,9 +39,13 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean, indication: Boolean) {
-            itemView.setOnClickListener {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean) {
+            cardView.setOnClickListener {
                 onClickListener.onClick(record)
+            }
+
+            cardView.setOnLongClickListener {
+                onLongListener.onClick(record)
             }
 
             dateTextView.text = record.datetime.getDateTimeString()
@@ -154,5 +158,9 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
 }
 
 class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
+    fun onClick(record: DbRecord) = clickListener(record)
+}
+
+class RecordLongListener(val clickListener: (record: DbRecord) -> Boolean) {
     fun onClick(record: DbRecord) = clickListener(record)
 }

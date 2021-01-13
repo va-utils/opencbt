@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -24,16 +25,22 @@ import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.settings.PreferenceRepository
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
+    private lateinit var database: CbdDatabase
+    private lateinit var prefs: PreferenceRepository
+    private val listViewModel: RecordListViewModel by viewModels {
+        RecordListViewModelFactory(database.databaseDao, prefs)
+    }
+
     private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
-    private lateinit var prefs: PreferenceRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -67,30 +74,56 @@ class RvFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.rv_layout, container, false) as LinearLayout
+
         rv = ll.findViewById(R.id.rv)
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
         fab = ll.findViewById(R.id.fab)
+
         prefs = (requireActivity().application as App).preferenceRepository
+        database = CbdDatabase.getInstance(requireContext())
 
         dataAdapter = RecordsAdapter(RecordListener {
             findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = it.id })
+        },
+        RecordLongListener {
+
+            true
         })
 
         prefs.isIntensityIndicationEnabled.observe(viewLifecycleOwner) {
             dataAdapter.intensityIndication = it
         }
 
-        viewModel.getAllRecords().observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                dataAdapter.submitList(it)
+        viewModel.isAuthenticated.observe(viewLifecycleOwner, {
+            if (it) {
+                listViewModel.getAllRecords().observe(viewLifecycleOwner) { list ->
+                    if (list.isNotEmpty()) {
+                        dataAdapter.submitList(list)
 
-                welcomeTv.visibility = View.GONE
-                rv.visibility = View.VISIBLE
+                        welcomeTv.visibility = View.GONE
+                        rv.visibility = View.VISIBLE
+                    } else {
+                        welcomeTv.visibility = View.VISIBLE
+                        rv.visibility = View.GONE
+                    }
+                }
             } else {
                 welcomeTv.visibility = View.VISIBLE
                 rv.visibility = View.GONE
             }
         })
+
+//        viewModel.getAllRecords().observe(viewLifecycleOwner, {
+//            if (it.isNotEmpty()) {
+//                dataAdapter.submitList(it)
+//
+//                welcomeTv.visibility = View.GONE
+//                rv.visibility = View.VISIBLE
+//            } else {
+//                welcomeTv.visibility = View.VISIBLE
+//                rv.visibility = View.GONE
+//            }
+//        })
 
         dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
