@@ -112,7 +112,7 @@
         <Button android:id="@+id/saveHTMLButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
+            style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
             android:text="@string/savehtml_button_save"/>
     </LinearLayout>
 </LinearLayout>
