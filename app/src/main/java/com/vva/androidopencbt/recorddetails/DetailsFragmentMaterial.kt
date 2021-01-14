@@ -2,7 +2,11 @@ package com.vva.androidopencbt.recorddetails
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,13 +14,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.slider.LabelFormatter
@@ -27,10 +35,16 @@ import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import kotlinx.android.synthetic.main.fragment_details_material.*
+import org.joda.time.DateTime
 
 class DetailsFragmentMaterial: Fragment() {
     private lateinit var ll: LinearLayout
     private val viewModel: RecordsViewModel by activityViewModels()
+    private lateinit var database: CbdDatabase
+    private lateinit var args: DetailsFragmentMaterialArgs
+    private val detailsViewModel: DetailsViewModel by viewModels {
+        DetailsViewModelFactory(args.recordKey, database.databaseDao)
+    }
 
     private lateinit var thoughtInputLayout: TextInputLayout
     private lateinit var rationalInputLayout: TextInputLayout
@@ -54,6 +68,8 @@ class DetailsFragmentMaterial: Fragment() {
     private lateinit var deleteButton: Button
     private lateinit var saveButton: Button
 
+    private lateinit var currentRecord: DbRecord
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,6 +78,25 @@ class DetailsFragmentMaterial: Fragment() {
 
         view.findViewById<Toolbar>(R.id.details_toolbar).apply {
             setupWithNavController(navController, appBarConfiguration)
+            setNavigationOnClickListener {
+                if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
+                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput(currentRecord.id), currentRecord)) {
+                        AlertDialog.Builder(requireContext())
+                                .setTitle("Отменить изменения?")
+                                .setMessage("Были внесены изменения. Отменить?")
+                                .setNegativeButton("Отменить") { dialogInterface: DialogInterface, i: Int ->
+                                    navController.navigateUp()
+                                }
+                                .setPositiveButton("Сохранить") { dialogInterface: DialogInterface, i: Int ->
+                                    save(args.recordKey)
+                                    navController.navigateUp()
+                                }
+                                .show()
+                    } else {
+                        navController.navigateUp()
+                    }
+                }
+            }
             menu.forEach { menuItem ->
                 menuItem.setOnMenuItemClickListener { item ->
                     if (item.itemId == R.id.menu_help) {
@@ -89,11 +124,9 @@ class DetailsFragmentMaterial: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_details_material, container, false) as LinearLayout
-        val args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
+        args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
+        database = CbdDatabase.getInstance(requireActivity().application)
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val detailsViewModel: DetailsViewModel by viewModels {
-            DetailsViewModelFactory(args.recordKey, CbdDatabase.getInstance(requireActivity().application).databaseDao)
-        }
 
         initControls()
 
@@ -118,6 +151,7 @@ class DetailsFragmentMaterial: Fragment() {
             deleteButton.visibility = View.VISIBLE
 
             detailsViewModel.getRecord().observe(viewLifecycleOwner) { record ->
+                currentRecord = record
                 proceedString(record.thoughts, "enable_thoughts", thoughtInputLayout)
                 proceedString(record.rational, "enable_rational", rationalInputLayout)
                 proceedString(record.emotions, "enable_emotions", emotionsInputLayout)
@@ -159,6 +193,7 @@ class DetailsFragmentMaterial: Fragment() {
                 }
             }
         } else {
+            currentRecord = DbRecord()
             deleteButton.visibility = View.GONE
 
             if (!prefs.getBoolean("enable_thoughts", true))
@@ -228,6 +263,24 @@ class DetailsFragmentMaterial: Fragment() {
     }
 
     private fun save(id: Long) {
+        val record = getRecordFromInput(id)
+
+        if (id > 0) {
+            viewModel.updateRecord(id,
+                    record.situation,
+                    record.thoughts,
+                    record.rational,
+                    record.emotions,
+                    record.distortions,
+                    record.feelings,
+                    record.actions,
+                    record.intensity)
+        } else {
+            viewModel.addRecord(record)
+        }
+    }
+
+    private fun getRecordFromInput(id: Long): DbRecord {
         val thoughts = thoughtInputLayout.editText?.text.toString()
         val rational = rationalInputLayout.editText?.text.toString()
         val situation = situationInputLayout.editText?.text.toString()
@@ -268,29 +321,18 @@ class DetailsFragmentMaterial: Fragment() {
             dist = dist or DbRecord.PERSONALIZATION
         }
 
-        if (id > 0) {
-            viewModel.updateRecord(id,
-                    situation,
-                    thoughts,
-                    rational,
-                    emotions,
-                    dist,
-                    feelings,
-                    actions,
-                    intensity)
-        } else {
-            viewModel.addRecord(DbRecord(
-                    0L,
-                    situation,
-                    thoughts,
-                    rational,
-                    emotions,
-                    dist,
-                    feelings,
-                    actions,
-                    intensity
-            ))
-        }
+        return DbRecord(
+                id,
+                situation,
+                thoughts,
+                rational,
+                emotions,
+                dist,
+                feelings,
+                actions,
+                intensity,
+                if (id == 0L) DateTime() else currentRecord.datetime
+        )
     }
 
     private fun hideDistortions() {

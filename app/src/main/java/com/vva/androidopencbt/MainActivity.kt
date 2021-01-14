@@ -44,6 +44,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        supportFragmentManager.removeOnBackStackChangedListener {
+            Log.d("BACK", "onRemove")
+        }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            Log.d("BACK", "onChange")
+        }
     }
 
     fun addNewRecord(view: View) {
@@ -60,5 +68,16 @@ class MainActivity : AppCompatActivity() {
                 vm.authSuccessful()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("BACK", "PRESSED")
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        Log.d("Back", "UP")
+        return super.onSupportNavigateUp()
     }
 }
