@@ -44,14 +44,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        supportFragmentManager.removeOnBackStackChangedListener {
-            Log.d("BACK", "onRemove")
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            Log.d("BACK", "onChange")
-        }
     }
 
     fun addNewRecord(view: View) {
@@ -71,13 +63,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        Log.d("BACK", "PRESSED")
+        val navController = findNavController(R.id.myNavHostFragment)
 
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        Log.d("Back", "UP")
-        return super.onSupportNavigateUp()
+        if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
+            super.onBackPressed()
+            TODO()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

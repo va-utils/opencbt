@@ -97,6 +97,21 @@ data class DbRecord(
 
         return true
     }
+
+    fun equalsIgnoreIdAndDate(record: DbRecord): Boolean {
+        if (this === record) return true
+
+        if (situation != record.situation) return false
+        if (thoughts != record.thoughts) return false
+        if (rational != record.rational) return false
+        if (emotions != record.emotions) return false
+        if (distortions != record.distortions) return false
+        if (feelings != record.feelings) return false
+        if (actions != record.actions) return false
+        if (intensity != record.intensity) return false
+
+        return true
+    }
 }
 
 @Suppress("unused")

@@ -91,43 +91,43 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             }
         }
     }
+//
+//    fun addRecord(dbRecord: DbRecord) {
+//        uiScope.launch {
+//            withContext(Dispatchers.IO) {
+//                db.databaseDao.addRecord(dbRecord)
+//            }
+//        }
+//    }
 
-    fun addRecord(dbRecord: DbRecord) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                db.databaseDao.addRecord(dbRecord)
-            }
-        }
-    }
-
-    fun updateRecord(id: Long,
-                     situation: String,
-                     thought: String,
-                     rational: String,
-                     emotion: String,
-                     finalDist: Int,
-                     feelings: String,
-                     actions: String,
-                     intensity: Int) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                db.databaseDao.updateRecord(
-                        DbRecord(
-                                id,
-                                situation,
-                                thought,
-                                rational,
-                                emotion,
-                                finalDist,
-                                feelings,
-                                actions,
-                                intensity,
-                                db.databaseDao.getRecordById(id).datetime
-                        )
-                )
-            }
-        }
-    }
+//    fun updateRecord(id: Long,
+//                     situation: String,
+//                     thought: String,
+//                     rational: String,
+//                     emotion: String,
+//                     finalDist: Int,
+//                     feelings: String,
+//                     actions: String,
+//                     intensity: Int) {
+//        uiScope.launch {
+//            withContext(Dispatchers.IO) {
+//                db.databaseDao.updateRecord(
+//                        DbRecord(
+//                                id,
+//                                situation,
+//                                thought,
+//                                rational,
+//                                emotion,
+//                                finalDist,
+//                                feelings,
+//                                actions,
+//                                intensity,
+//                                db.databaseDao.getRecordById(id).datetime
+//                        )
+//                )
+//            }
+//        }
+//    }
 
     fun navigateToRecord(id: Long) {
         _newRecordNavigated.value = id

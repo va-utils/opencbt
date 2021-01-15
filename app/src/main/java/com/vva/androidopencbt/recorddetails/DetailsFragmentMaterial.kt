@@ -68,7 +68,7 @@ class DetailsFragmentMaterial: Fragment() {
     private lateinit var deleteButton: Button
     private lateinit var saveButton: Button
 
-    private lateinit var currentRecord: DbRecord
+    private var id: Long = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,7 +80,7 @@ class DetailsFragmentMaterial: Fragment() {
             setupWithNavController(navController, appBarConfiguration)
             setNavigationOnClickListener {
                 if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
-                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput(currentRecord.id), currentRecord)) {
+                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
                         AlertDialog.Builder(requireContext())
                                 .setTitle("Отменить изменения?")
                                 .setMessage("Были внесены изменения. Отменить?")
@@ -88,7 +88,7 @@ class DetailsFragmentMaterial: Fragment() {
                                     navController.navigateUp()
                                 }
                                 .setPositiveButton("Сохранить") { dialogInterface: DialogInterface, i: Int ->
-                                    save(args.recordKey)
+                                    save()
                                     navController.navigateUp()
                                 }
                                 .show()
@@ -127,31 +127,34 @@ class DetailsFragmentMaterial: Fragment() {
         args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
         database = CbdDatabase.getInstance(requireActivity().application)
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        id = args.recordKey
 
         initControls()
 
-        if(prefs.getBoolean("enable_percents",false))
-        {
+        if(prefs.getBoolean("enable_percents",false)) {
             percentsTextView.visibility = View.VISIBLE
             intensitySeekBar.labelBehavior = LabelFormatter.LABEL_GONE
-            intensitySeekBar.addOnChangeListener {slider, value, fromUser ->  percentsTextView.text = "${value.toInt()}%"}
+            intensitySeekBar.addOnChangeListener {
+                _, value, _ ->
+                percentsTextView.text = "${value.toInt()}%"
+            }
         }
 
         deleteButton.setOnClickListener {
-            viewModel.deleteRecord(args.recordKey)
+            detailsViewModel.deleteRecordById(id)
             findNavController().popBackStack()
         }
 
         saveButton.setOnClickListener {
-            save(args.recordKey)
+            save()
             findNavController().popBackStack()
         }
 
-        if (args.recordKey > 0) {
+        if (id > 0) {
             deleteButton.visibility = View.VISIBLE
 
             detailsViewModel.getRecord().observe(viewLifecycleOwner) { record ->
-                currentRecord = record
+                detailsViewModel.currentRecord = record
                 proceedString(record.thoughts, "enable_thoughts", thoughtInputLayout)
                 proceedString(record.rational, "enable_rational", rationalInputLayout)
                 proceedString(record.emotions, "enable_emotions", emotionsInputLayout)
@@ -193,7 +196,7 @@ class DetailsFragmentMaterial: Fragment() {
                 }
             }
         } else {
-            currentRecord = DbRecord()
+            detailsViewModel.currentRecord = DbRecord()
             deleteButton.visibility = View.GONE
 
             if (!prefs.getBoolean("enable_thoughts", true))
@@ -262,11 +265,11 @@ class DetailsFragmentMaterial: Fragment() {
         }
     }
 
-    private fun save(id: Long) {
-        val record = getRecordFromInput(id)
+    private fun save() {
+        val record = getRecordFromInput()
 
         if (id > 0) {
-            viewModel.updateRecord(id,
+            detailsViewModel.updateRecord(id,
                     record.situation,
                     record.thoughts,
                     record.rational,
@@ -276,11 +279,11 @@ class DetailsFragmentMaterial: Fragment() {
                     record.actions,
                     record.intensity)
         } else {
-            viewModel.addRecord(record)
+            detailsViewModel.addRecord(record)
         }
     }
 
-    private fun getRecordFromInput(id: Long): DbRecord {
+    private fun getRecordFromInput(): DbRecord {
         val thoughts = thoughtInputLayout.editText?.text.toString()
         val rational = rationalInputLayout.editText?.text.toString()
         val situation = situationInputLayout.editText?.text.toString()
@@ -331,7 +334,7 @@ class DetailsFragmentMaterial: Fragment() {
                 feelings,
                 actions,
                 intensity,
-                if (id == 0L) DateTime() else currentRecord.datetime
+                if (id == 0L) DateTime() else detailsViewModel.currentRecord?.datetime ?: DateTime()
         )
     }
 
@@ -366,6 +369,7 @@ class DetailsFragmentMaterial: Fragment() {
 
     override fun onStop() {
         super.onStop()
+        detailsViewModel.currentRecord = null
 
         // Hide keyboard when back pressed
         (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
