@@ -44,6 +44,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        vm.askDetailsFragmentConfirm.observe(this) {
+            when (it) {
+                false -> {
+                    super.onBackPressed()
+                }
+            }
+        }
     }
 
     fun addNewRecord(view: View) {
@@ -59,6 +67,16 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 vm.authSuccessful()
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        val navController = findNavController(R.id.myNavHostFragment)
+
+        if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
+            vm.askDetailsFragmentConfirmation()
+        } else {
+            super.onBackPressed()
         }
     }
 }

@@ -50,6 +50,10 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isAuthenticated:LiveData<Boolean>
         get() = _isAuthenticated
 
+    private val _askChangesConfirm = MutableLiveData<Boolean?>()
+    val askDetailsFragmentConfirm: LiveData<Boolean?>
+        get() = _askChangesConfirm
+
     private val records: LiveData<List<DbRecord>> = Transformations.switchMap(isAuthenticated) {
         return@switchMap if (it) {
             Transformations.switchMap(_isDescOrder) {
@@ -64,6 +68,18 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         } else {
             MutableLiveData(emptyList())
         }
+    }
+
+    fun askDetailsFragmentConfirmation() {
+        _askChangesConfirm.value = true
+    }
+
+    fun detailsFragmentConfirmChanges() {
+        _askChangesConfirm.value = false
+    }
+
+    fun detailsFragmentConfirmChangesCancel() {
+        _askChangesConfirm.value = null
     }
 
     fun authSuccessful() {
@@ -91,43 +107,43 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             }
         }
     }
+//
+//    fun addRecord(dbRecord: DbRecord) {
+//        uiScope.launch {
+//            withContext(Dispatchers.IO) {
+//                db.databaseDao.addRecord(dbRecord)
+//            }
+//        }
+//    }
 
-    fun addRecord(dbRecord: DbRecord) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                db.databaseDao.addRecord(dbRecord)
-            }
-        }
-    }
-
-    fun updateRecord(id: Long,
-                     situation: String,
-                     thought: String,
-                     rational: String,
-                     emotion: String,
-                     finalDist: Int,
-                     feelings: String,
-                     actions: String,
-                     intensity: Int) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                db.databaseDao.updateRecord(
-                        DbRecord(
-                                id,
-                                situation,
-                                thought,
-                                rational,
-                                emotion,
-                                finalDist,
-                                feelings,
-                                actions,
-                                intensity,
-                                db.databaseDao.getRecordById(id).datetime
-                        )
-                )
-            }
-        }
-    }
+//    fun updateRecord(id: Long,
+//                     situation: String,
+//                     thought: String,
+//                     rational: String,
+//                     emotion: String,
+//                     finalDist: Int,
+//                     feelings: String,
+//                     actions: String,
+//                     intensity: Int) {
+//        uiScope.launch {
+//            withContext(Dispatchers.IO) {
+//                db.databaseDao.updateRecord(
+//                        DbRecord(
+//                                id,
+//                                situation,
+//                                thought,
+//                                rational,
+//                                emotion,
+//                                finalDist,
+//                                feelings,
+//                                actions,
+//                                intensity,
+//                                db.databaseDao.getRecordById(id).datetime
+//                        )
+//                )
+//            }
+//        }
+//    }
 
     fun navigateToRecord(id: Long) {
         _newRecordNavigated.value = id

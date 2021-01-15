@@ -1,12 +1,72 @@
 package com.vva.androidopencbt.recorddetails
 
 import androidx.lifecycle.ViewModel
+import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class DetailsViewModel(
-        private val recordKey: Long? = null,
-        dataSource: RecordDao) : ViewModel() {
-    val ds = dataSource
+        private val recordKey: Long = 0,
+        private val dataSource: RecordDao) : ViewModel() {
+    private val vmJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
+    var currentRecord: DbRecord? = null
 
-    fun getRecord() = ds.getRecordLiveDataById(recordKey ?: 0)
+    fun getRecord() = dataSource.getRecordLiveDataById(recordKey)
+
+    fun isRecordHasChanged(dbRecord: DbRecord): Boolean {
+        return currentRecord?.let {
+            !dbRecord.equalsIgnoreIdAndDate(it)
+        } ?: false
+    }
+
+    fun deleteRecordById(id: Long) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSource.deleteRecord(
+                        dataSource.getRecordById(id)
+                )
+            }
+        }
+    }
+
+    fun addRecord(dbRecord: DbRecord) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSource.addRecord(dbRecord)
+            }
+        }
+    }
+
+    fun updateRecord(
+            id: Long,
+            situation: String,
+            thought: String,
+            rational: String,
+            emotion: String,
+            finalDist: Int,
+            feelings: String,
+            actions: String,
+            intensity: Int
+    ) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSource.updateRecord(
+                        DbRecord(
+                                id,
+                                situation,
+                                thought,
+                                rational,
+                                emotion,
+                                finalDist,
+                                feelings,
+                                actions,
+                                intensity,
+                                dataSource.getRecordById(id).datetime
+                        )
+                )
+            }
+        }
+    }
 }
