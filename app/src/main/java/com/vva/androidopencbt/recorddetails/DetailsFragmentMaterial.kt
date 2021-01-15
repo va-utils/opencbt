@@ -82,12 +82,12 @@ class DetailsFragmentMaterial: Fragment() {
                 if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
                     if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
                         AlertDialog.Builder(requireContext())
-                                .setTitle("Отменить изменения?")
-                                .setMessage("Были внесены изменения. Отменить?")
-                                .setNegativeButton("Отменить") { dialogInterface: DialogInterface, i: Int ->
-                                    navController.navigateUp()
+                                .setTitle(context.getString(R.string.details_fragment_confirm_dialog_title))
+                                .setMessage(context.getString(R.string.details_fragment_confirm_dialog_message))
+                                .setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, i: Int ->
+                                    dialogInterface.dismiss()
                                 }
-                                .setPositiveButton("Сохранить") { dialogInterface: DialogInterface, i: Int ->
+                                .setPositiveButton(getString(R.string.save)) { dialogInterface: DialogInterface, i: Int ->
                                     save()
                                     navController.navigateUp()
                                 }
@@ -214,6 +214,29 @@ class DetailsFragmentMaterial: Fragment() {
 
             if (!prefs.getBoolean("enable_distortions", true)) {
                 hideDistortions()
+            }
+        }
+
+        viewModel.askDetailsFragmentConfirm.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
+                        AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.details_fragment_confirm_dialog_title))
+                                .setMessage(getString(R.string.details_fragment_confirm_dialog_message))
+                                .setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, i: Int ->
+                                    dialogInterface.dismiss()
+                                    viewModel.detailsFragmentConfirmChangesCancel()
+                                }
+                                .setPositiveButton(getString(R.string.save)) { dialogInterface: DialogInterface, i: Int ->
+                                    save()
+                                    viewModel.detailsFragmentConfirmChanges()
+                                }
+                                .show()
+                    } else {
+                        viewModel.detailsFragmentConfirmChanges()
+                    }
+                }
             }
         }
 

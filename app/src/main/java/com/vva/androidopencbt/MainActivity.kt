@@ -44,6 +44,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        vm.askDetailsFragmentConfirm.observe(this) {
+            when (it) {
+                false -> {
+                    super.onBackPressed()
+                }
+            }
+        }
     }
 
     fun addNewRecord(view: View) {
@@ -66,8 +74,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.myNavHostFragment)
 
         if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
-            super.onBackPressed()
-            TODO()
+            vm.askDetailsFragmentConfirmation()
         } else {
             super.onBackPressed()
         }

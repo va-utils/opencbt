@@ -50,6 +50,10 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isAuthenticated:LiveData<Boolean>
         get() = _isAuthenticated
 
+    private val _askChangesConfirm = MutableLiveData<Boolean?>()
+    val askDetailsFragmentConfirm: LiveData<Boolean?>
+        get() = _askChangesConfirm
+
     private val records: LiveData<List<DbRecord>> = Transformations.switchMap(isAuthenticated) {
         return@switchMap if (it) {
             Transformations.switchMap(_isDescOrder) {
@@ -64,6 +68,18 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         } else {
             MutableLiveData(emptyList())
         }
+    }
+
+    fun askDetailsFragmentConfirmation() {
+        _askChangesConfirm.value = true
+    }
+
+    fun detailsFragmentConfirmChanges() {
+        _askChangesConfirm.value = false
+    }
+
+    fun detailsFragmentConfirmChangesCancel() {
+        _askChangesConfirm.value = null
     }
 
     fun authSuccessful() {
