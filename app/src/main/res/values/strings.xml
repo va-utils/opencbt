@@ -171,7 +171,7 @@
 
     <string name="cancel">Отмена</string>
     <string name="details_fragment_confirm_dialog_title">Отменить изменения?</string>
-    <string name="details_fragment_confirm_dialog_message">Были внесены изменения. Сохранить?</string>
+    <string name="details_fragment_confirm_dialog_message">Были внесены изменения. Выйти?</string>
     <string name="save">Сохранить</string>
     <string name="exit">Выйти</string>
 </resources>
