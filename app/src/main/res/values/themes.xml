@@ -33,6 +33,7 @@
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.OpenCBT.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.OpenCBT.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.OpenCBT.LargeComponent</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.AppTheme.MaterialAlertDialog</item>
     </style>
 
     <style name="Base.Theme.OpenCBT" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
@@ -41,5 +42,9 @@
 <!--        <item name="android:navigationBarColor" tools:ignore="NewApi">?android:attr/colorBackground</item>-->
 <!--        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>-->
 <!--        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">?attr/colorControlHighlight</item>-->
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog" >
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.OpenCBT.AlertDialog</item>
     </style>
 </resources>

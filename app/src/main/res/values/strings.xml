@@ -170,8 +170,8 @@
     <string name="import_cancel">Отмена</string>
 
     <string name="cancel">Отмена</string>
-    <string name="details_fragment_confirm_dialog_title">Сохранить изменения?</string>
+    <string name="details_fragment_confirm_dialog_title">Отменить изменения?</string>
     <string name="details_fragment_confirm_dialog_message">Были внесены изменения. Сохранить?</string>
     <string name="save">Сохранить</string>
-
+    <string name="exit">Выйти</string>
 </resources>

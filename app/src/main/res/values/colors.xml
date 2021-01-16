@@ -33,6 +33,7 @@
     <color name="secondaryTextColor">#000000</color>
 
     <color name="primaryColorDark">#455a64</color>
+<!--    <color name="primaryColorDark">#880e4f</color>-->
     <color name="primaryLightColorDark">#718792</color>
     <color name="primaryDarkColorDark">#1c313a</color>
     <color name="secondaryColorDark">#00897b</color>

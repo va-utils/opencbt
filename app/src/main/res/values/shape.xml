@@ -13,8 +13,13 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/reply_large_component_corner_radius</item>
     </style>
+    <style name="ShapeAppearance.OpenCBT.AlertDialog" parent="ShapeAppearance.MaterialComponents.MediumComponent" >
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/details_confirm_dialog_corner_radius</item>
+    </style>
 
     <dimen name="reply_small_component_corner_radius">24dp</dimen>
     <dimen name="reply_medium_component_corner_radius">0dp</dimen>
     <dimen name="reply_large_component_corner_radius">12dp</dimen>
+    <dimen name="details_confirm_dialog_corner_radius">6dp</dimen>
 </resources>

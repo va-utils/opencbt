@@ -4,29 +4,22 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputLayout
@@ -81,15 +74,14 @@ class DetailsFragmentMaterial: Fragment() {
             setNavigationOnClickListener {
                 if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
                     if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
-                        AlertDialog.Builder(requireContext())
-                                .setTitle(context.getString(R.string.details_fragment_confirm_dialog_title))
-                                .setMessage(context.getString(R.string.details_fragment_confirm_dialog_message))
-                                .setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, i: Int ->
-                                    dialogInterface.dismiss()
-                                }
-                                .setPositiveButton(getString(R.string.save)) { dialogInterface: DialogInterface, i: Int ->
-                                    save()
+                        MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(R.string.details_fragment_confirm_dialog_title)
+                                .setMessage(R.string.details_fragment_confirm_dialog_message)
+                                .setNegativeButton(R.string.exit) { dialogInterface: DialogInterface, i: Int ->
                                     navController.navigateUp()
+                                }
+                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, i: Int ->
+                                    dialogInterface.dismiss()
                                 }
                                 .show()
                     } else {
@@ -100,7 +92,7 @@ class DetailsFragmentMaterial: Fragment() {
             menu.forEach { menuItem ->
                 menuItem.setOnMenuItemClickListener { item ->
                     if (item.itemId == R.id.menu_help) {
-                        val builder = AlertDialog.Builder(requireContext())
+                        val builder = MaterialAlertDialogBuilder(requireContext())
                         builder.setMessage(getText(R.string.dialog_help_text))
                         builder.setTitle("Справка")
                         builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
@@ -221,20 +213,20 @@ class DetailsFragmentMaterial: Fragment() {
             when (it) {
                 true -> {
                     if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
-                        AlertDialog.Builder(requireContext())
-                                .setTitle(getString(R.string.details_fragment_confirm_dialog_title))
-                                .setMessage(getString(R.string.details_fragment_confirm_dialog_message))
-                                .setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, i: Int ->
+                        MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(R.string.details_fragment_confirm_dialog_title)
+                                .setMessage(R.string.details_fragment_confirm_dialog_message)
+                                .setNegativeButton(R.string.exit) { dialogInterface: DialogInterface, i: Int ->
+                                    dialogInterface.dismiss()
+                                    viewModel.detailsFragmentRollbackChanges()
+                                }
+                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, i: Int ->
                                     dialogInterface.dismiss()
                                     viewModel.detailsFragmentConfirmChangesCancel()
                                 }
-                                .setPositiveButton(getString(R.string.save)) { dialogInterface: DialogInterface, i: Int ->
-                                    save()
-                                    viewModel.detailsFragmentConfirmChanges()
-                                }
                                 .show()
                     } else {
-                        viewModel.detailsFragmentConfirmChanges()
+                        viewModel.detailsFragmentRollbackChanges()
                     }
                 }
             }

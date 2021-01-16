@@ -74,7 +74,7 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
         _askChangesConfirm.value = true
     }
 
-    fun detailsFragmentConfirmChanges() {
+    fun detailsFragmentRollbackChanges() {
         _askChangesConfirm.value = false
     }
 
