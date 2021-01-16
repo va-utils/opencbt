@@ -33,4 +33,7 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
+    <style name="Widget.AppTheme.Night.MaterialCardView" parent="Widget.MaterialComponents.CardView" >
+        <item name="android:backgroundTint">@color/n_forBack</item>
+    </style>
 </resources>

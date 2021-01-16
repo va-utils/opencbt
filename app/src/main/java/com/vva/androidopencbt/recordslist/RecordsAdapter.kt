@@ -45,7 +45,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
             }
 
             cardView.setOnLongClickListener {
-                onLongListener.onClick(record)
+                onLongListener.onClick(it, record)
             }
 
             dateTextView.text = record.datetime.getDateTimeString()
@@ -161,6 +161,6 @@ class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
     fun onClick(record: DbRecord) = clickListener(record)
 }
 
-class RecordLongListener(val clickListener: (record: DbRecord) -> Boolean) {
-    fun onClick(record: DbRecord) = clickListener(record)
+class RecordLongListener(val clickListener: (view: View, record: DbRecord) -> Boolean) {
+    fun onClick(view: View, record: DbRecord) = clickListener(view, record)
 }

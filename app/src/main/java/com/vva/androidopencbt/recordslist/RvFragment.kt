@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -26,6 +25,7 @@ import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.settings.PreferenceRepository
 
 class RvFragment: Fragment() {
@@ -85,9 +85,9 @@ class RvFragment: Fragment() {
         dataAdapter = RecordsAdapter(RecordListener {
             findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = it.id })
         },
-        RecordLongListener {
-
-            true
+        RecordLongListener { view: View, dbRecord: DbRecord ->
+            listViewModel.activateSelection()
+            view.callOnClick()
         })
 
         prefs.isIntensityIndicationEnabled.observe(viewLifecycleOwner) {

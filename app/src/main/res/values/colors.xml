@@ -32,12 +32,16 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
 
-    <color name="primaryColorDark">#455a64</color>
+<!--    <color name="primaryColorDark">#455a64</color>-->
 <!--    <color name="primaryColorDark">#880e4f</color>-->
     <color name="primaryLightColorDark">#718792</color>
     <color name="primaryDarkColorDark">#1c313a</color>
-    <color name="secondaryColorDark">#00897b</color>
-    <color name="secondaryLightColorDark">#4ebaaa</color>
+<!--    <color name="secondaryColorDark">#00897b</color>-->
+    <color name="primaryColorDark">#f36223</color>
+    <color name="secondaryColorDark">#CD9D7F</color>
+    <color name="secondaryLightColorDark">#CD9D63</color>
+
+<!--    <color name="secondaryLightColorDark">#4ebaaa</color>-->
     <color name="secondaryDarkColorDark">#005b4f</color>
     <color name="primaryTextColorDark">#ffffff</color>
     <color name="secondaryTextColorDark">#000000</color>

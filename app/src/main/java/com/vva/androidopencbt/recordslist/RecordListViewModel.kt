@@ -17,8 +17,19 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         }
     }
 
+    private val _isSelectionActive = MutableLiveData<Boolean>()
+    val isSelectionActive: LiveData<Boolean>
+        get() = _isSelectionActive
+
     fun getAllRecords() = records
 
+    fun activateSelection() {
+        _isSelectionActive.value = true
+    }
+
+    fun deactivateSelection() {
+        _isSelectionActive.value = false
+    }
 }
 
 class RecordListViewModelFactory(private val dataSource: RecordDao, private val prefs: PreferenceRepository): ViewModelProvider.Factory {
