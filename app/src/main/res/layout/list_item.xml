@@ -9,6 +9,7 @@
         android:clickable="true"
         android:focusable="true"
         android:background="?android:selectableItemBackground"
+        android:backgroundTint="?attr/android:windowBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         <LinearLayout
