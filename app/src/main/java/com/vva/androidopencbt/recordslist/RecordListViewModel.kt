@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.recordslist
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
@@ -39,9 +38,7 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         } else {
             isSelectAllActive = false
             val isSelected = _selectedItemsArray[dbRecord.id] ?: false
-            Log.d("TST", isSelected.toString())
             _selectedItemsArray[dbRecord.id] = !isSelected
-            Log.d("TST", _selectedItemsArray[dbRecord.id].toString())
             _selectedItems.value = _selectedItemsArray
             true
         }
@@ -77,7 +74,6 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         _selectedItemsArray.filterValues {
             true
         }.forEach {
-            Log.d("TST", it.toString())
             uiScope.launch(Dispatchers.IO) {
                 dataSource.deleteById(it.key)
             }
