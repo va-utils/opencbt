@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,12 +17,14 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     var quotes = false
     var intensityIndication = false
 
+    private var _selectedItems = HashMap<Long, Boolean>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication)
+        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, position, _selectedItems)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -39,13 +41,19 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, position: Int, selection: HashMap<Long, Boolean>) {
             cardView.setOnClickListener {
-                onClickListener.onClick(record)
+                onClickListener.onClick(it, record, position)
             }
 
             cardView.setOnLongClickListener {
-                onLongListener.onClick(it, record)
+                onLongListener.onClick(it, record, position)
+            }
+
+            if (selection[record.id] == true) {
+                cardView.background.setTint(ResourcesCompat.getColor(res, R.color.list_selection_color, null))
+            } else {
+                cardView.background.setTintList(null)
             }
 
             dateTextView.text = record.datetime.getDateTimeString()
@@ -146,6 +154,15 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         }
     }
 
+    fun submitSelectionArray(map: HashMap<Long, Boolean>) {
+        _selectedItems = map
+        notifyDataSetChanged()
+    }
+
+    fun getList(): List<DbRecord> {
+        return currentList
+    }
+
     class DiffCallback: DiffUtil.ItemCallback<DbRecord>() {
         override fun areItemsTheSame(oldItem: DbRecord, newItem: DbRecord): Boolean {
             return oldItem.id == newItem.id
@@ -157,10 +174,10 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     }
 }
 
-class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
-    fun onClick(record: DbRecord) = clickListener(record)
+class RecordListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Unit) {
+    fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
 }
 
-class RecordLongListener(val clickListener: (view: View, record: DbRecord) -> Boolean) {
-    fun onClick(view: View, record: DbRecord) = clickListener(view, record)
+class RecordLongListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Boolean) {
+    fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
 }

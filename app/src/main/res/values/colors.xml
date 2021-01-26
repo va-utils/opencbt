@@ -32,21 +32,6 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
 
-  <!--  <color name="primaryColorDark">#455a64</color> -->
-   <color name="primaryColorDark">#f36223</color>
-    <color name="primaryLightColorDark">#718792</color>
-    <color name="primaryDarkColorDark">#1c313a</color>
-    <color name="secondaryColorDark">#CD9D63</color>
-    <color name="secondaryLightColorDark">#CD9D7F</color>
-    <color name="secondaryDarkColorDark">#005b4f</color>
-    <color name="primaryTextColorDark">#ffffff</color>
-    <color name="secondaryTextColorDark">#000000</color>
-
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -61,4 +46,6 @@
 
     <color name="n_forBack">#161a1f</color>
 
+    <color name="list_selection_color">#c7c7c7</color>
+    <color name="action_mode_background">@color/primaryDarkColor</color>
 </resources>

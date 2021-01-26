@@ -2,14 +2,15 @@ package com.vva.androidopencbt.recordslist
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.App
@@ -41,13 +43,18 @@ class RvFragment: Fragment() {
     private lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
+    private lateinit var toolbar: Toolbar
+    private lateinit var appBar: AppBarLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBar = view.findViewById(R.id.rv_appBar)
+        toolbar = view.findViewById(R.id.rv_toolbar)
+        toolbar.inflateMenu(R.menu.menu_main)
 
-        view.findViewById<Toolbar>(R.id.rv_toolbar).setupWithNavController(navController, appBarConfiguration)
-        view.findViewById<Toolbar>(R.id.rv_toolbar).menu.forEach { menuItem ->
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+        toolbar.menu.forEach { menuItem ->
             menuItem.setOnMenuItemClickListener {
                 val navOptions = NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_right)
@@ -82,13 +89,67 @@ class RvFragment: Fragment() {
         prefs = (requireActivity().application as App).preferenceRepository
         database = CbdDatabase.getInstance(requireContext())
 
-        dataAdapter = RecordsAdapter(RecordListener {
-            findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = it.id })
+        dataAdapter = RecordsAdapter(RecordListener { view: View, dbRecord: DbRecord, position: Int ->
+            when (listViewModel.onItemClick(dbRecord)) {
+                null -> {
+                    findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = dbRecord.id })
+                }
+            }
         },
-        RecordLongListener { view: View, dbRecord: DbRecord ->
-            listViewModel.activateSelection()
-            view.callOnClick()
+        RecordLongListener { view: View, dbRecord: DbRecord, position: Int ->
+            listViewModel.onItemLongClick(dbRecord)
+            viewModel.activateSelection()
+            true
         })
+
+        listViewModel.selectedItems.observe(viewLifecycleOwner) {
+            dataAdapter.submitSelectionArray(it)
+        }
+
+        viewModel.isSelectionActive.observe(viewLifecycleOwner) {
+            if (!it) {
+                listViewModel.cancelAllSelections()
+            } else {
+                toolbar.startActionMode(object: ActionMode.Callback {
+                    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+                        mode.menuInflater?.inflate(R.menu.list_selection, menu)
+                        return true
+                    }
+
+                    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+                        return false
+                    }
+
+                    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+                        return when (item.itemId) {
+                            R.id.action_cancel -> {
+                                mode.finish()
+                                true
+                            }
+                            R.id.action_delete -> {
+                                listViewModel.deleteSelected()
+                                mode.finish()
+                                true
+                            }
+                            R.id.action_select_all -> {
+                                listViewModel.selectAll(dataAdapter.getList())
+                                true
+                            }
+                            else -> {
+                                listViewModel.cancelAllSelections()
+                                mode.finish()
+                                true
+                            }
+                        }
+                    }
+
+                    override fun onDestroyActionMode(mode: ActionMode?) {
+                        listViewModel.cancelAllSelections()
+                        viewModel.deactivateSelection()
+                    }
+                })
+            }
+        }
 
         prefs.isIntensityIndicationEnabled.observe(viewLifecycleOwner) {
             dataAdapter.intensityIndication = it
@@ -112,18 +173,6 @@ class RvFragment: Fragment() {
                 rv.visibility = View.GONE
             }
         })
-
-//        viewModel.getAllRecords().observe(viewLifecycleOwner, {
-//            if (it.isNotEmpty()) {
-//                dataAdapter.submitList(it)
-//
-//                welcomeTv.visibility = View.GONE
-//                rv.visibility = View.VISIBLE
-//            } else {
-//                welcomeTv.visibility = View.VISIBLE
-//                rv.visibility = View.GONE
-//            }
-//        })
 
         dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

@@ -9,7 +9,6 @@
         android:clickable="true"
         android:focusable="true"
         android:background="?android:selectableItemBackground"
-        android:backgroundTint="?attr/android:windowBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         <LinearLayout
@@ -17,7 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

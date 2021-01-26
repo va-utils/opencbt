@@ -33,6 +33,9 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.OpenCBT.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.OpenCBT.LargeComponent</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.AppTheme.MaterialAlertDialog</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/action_mode_background</item>
     </style>
 
     <style name="Base.Theme.OpenCBT" parent="Theme.MaterialComponents.DayNight.NoActionBar" >

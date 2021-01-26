@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.recordslist.RecordListViewModel
+import com.vva.androidopencbt.recordslist.RecordListViewModelFactory
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 import com.vva.androidopencbt.settings.PreferenceRepository
 
@@ -20,12 +23,14 @@ import com.vva.androidopencbt.settings.PreferenceRepository
 class MainActivity : AppCompatActivity() {
     private val vm: RecordsViewModel by viewModels()
     private lateinit var preferences: PreferenceRepository
+    private lateinit var database: CbdDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         preferences = (application as App).preferenceRepository
+        database = CbdDatabase.getInstance(this)
 
         vm.isAuthenticated.observe(this) {
             if (!it && preferences.isPinEnabled.value == true) {
@@ -75,6 +80,8 @@ class MainActivity : AppCompatActivity() {
 
         if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
             vm.askDetailsFragmentConfirmation()
+        } else  if (navController.currentDestination?.id == R.id.rvFragment && vm.isSelectionActive.value == true) {
+            vm.deactivateSelection()
         } else {
             super.onBackPressed()
         }

@@ -1,12 +1,20 @@
 package com.vva.androidopencbt.recordslist
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.PreferenceRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRepository): ViewModel() {
+    private val job = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + job)
+
     private val records: LiveData<List<DbRecord>> = Transformations.switchMap(prefs.isDescOrder) {
         isDesc ->
 
@@ -17,18 +25,70 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         }
     }
 
-    private val _isSelectionActive = MutableLiveData<Boolean>()
-    val isSelectionActive: LiveData<Boolean>
-        get() = _isSelectionActive
+    private var isSelectionActive = false
+    private var isSelectAllActive = false
+
+    private var _selectedItemsArray = HashMap<Long, Boolean>()
+
+    private val _selectedItems = MutableLiveData<HashMap<Long, Boolean>>()
+    val selectedItems: LiveData<HashMap<Long, Boolean>>
+        get() = _selectedItems
 
     fun getAllRecords() = records
 
-    fun activateSelection() {
-        _isSelectionActive.value = true
+    fun onItemClick(dbRecord: DbRecord): Boolean? {
+        return if (!isSelectionActive) {
+            null
+        } else {
+            isSelectAllActive = false
+            val isSelected = _selectedItemsArray[dbRecord.id] ?: false
+            _selectedItemsArray[dbRecord.id] = !isSelected
+            _selectedItems.value = _selectedItemsArray
+            true
+        }
     }
 
-    fun deactivateSelection() {
-        _isSelectionActive.value = false
+    fun onItemLongClick(dbRecord: DbRecord) {
+        if (!isSelectionActive) {
+            isSelectionActive = true
+            onItemClick(dbRecord)
+        }
+    }
+
+    fun cancelAllSelections() {
+        _selectedItemsArray = HashMap()
+        _selectedItems.value = _selectedItemsArray
+        isSelectionActive = false
+    }
+
+    fun selectAll(list: List<DbRecord>) {
+        isSelectAllActive = !isSelectAllActive
+        if (isSelectAllActive) {
+            list.forEach {
+                _selectedItemsArray[it.id] = true
+                _selectedItems.value = _selectedItemsArray
+            }
+        } else {
+            _selectedItemsArray = HashMap()
+            _selectedItems.value = _selectedItemsArray
+        }
+    }
+
+    fun deleteSelected() {
+        uiScope.launch(Dispatchers.IO) {
+            _selectedItemsArray.forEach {
+                if (it.value) {
+                    dataSource.deleteById(it.key)
+                    _selectedItemsArray.remove(it.key)
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        job.cancel()
     }
 }
 
