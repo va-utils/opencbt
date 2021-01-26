@@ -6,10 +6,7 @@ import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.PreferenceRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRepository): ViewModel() {
     private val job = Job()
@@ -42,7 +39,9 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         } else {
             isSelectAllActive = false
             val isSelected = _selectedItemsArray[dbRecord.id] ?: false
+            Log.d("TST", isSelected.toString())
             _selectedItemsArray[dbRecord.id] = !isSelected
+            Log.d("TST", _selectedItemsArray[dbRecord.id].toString())
             _selectedItems.value = _selectedItemsArray
             true
         }
@@ -75,13 +74,14 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
     }
 
     fun deleteSelected() {
-        uiScope.launch(Dispatchers.IO) {
-            _selectedItemsArray.forEach {
-                if (it.value) {
-                    dataSource.deleteById(it.key)
-                    _selectedItemsArray.remove(it.key)
-                }
+        _selectedItemsArray.filterValues {
+            true
+        }.forEach {
+            Log.d("TST", it.toString())
+            uiScope.launch(Dispatchers.IO) {
+                dataSource.deleteById(it.key)
             }
+            _selectedItemsArray.remove(it.key)
         }
     }
 
