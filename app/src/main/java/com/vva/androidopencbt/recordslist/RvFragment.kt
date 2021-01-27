@@ -124,7 +124,10 @@ class RvFragment: Fragment() {
                                 true
                             }
                             R.id.action_delete -> {
-                                listViewModel.deleteSelected()
+                                val count = listViewModel.deleteSelected().size
+                                Snackbar.make(ll, resources.getQuantityString(R.plurals.delete_cancel, count, count), Snackbar.LENGTH_LONG).setAction(R.string.cancel) {
+                                    listViewModel.rollbackDeletion()
+                                }.show()
                                 mode.finish()
                                 true
                             }
@@ -192,7 +195,8 @@ class RvFragment: Fragment() {
                         if (list?.isEmpty()!!) {
                             Toast.makeText(requireContext(), getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
                         } else {
-                            Snackbar.make(ll, "Импортировано ${list.size} записей", Snackbar.LENGTH_SHORT)
+                            val count = list.size
+                            Snackbar.make(ll, resources.getQuantityString(R.plurals.import_cancel, count, count), Snackbar.LENGTH_SHORT)
                                     .setAction(getString(R.string.import_cancel)) { _ ->
                                         list.forEach { id ->
                                             viewModel.deleteRecord(id)

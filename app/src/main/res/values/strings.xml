@@ -179,4 +179,14 @@
     <string name="selection_action_cancel">Отмена</string>
     <string name="selection_action_delete">Удалить</string>
     <string name="selection_action_select_all">Выделить все</string>
+    <plurals name="import_cancel" >
+        <item quantity="one">Импортирована %d запись</item>
+        <item quantity="few">Импортировано %d записи</item>
+        <item quantity="other">Импортировано %d записей</item>
+    </plurals>
+    <plurals name="delete_cancel" >
+        <item quantity="one">Удалена %d запись</item>
+        <item quantity="few">Удалено %d записи</item>
+        <item quantity="other">Удалено %d записей</item>
+    </plurals>
 </resources>

@@ -1,11 +1,13 @@
 package com.vva.androidopencbt.recordslist
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.PreferenceRepository
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
 
 class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRepository): ViewModel() {
     private val job = Job()
@@ -24,7 +26,8 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
     private var isSelectionActive = false
     private var isSelectAllActive = false
 
-    private var _selectedItemsArray = HashMap<Long, Boolean>()
+    private var _selectedItemsMap = HashMap<Long, Boolean>()
+    private var _selectedItemsCache = ArrayList<DbRecord>()
 
     private val _selectedItems = MutableLiveData<HashMap<Long, Boolean>>()
     val selectedItems: LiveData<HashMap<Long, Boolean>>
@@ -37,9 +40,13 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
             null
         } else {
             isSelectAllActive = false
-            val isSelected = _selectedItemsArray[dbRecord.id] ?: false
-            _selectedItemsArray[dbRecord.id] = !isSelected
-            _selectedItems.value = _selectedItemsArray
+            val isSelected = _selectedItemsMap[dbRecord.id] ?: false
+            if (!isSelected)
+                _selectedItemsCache.add(dbRecord)
+            else
+                _selectedItemsCache.remove(dbRecord)
+            _selectedItemsMap[dbRecord.id] = !isSelected
+            _selectedItems.value = _selectedItemsMap
             true
         }
     }
@@ -52,32 +59,46 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
     }
 
     fun cancelAllSelections() {
-        _selectedItemsArray = HashMap()
-        _selectedItems.value = _selectedItemsArray
+        _selectedItemsMap = HashMap()
+        _selectedItems.value = _selectedItemsMap
         isSelectionActive = false
+
+        uiScope.launch(Dispatchers.Default) {
+            delay(TimeUnit.SECONDS.toMillis(DELETE_HOLD_TIME_SEC))
+            _selectedItemsCache = ArrayList()
+        }
     }
 
     fun selectAll(list: List<DbRecord>) {
         isSelectAllActive = !isSelectAllActive
         if (isSelectAllActive) {
             list.forEach {
-                _selectedItemsArray[it.id] = true
-                _selectedItems.value = _selectedItemsArray
+                _selectedItemsMap[it.id] = true
+                _selectedItems.value = _selectedItemsMap
             }
         } else {
-            _selectedItemsArray = HashMap()
-            _selectedItems.value = _selectedItemsArray
+            _selectedItemsMap = HashMap()
+            _selectedItems.value = _selectedItemsMap
         }
     }
 
-    fun deleteSelected() {
-        _selectedItemsArray.filterValues {
-            true
+    fun deleteSelected(): List<DbRecord> {
+        _selectedItemsMap.filterValues {
+            it
         }.forEach {
             uiScope.launch(Dispatchers.IO) {
                 dataSource.deleteById(it.key)
             }
-            _selectedItemsArray.remove(it.key)
+            _selectedItemsMap.remove(it.key)
+        }
+        return _selectedItemsCache
+    }
+
+    fun rollbackDeletion() {
+        _selectedItemsCache.forEach {
+            uiScope.launch(Dispatchers.IO) {
+                dataSource.addRecord(it)
+            }
         }
     }
 
@@ -85,6 +106,10 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         super.onCleared()
 
         job.cancel()
+    }
+
+    companion object {
+        const val DELETE_HOLD_TIME_SEC = 5L
     }
 }
 
