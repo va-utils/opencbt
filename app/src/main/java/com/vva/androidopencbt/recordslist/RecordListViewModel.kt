@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.recordslist
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbContract
 import com.vva.androidopencbt.db.DbRecord

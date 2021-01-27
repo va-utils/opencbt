@@ -42,6 +42,8 @@ class RvFragment: Fragment() {
     private lateinit var fab : FloatingActionButton
     private lateinit var toolbar: Toolbar
     private lateinit var appBar: AppBarLayout
+    private var actionMode: ActionMode? = null
+    private var itemForDeletionCount = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -101,20 +103,23 @@ class RvFragment: Fragment() {
 
         listViewModel.selectedItems.observe(viewLifecycleOwner) {
             dataAdapter.submitSelectionArray(it)
+            itemForDeletionCount = it.filterValues { it }.size
+            actionMode?.invalidate()
         }
 
         viewModel.isSelectionActive.observe(viewLifecycleOwner) {
             if (!it) {
                 listViewModel.cancelAllSelections()
             } else {
-                toolbar.startActionMode(object: ActionMode.Callback {
+                actionMode = toolbar.startActionMode(object: ActionMode.Callback {
                     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
                         mode.menuInflater?.inflate(R.menu.list_selection, menu)
                         return true
                     }
 
                     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-                        return false
+                        menu.findItem(R.id.action_delete).isEnabled = itemForDeletionCount > 0
+                        return true
                     }
 
                     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
