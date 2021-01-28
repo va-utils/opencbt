@@ -133,8 +133,17 @@ class DetailsFragmentMaterial: Fragment() {
         }
 
         deleteButton.setOnClickListener {
-            detailsViewModel.deleteRecordById(id)
-            findNavController().popBackStack()
+
+            MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.details_fragment_remove_confirm_dialog_title).
+                    setMessage(R.string.details_fragment_remove_confirm_dialog_message).
+                    setNegativeButton(R.string.remove) { dialogInterface: DialogInterface, i: Int ->
+                        detailsViewModel.deleteRecordById(id)
+                        findNavController().popBackStack()
+                    }
+                    .setNeutralButton(R.string.cancel)
+                    { dialogInterface: DialogInterface, i: Int ->
+                        dialogInterface.dismiss()
+                    }.show()
         }
 
         saveButton.setOnClickListener {

@@ -189,4 +189,9 @@
         <item quantity="few">Удалено %d записи</item>
         <item quantity="other">Удалено %d записей</item>
     </plurals>
+
+    <string name="details_fragment_remove_confirm_dialog_title">Удалить запись?</string>
+    <string name="details_fragment_remove_confirm_dialog_message">Вы действительно хотите удалить эту запись?</string>
+    <string name="remove">Удалить</string>
+
 </resources>
