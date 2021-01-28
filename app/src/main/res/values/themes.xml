@@ -11,7 +11,7 @@
         <item name="colorSecondary">@color/primaryColor</item>
         <item name="colorSecondaryVariant">@color/primaryLightColor</item>
         <item name="appBarLayoutStyle">@style/Widget.AppTheme.Light.AppBar</item>
-        <item name="actionModeBackground">@color/primaryColor</item>
+     <!--   <item name="actionModeBackground">@color/primaryColor</item> -->
 
     </style>
     <!--  Base theme for light and night themes  -->
@@ -36,7 +36,7 @@
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.AppTheme.MaterialAlertDialog</item>
 
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@color/action_mode_background</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
     </style>
 
     <style name="Base.Theme.OpenCBT" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
