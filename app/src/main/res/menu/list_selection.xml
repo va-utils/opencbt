@@ -5,7 +5,6 @@
         android:id="@+id/action_select_all"
         android:title="@string/selection_action_select_all"
         app:showAsAction="ifRoom"
-        
         android:icon="@drawable/ic_baseline_select_all_24" />
     <item
         android:id="@+id/action_delete"

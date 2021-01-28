@@ -11,6 +11,7 @@
         <item name="colorSecondary">@color/primaryColor</item>
         <item name="colorSecondaryVariant">@color/primaryLightColor</item>
         <item name="appBarLayoutStyle">@style/Widget.AppTheme.Light.AppBar</item>
+        <item name="actionModeBackground">@color/primaryColor</item>
 
     </style>
     <!--  Base theme for light and night themes  -->

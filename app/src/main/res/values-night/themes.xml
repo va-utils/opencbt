@@ -15,6 +15,7 @@
         <item name="appBarLayoutStyle">@style/Widget.AppTheme.Dark.AppBar</item>
         <item name="materialButtonStyle">@style/Widget.AppTheme.Night.OutlinedButton</item>
         <item name="materialCardViewStyle">@style/Widget.AppTheme.Night.MaterialCardView</item>
+        <item name="actionModeBackground">@color/primaryColor</item>
     </style>
 
     <style name="Widget.AppTheme.Night.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton" >
