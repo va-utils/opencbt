@@ -12,10 +12,10 @@
         <!-- Status bar color. -->
         <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
-        <item name="appBarLayoutStyle">@style/Widget.AppTheme.Dark.AppBar</item>
         <item name="materialButtonStyle">@style/Widget.AppTheme.Night.OutlinedButton</item>
         <item name="materialCardViewStyle">@style/Widget.AppTheme.Night.MaterialCardView</item>
-      <!--  <item name="actionModeBackground">@color/primaryColor</item> -->
+        <item name="actionModeStyle">@style/Widget.AppTheme.ActionMode</item>
+<!--        <item name="actionBarTheme">@style/Widget.AppTheme.AppBarStyle</item>-->
     </style>
 
     <style name="Widget.AppTheme.Night.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton" >

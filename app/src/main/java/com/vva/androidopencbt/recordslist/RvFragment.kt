@@ -124,10 +124,6 @@ class RvFragment: Fragment() {
 
                     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
                         return when (item.itemId) {
-                            R.id.action_cancel -> {
-                                mode.finish()
-                                true
-                            }
                             R.id.action_delete -> {
                                 val count = listViewModel.deleteSelected().size
                                 Snackbar.make(ll, resources.getQuantityString(R.plurals.delete_cancel, count, count), Snackbar.LENGTH_LONG).setAction(R.string.cancel) {

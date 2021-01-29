@@ -11,9 +11,4 @@
         android:title="@string/selection_action_delete"
         app:showAsAction="always"
         android:icon="@drawable/ic_baseline_delete_24" />
-    <item
-        android:id="@+id/action_cancel"
-        android:icon="@drawable/ic_baseline_cancel_24"
-        android:title="@string/selection_action_cancel"
-        app:showAsAction="ifRoom" />
 </menu>

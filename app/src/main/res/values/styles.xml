@@ -1,5 +1,7 @@
 <resources>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -23,11 +25,6 @@
     <style name="AppTheme.Widget.MaterialComponents.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton" >
     </style>
 
-    <style name="Widget.AppTheme.Light.AppBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
-
     <style name="Widget.AppTheme.Dark.AppBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
@@ -35,5 +32,15 @@
 
     <style name="Widget.AppTheme.Night.MaterialCardView" parent="Widget.MaterialComponents.CardView" >
         <item name="android:backgroundTint">@color/n_forBack</item>
+    </style>
+
+    <style name="Widget.AppTheme.ActionMode" parent="Base.Widget.AppCompat.ActionMode" >
+        <item name="background">?attr/colorSecondary</item>
+    </style>
+    <style name="Widget.AppTheme.AppBarStyle" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" >
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.AppBar</item>
+    </style>
+    <style name="ThemeOverlay.AppTheme.AppBar" parent="" >
+<!--        <item name="colorOnPrimary">?attr/colorOnPrimary</item>-->
     </style>
 </resources>
