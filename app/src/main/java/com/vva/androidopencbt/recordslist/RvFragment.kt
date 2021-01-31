@@ -2,12 +2,14 @@ package com.vva.androidopencbt.recordslist
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,16 +18,20 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.App
+import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
+import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.settings.PreferenceRepository
+import java.io.File
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
@@ -34,6 +40,7 @@ class RvFragment: Fragment() {
     private val listViewModel: RecordListViewModel by viewModels {
         RecordListViewModelFactory(database.databaseDao, prefs)
     }
+    private val exportViewModel: ExportViewModel by activityViewModels()
 
     private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
@@ -107,6 +114,36 @@ class RvFragment: Fragment() {
             actionMode?.invalidate()
         }
 
+        exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
+            val fileType = when (prefs.defaultExportFormat.value) {
+                "JSON" -> {
+                    "application/json"
+                }
+                "HTML" -> {
+                    "application/html"
+                }
+                else -> {
+                    throw IllegalArgumentException("No such format")
+                }
+            }
+            if (it) {
+                val file = File(requireActivity().filesDir, exportViewModel.fileName)
+                val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
+                val forSendIntent = Intent(Intent.ACTION_SEND)
+                forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                forSendIntent.setDataAndType(uri, fileType)
+
+                val pm: PackageManager = requireActivity().packageManager
+                if (forSendIntent.resolveActivity(pm) != null) {
+                    startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+                    exportViewModel.htmlFileShared()
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         viewModel.isSelectionActive.observe(viewLifecycleOwner) {
             if (!it) {
                 listViewModel.cancelAllSelections()
@@ -119,6 +156,7 @@ class RvFragment: Fragment() {
 
                     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
                         menu.findItem(R.id.action_delete).isEnabled = itemForDeletionCount > 0
+                        menu.findItem(R.id.action_export).isEnabled = itemForDeletionCount > 0
                         return true
                     }
 
@@ -134,6 +172,10 @@ class RvFragment: Fragment() {
                             }
                             R.id.action_select_all -> {
                                 listViewModel.selectAll(dataAdapter.getList())
+                                true
+                            }
+                            R.id.action_export -> {
+                                exportViewModel.exportSelected(listViewModel.selectedItemsList, requireContext())
                                 true
                             }
                             else -> {

@@ -8,7 +8,7 @@ import com.vva.androidopencbt.settings.PreferenceRepository
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
-class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRepository): ViewModel() {
+class RecordListViewModel(private val dataSource: RecordDao, private val prefs: PreferenceRepository): ViewModel() {
     private val job = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + job)
 
@@ -27,6 +27,8 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
 
     private var _selectedItemsMap = HashMap<Long, Boolean>()
     private var _selectedItemsCache = ArrayList<DbRecord>()
+    val selectedItemsList: List<DbRecord>
+        get() = _selectedItemsCache
 
     private val _selectedItems = MutableLiveData<HashMap<Long, Boolean>>()
     val selectedItems: LiveData<HashMap<Long, Boolean>>
@@ -87,8 +89,8 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         }.forEach {
             uiScope.launch(Dispatchers.IO) {
                 dataSource.deleteById(it.key)
+                _selectedItemsMap.remove(it.key)
             }
-            _selectedItemsMap.remove(it.key)
         }
         return _selectedItemsCache
     }
@@ -97,6 +99,7 @@ class RecordListViewModel(private val dataSource: RecordDao, prefs: PreferenceRe
         _selectedItemsCache.forEach {
             uiScope.launch(Dispatchers.IO) {
                 dataSource.addRecord(it)
+                _selectedItemsCache.remove(it)
             }
         }
     }

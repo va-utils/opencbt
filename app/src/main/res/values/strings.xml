@@ -179,6 +179,7 @@
     <string name="selection_action_cancel">Отмена</string>
     <string name="selection_action_delete">Удалить</string>
     <string name="selection_action_select_all">Выделить все</string>
+    <string name="selection_action_export">Экспортировать</string>
     <plurals name="import_cancel" >
         <item quantity="one">Импортирована %d запись</item>
         <item quantity="few">Импортировано %d записи</item>

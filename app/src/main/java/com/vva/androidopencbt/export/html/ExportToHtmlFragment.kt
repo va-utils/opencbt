@@ -12,15 +12,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import com.vva.androidopencbt.App
 import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.getDateString
+import com.vva.androidopencbt.settings.PreferenceRepository
 import org.joda.time.DateTime
 import java.io.File
 
@@ -33,6 +34,7 @@ class ExportToHtmlFragment: Fragment() {
     private lateinit var jsonRb : RadioButton
     private lateinit var exportWelcomeTv : TextView
     private lateinit var totalDiaryCb : CheckBox
+    private lateinit var prefs: PreferenceRepository
     private val exportViewModel: ExportViewModel by activityViewModels()
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
@@ -45,7 +47,7 @@ class ExportToHtmlFragment: Fragment() {
         exportViewModel.setEndDate(DateTime(year, month+1, dayOfMonth, 23, 59))
     }
 
-    private val onClickListener = View.OnClickListener() {
+    private val onClickListener = View.OnClickListener {
         when(it.id) {
             R.id.startEditText -> {
                 val date = exportViewModel.beginDate.value!!
@@ -67,8 +69,9 @@ class ExportToHtmlFragment: Fragment() {
         view.findViewById<Toolbar>(R.id.html_export_toolbar).setupWithNavController(navController, appBarConfiguration)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_export_html, container, false) as LinearLayout
+        prefs = (requireActivity().application as App).preferenceRepository
 
         //---для выбора периода
         startEditText = ll.findViewById(R.id.startEditText)
@@ -78,7 +81,7 @@ class ExportToHtmlFragment: Fragment() {
         //--
         exportBtn = ll.findViewById(R.id.saveHTMLButton)
         exportBtn.setOnClickListener {
-            exportViewModel.makeExportFile(requireContext())
+            exportViewModel.makeExportFile(context = requireContext())
         }
 
         exportWelcomeTv = ll.findViewById(R.id.exportWelcomeTv)
@@ -93,46 +96,36 @@ class ExportToHtmlFragment: Fragment() {
         val rg = ll.findViewById<RadioGroup>(R.id.exportRg)
         rg.setOnCheckedChangeListener{
             g : RadioGroup, id : Int ->
-            when(id)
-            {
+            when(id) {
                 R.id.jsonRb -> exportViewModel.setFormat("JSON")
                 R.id.htmlRb -> exportViewModel.setFormat("HTML")
             }
         }
 
-        exportViewModel.totalDiary.observe(viewLifecycleOwner,
-         {
+        exportViewModel.totalDiary.observe(viewLifecycleOwner) {
              totalDiaryCb.isChecked = it
              startEditText.isEnabled = !it
              endEditText.isEnabled = !it
-        })
+        }
 
-        exportViewModel.format.observe(viewLifecycleOwner,
-                {
-                    when(it)
-                    {
-                        "JSON" ->
-                        {
-                            jsonRb.isChecked = true
-                            exportWelcomeTv.text = getString(R.string.savejson_welcome)
-                        }
-                        "HTML" ->
-                        {
-                            htmlRb.isChecked = true
-                            exportWelcomeTv.text = getString(R.string.savehtml_welcome)
-                        }
-                    }
-                })
+        exportViewModel.format.observe(viewLifecycleOwner) {
+            when(it) {
+                "JSON" -> {
+                    jsonRb.isChecked = true
+                    exportWelcomeTv.text = getString(R.string.savejson_welcome)
+                }
+                "HTML" -> {
+                    htmlRb.isChecked = true
+                    exportWelcomeTv.text = getString(R.string.savehtml_welcome)
+                }
+            }
+        }
 
 
         exportViewModel.beginDate.observe(viewLifecycleOwner, { startEditText.setText(it.getDateString()) })
         exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
-        exportViewModel.isHtmlExportInProgress.observe(viewLifecycleOwner, {
-
-        })
-
-        exportViewModel.isHtmlFileReady.observe(viewLifecycleOwner, {
+        exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
             val fileType = when (prefs.getString("default_export", "HTML")) {
                 "JSON" -> {
@@ -161,7 +154,7 @@ class ExportToHtmlFragment: Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
 
         return ll
     }

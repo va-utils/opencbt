@@ -35,6 +35,12 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
 
+    private val _defaultExportFormat = MutableLiveData<String>().apply {
+        value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+    }
+    val defaultExportFormat: LiveData<String>
+        get() = _defaultExportFormat
+
     private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener {
                 _, key ->
@@ -54,6 +60,9 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     PREFERENCE_ENABLE_PIN -> {
                         _isPinEnabled.value = sharedPreferences.getBoolean(PREFERENCE_ENABLE_PIN, false)
                     }
+                    PREFERENCE_DEFAULT_EXPORT -> {
+                        _defaultExportFormat.value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+                    }
                 }
             }
 
@@ -67,5 +76,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         private const val PREFERENCE_QUOTES_ENABLED = "enable_quotes"
         private const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
         private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
+        private const val PREFERENCE_DEFAULT_EXPORT = "default_export"
     }
 }
