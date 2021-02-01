@@ -17,7 +17,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     var quotes = false
     var intensityIndication = false
 
-    private var _selectedItems = HashMap<Long, Boolean>()
+    private var _selectedItems = HashMap<DbRecord, Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
@@ -41,7 +41,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, position: Int, selection: HashMap<Long, Boolean>) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
             cardView.setOnClickListener {
                 onClickListener.onClick(it, record, position)
             }
@@ -50,7 +50,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
                 onLongListener.onClick(it, record, position)
             }
 
-            if (selection[record.id] == true) {
+            if (selection[record] == true) {
                 cardView.background.setTint(ResourcesCompat.getColor(res, R.color.list_selection_color, null))
             } else {
                 cardView.background.setTintList(null)
@@ -154,7 +154,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         }
     }
 
-    fun submitSelectionArray(map: HashMap<Long, Boolean>) {
+    fun submitSelectionArray(map: HashMap<DbRecord, Boolean>) {
         _selectedItems = map
         notifyDataSetChanged()
     }

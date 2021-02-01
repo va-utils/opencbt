@@ -6,7 +6,6 @@ import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.PreferenceRepository
 import kotlinx.coroutines.*
-import java.util.concurrent.TimeUnit
 
 class RecordListViewModel(private val dataSource: RecordDao, private val prefs: PreferenceRepository): ViewModel() {
     private val job = Job()
@@ -25,13 +24,11 @@ class RecordListViewModel(private val dataSource: RecordDao, private val prefs: 
     private var isSelectionActive = false
     private var isSelectAllActive = false
 
-    private var _selectedItemsMap = HashMap<Long, Boolean>()
-    private var _selectedItemsCache = ArrayList<DbRecord>()
-    val selectedItemsList: List<DbRecord>
-        get() = _selectedItemsCache
+    private var _selectedItemsMap = HashMap<DbRecord, Boolean>()
+    private var deletedCache = ArrayList<DbRecord>()
 
-    private val _selectedItems = MutableLiveData<HashMap<Long, Boolean>>()
-    val selectedItems: LiveData<HashMap<Long, Boolean>>
+    private val _selectedItems = MutableLiveData<HashMap<DbRecord, Boolean>>()
+    val selectedItems: LiveData<HashMap<DbRecord, Boolean>>
         get() = _selectedItems
 
     fun getAllRecords() = records
@@ -41,12 +38,7 @@ class RecordListViewModel(private val dataSource: RecordDao, private val prefs: 
             null
         } else {
             isSelectAllActive = false
-            val isSelected = _selectedItemsMap[dbRecord.id] ?: false
-            if (!isSelected)
-                _selectedItemsCache.add(dbRecord)
-            else
-                _selectedItemsCache.remove(dbRecord)
-            _selectedItemsMap[dbRecord.id] = !isSelected
+            _selectedItemsMap[dbRecord] = _selectedItemsMap[dbRecord] != true
             _selectedItems.value = _selectedItemsMap
             true
         }
@@ -55,51 +47,49 @@ class RecordListViewModel(private val dataSource: RecordDao, private val prefs: 
     fun onItemLongClick(dbRecord: DbRecord) {
         if (!isSelectionActive) {
             isSelectionActive = true
+            deletedCache.clear()
+            _selectedItemsMap.clear()
+            _selectedItems.value = _selectedItemsMap
             onItemClick(dbRecord)
         }
     }
 
     fun cancelAllSelections() {
-        _selectedItemsMap = HashMap()
+        _selectedItemsMap.clear()
         _selectedItems.value = _selectedItemsMap
         isSelectionActive = false
-
-        uiScope.launch(Dispatchers.Default) {
-            delay(TimeUnit.SECONDS.toMillis(DELETE_HOLD_TIME_SEC))
-            _selectedItemsCache = ArrayList()
-        }
     }
 
     fun selectAll(list: List<DbRecord>) {
         isSelectAllActive = !isSelectAllActive
         if (isSelectAllActive) {
             list.forEach {
-                _selectedItemsMap[it.id] = true
+                _selectedItemsMap[it] = true
                 _selectedItems.value = _selectedItemsMap
             }
         } else {
-            _selectedItemsMap = HashMap()
+            _selectedItemsMap.clear()
             _selectedItems.value = _selectedItemsMap
         }
     }
 
-    fun deleteSelected(): List<DbRecord> {
-        _selectedItemsMap.filterValues {
+    fun deleteSelected(): Int {
+        val selected = _selectedItemsMap.filterValues {
             it
-        }.forEach {
-            uiScope.launch(Dispatchers.IO) {
-                dataSource.deleteById(it.key)
-                _selectedItemsMap.remove(it.key)
+        }
+        deletedCache.addAll(selected.keys)
+        uiScope.launch(Dispatchers.IO) {
+            selected.forEach {
+                dataSource.deleteRecord(it.key)
             }
         }
-        return _selectedItemsCache
+        return selected.size
     }
 
     fun rollbackDeletion() {
-        _selectedItemsCache.forEach {
+        deletedCache.forEach {
             uiScope.launch(Dispatchers.IO) {
                 dataSource.addRecord(it)
-                _selectedItemsCache.remove(it)
             }
         }
     }
@@ -108,10 +98,6 @@ class RecordListViewModel(private val dataSource: RecordDao, private val prefs: 
         super.onCleared()
 
         job.cancel()
-    }
-
-    companion object {
-        const val DELETE_HOLD_TIME_SEC = 5L
     }
 }
 

@@ -163,7 +163,7 @@ class RvFragment: Fragment() {
                     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
                         return when (item.itemId) {
                             R.id.action_delete -> {
-                                val count = listViewModel.deleteSelected().size
+                                val count = listViewModel.deleteSelected()
                                 Snackbar.make(ll, resources.getQuantityString(R.plurals.delete_cancel, count, count), Snackbar.LENGTH_LONG).setAction(R.string.cancel) {
                                     listViewModel.rollbackDeletion()
                                 }.show()
@@ -175,7 +175,8 @@ class RvFragment: Fragment() {
                                 true
                             }
                             R.id.action_export -> {
-                                exportViewModel.exportSelected(listViewModel.selectedItemsList, requireContext())
+                                exportViewModel.exportSelected(listViewModel.selectedItems.value?.keys?.toList(), requireContext())
+                                mode.finish()
                                 true
                             }
                             else -> {
@@ -221,7 +222,7 @@ class RvFragment: Fragment() {
             }
         })
 
-        viewModel.isQuotesEnabled.observe(viewLifecycleOwner) {
+        prefs.isQuotesEnabled.observe(viewLifecycleOwner) {
             dataAdapter.quotes = it
         }
 

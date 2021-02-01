@@ -30,21 +30,21 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
     var recyclerViewState: Parcelable? = null
 
-    private val _newRecordNavigated = MutableLiveData<Long>()
-    val newRecordNavigated: LiveData<Long>
-        get() = _newRecordNavigated
+//    private val _newRecordNavigated = MutableLiveData<Long>()
+//    val newRecordNavigated: LiveData<Long>
+//        get() = _newRecordNavigated
 
     private val _recordsListUpdated = MutableLiveData<Boolean>()
     val recordsListUpdated: LiveData<Boolean>
         get() = _recordsListUpdated
 
-    private val _isDescOrder = MutableLiveData(prefs.getBoolean("desc_ordering", false))
-    val isDescOrder: LiveData<Boolean>
-        get() = _isDescOrder
+//    private val _isDescOrder = MutableLiveData(prefs.getBoolean("desc_ordering", false))
+//    val isDescOrder: LiveData<Boolean>
+//        get() = _isDescOrder
 
-    private val _isQuotesEnabled = MutableLiveData(prefs.getBoolean("enable_quotes", true))
-    val isQuotesEnabled : LiveData<Boolean>
-        get() = _isQuotesEnabled
+//    private val _isQuotesEnabled = MutableLiveData(prefs.getBoolean("enable_quotes", true))
+//    val isQuotesEnabled : LiveData<Boolean>
+//        get() = _isQuotesEnabled
 
     private val _isAuthenticated = MutableLiveData(!prefs.getBoolean("enable_pin_protection", false))
     val isAuthenticated:LiveData<Boolean>
@@ -58,21 +58,21 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isSelectionActive: LiveData<Boolean>
         get() = _isSelectionActive
 
-    private val records: LiveData<List<DbRecord>> = Transformations.switchMap(isAuthenticated) {
-        return@switchMap if (it) {
-            Transformations.switchMap(_isDescOrder) {
-                isDesc ->
-
-                return@switchMap if (isDesc) {
-                    db.databaseDao.getAllOrdered(DbContract.ORDER_DESC)
-                } else {
-                    db.databaseDao.getAllOrdered(DbContract.ORDER_ASC)
-                }
-            }
-        } else {
-            MutableLiveData(emptyList())
-        }
-    }
+//    private val records: LiveData<List<DbRecord>> = Transformations.switchMap(isAuthenticated) {
+//        return@switchMap if (it) {
+//            Transformations.switchMap(_isDescOrder) {
+//                isDesc ->
+//
+//                return@switchMap if (isDesc) {
+//                    db.databaseDao.getAllOrdered(DbContract.ORDER_DESC)
+//                } else {
+//                    db.databaseDao.getAllOrdered(DbContract.ORDER_ASC)
+//                }
+//            }
+//        } else {
+//            MutableLiveData(emptyList())
+//        }
+//    }
 
     fun askDetailsFragmentConfirmation() {
         _askChangesConfirm.value = true
@@ -107,9 +107,9 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val importData: LiveData<List<Long>?>
         get() = _importData
 
-    fun getAllRecords() = records
+//    fun getAllRecords() = records
 
-    fun getRecordById(id: Long) = db.databaseDao.getById(id)
+//    fun getRecordById(id: Long) = db.databaseDao.getById(id)
 
     fun deleteRecord(id: Long) {
         uiScope.launch {
@@ -120,55 +120,18 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             }
         }
     }
-//
-//    fun addRecord(dbRecord: DbRecord) {
-//        uiScope.launch {
-//            withContext(Dispatchers.IO) {
-//                db.databaseDao.addRecord(dbRecord)
-//            }
-//        }
+
+//    fun navigateToRecord(id: Long) {
+//        _newRecordNavigated.value = id
 //    }
 
-//    fun updateRecord(id: Long,
-//                     situation: String,
-//                     thought: String,
-//                     rational: String,
-//                     emotion: String,
-//                     finalDist: Int,
-//                     feelings: String,
-//                     actions: String,
-//                     intensity: Int) {
-//        uiScope.launch {
-//            withContext(Dispatchers.IO) {
-//                db.databaseDao.updateRecord(
-//                        DbRecord(
-//                                id,
-//                                situation,
-//                                thought,
-//                                rational,
-//                                emotion,
-//                                finalDist,
-//                                feelings,
-//                                actions,
-//                                intensity,
-//                                db.databaseDao.getRecordById(id).datetime
-//                        )
-//                )
-//            }
-//        }
+//    fun setOrder(order: Boolean) {
+//        _isDescOrder.value = order
 //    }
 
-    fun navigateToRecord(id: Long) {
-        _newRecordNavigated.value = id
-    }
-
-    fun setOrder(order: Boolean) {
-        _isDescOrder.value = order
-    }
-
-    fun setQuotes(status : Boolean) {
-        _isQuotesEnabled.value = status
-    }
+//    fun setQuotes(status : Boolean) {
+//        _isQuotesEnabled.value = status
+//    }
 
     fun listUpdated() {
         _recordsListUpdated.value = true
