@@ -14,6 +14,7 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
 
-    <color name="n_forBack">#161a1f</color>
+<!--    <color name="n_forBack">#161a1f</color>-->
+    <color name="n_forBack">#212121</color>
     <color name="list_selection_color">#3c4046</color>
 </resources>

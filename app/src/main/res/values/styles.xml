@@ -31,7 +31,7 @@
     </style>
 
     <style name="Widget.AppTheme.Night.MaterialCardView" parent="Widget.MaterialComponents.CardView" >
-        <item name="android:backgroundTint">@color/n_forBack</item>
+        <item name="android:backgroundTint">@color/black</item>
     </style>
 
     <style name="Widget.AppTheme.ActionMode" parent="Base.Widget.AppCompat.ActionMode" >

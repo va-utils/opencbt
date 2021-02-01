@@ -26,9 +26,12 @@
     <color name="primaryColor">#38709a</color>
     <color name="primaryLightColor">#6b9ecb</color>
     <color name="primaryDarkColor">#00456c</color>
-    <color name="secondaryColor">#006064</color>
-    <color name="secondaryLightColor">#428e92</color>
-    <color name="secondaryDarkColor">#00363a</color>
+<!--    <color name="secondaryColor">#006064</color>-->
+<!--    <color name="secondaryLightColor">#428e92</color>-->
+<!--    <color name="secondaryDarkColor">#00363a</color>-->
+    <color name="secondaryColor">#00456c</color>
+    <color name="secondaryLightColor">#41709a</color>
+    <color name="secondaryDarkColor">#001e41</color>
     <color name="primaryTextColor">@color/black</color>
     <color name="secondaryTextColor">#000000</color>
 
