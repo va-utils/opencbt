@@ -166,7 +166,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun exportSelected(data: List<DbRecord>, context: Context) {
+    fun exportSelected(data: List<DbRecord>?, context: Context) {
         makeExportFile(data, context)
     }
 
