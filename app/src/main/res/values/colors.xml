@@ -49,4 +49,6 @@
     <color name="list_selection_color">#c7c7c7</color>
     <color name="action_mode_background">@color/primaryDarkColor</color>
     <color name="colorOnText">@color/black</color>
+    <color name="gray_A700">#616161</color>
+    <color name="blue_50">#EEF0F2</color>
 </resources>

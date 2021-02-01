@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -227,7 +228,6 @@ class RvFragment: Fragment() {
         }
 
         rv.adapter = dataAdapter
-
         viewModel.importInAction.observe(viewLifecycleOwner) {
             if (it == null)
                 return@observe

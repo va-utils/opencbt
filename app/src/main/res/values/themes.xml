@@ -10,6 +10,7 @@
 
         <item name="colorSecondary">@color/primaryColor</item>
         <item name="colorSecondaryVariant">@color/primaryLightColor</item>
+        <item name="android:windowBackground">@color/blue_50</item>
     </style>
     <!--  Base theme for light and night themes  -->
     <style name="Base.Theme.AppTheme" parent="Base.Theme.OpenCBT" >
