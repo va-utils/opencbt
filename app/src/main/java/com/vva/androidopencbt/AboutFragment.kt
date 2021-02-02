@@ -32,9 +32,12 @@ class AboutFragment : Fragment() {
         val sendButton : Button = v.findViewById(R.id.sendButton)
         val webSiteButton : Button = v.findViewById(R.id.websiteButton)
         val cbdButton : Button = v.findViewById(R.id.cbdButton)
+        val allVersionButton : Button = v.findViewById(R.id.allVersionButton)
         sendButton.setOnClickListener(listener)
         webSiteButton.setOnClickListener(listener)
         cbdButton.setOnClickListener(listener)
+        allVersionButton.setOnClickListener(listener);
+
         aboutTextView.text = getString(R.string.app_author, BuildConfig.VERSION_NAME, BuildConfig.BUILD_TYPE)
         return v
     }
@@ -48,6 +51,7 @@ class AboutFragment : Fragment() {
         R.id.sendButton -> sendFeedBack()
         R.id.websiteButton -> openGitHub()
         R.id.cbdButton -> getCBTInfo()
+        R.id.allVersionButton -> openGitHubAllVersions()
     }}
 
     private fun sendFeedBack() {
@@ -63,6 +67,13 @@ class AboutFragment : Fragment() {
     private fun openGitHub() {
         //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show()
         val github: Uri = Uri.parse("https://github.com/va-utils/opencbt")
+        val webIntent = Intent(Intent.ACTION_VIEW, github)
+        activity?.startActivity(webIntent)
+    }
+
+    private fun openGitHubAllVersions() {
+        //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show()
+        val github: Uri = Uri.parse("https://github.com/va-utils/opencbt/releases")
         val webIntent = Intent(Intent.ACTION_VIEW, github)
         activity?.startActivity(webIntent)
     }

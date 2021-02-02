@@ -4,22 +4,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
 
-class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false
+    var intensityIndication = false
+
+    private var _selectedItems = HashMap<DbRecord, Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         return RecordsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, quotes)
+        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, position, _selectedItems)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -32,12 +37,23 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
         private val actionsTextView: TextView = itemView.findViewById(R.id.actionsTextView)
         private val distortionTextView: TextView = itemView.findViewById(R.id.distortionTextView)
         private val intensityTextView: TextView = itemView.findViewById(R.id.intensityTextView)
+        private val cardView: MaterialCardView = itemView.findViewById(R.id.card_view)
 
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, quotes: Boolean) {
-            itemView.setOnClickListener {
-                onClickListener.onClick(record)
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
+            cardView.setOnClickListener {
+                onClickListener.onClick(it, record, position)
+            }
+
+            cardView.setOnLongClickListener {
+                onLongListener.onClick(it, record, position)
+            }
+
+            if (selection[record] == true) {
+                cardView.background.setTint(ResourcesCompat.getColor(res, R.color.list_selection_color, null))
+            } else {
+                cardView.background.setTintList(null)
             }
 
             dateTextView.text = record.datetime.getDateTimeString()
@@ -75,6 +91,23 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
                 } else {
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
+                }
+                if (indication) {
+                    itemView.setPadding(0, 1, 0, 0)
+                    cardView.apply {
+                        shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                                .setTopLeftCornerSize(1F * itemView.resources.getDimension(R.dimen.reply_small_component_corner_radius))
+                                .build()
+                    }
+                    itemView.setBackgroundResource(when (intensity) {
+                        0 -> R.color.intensity_zero
+                        in 1..30 -> R.color.intensity_low
+                        in 31..60 -> R.color.intensity_mid
+                        in 61..90 -> R.color.intensity_mid_high
+                        else -> R.color.intensity_high
+                    })
+                } else {
+                    itemView.setPadding(0, 0, 0, 0)
                 }
 
                 when  {
@@ -121,6 +154,15 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
         }
     }
 
+    fun submitSelectionArray(map: HashMap<DbRecord, Boolean>) {
+        _selectedItems = map
+        notifyDataSetChanged()
+    }
+
+    fun getList(): List<DbRecord> {
+        return currentList
+    }
+
     class DiffCallback: DiffUtil.ItemCallback<DbRecord>() {
         override fun areItemsTheSame(oldItem: DbRecord, newItem: DbRecord): Boolean {
             return oldItem.id == newItem.id
@@ -132,6 +174,10 @@ class RecordsAdapter(private val listener: RecordListener): ListAdapter<DbRecord
     }
 }
 
-class RecordListener(val clickListener: (record: DbRecord) -> Unit) {
-    fun onClick(record: DbRecord) = clickListener(record)
+class RecordListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Unit) {
+    fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
+}
+
+class RecordLongListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Boolean) {
+    fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
 }

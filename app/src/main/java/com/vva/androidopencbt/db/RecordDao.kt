@@ -46,6 +46,9 @@ interface RecordDao {
     @Query(DbContract.Diary.GET_RECORDS_FOR_PERIOD)
     fun getRecordsForPeriod (t1 : DateTime, t2 : DateTime) : List<DbRecord>
 
+    @Query(DbContract.Diary.DELETE_BY_ID)
+    fun deleteById(id: Long)
+
     @Update
     fun updateRecord(record: DbRecord)
 

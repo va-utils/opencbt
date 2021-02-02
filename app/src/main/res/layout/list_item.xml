@@ -1,92 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:clickable="true"
-    android:padding="10dp"
-    android:background="?android:selectableItemBackground"
-    android:focusable="true">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dateTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="13sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/emptyTextView"
-        android:text="@string/adapter_empty"
-        android:visibility="gone"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/distortionTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/emotionTextView"
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:textSize="12sp" />
-
-    <LinearLayout
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:showDividers="middle|beginning"
-        android:orientation="vertical"
-        android:divider="@drawable/separator">
-
-        <TextView
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:id="@+id/intensityTextView"/>
+            android:orientation="vertical"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dateTextView"
+                android:textAppearance="?attr/textAppearanceOverline"
+                tools:text="14:35 01 декабря 2020"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:id="@+id/situationTextView"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/emptyTextView"
+                android:text="@string/adapter_empty"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimaryVariant" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:id="@+id/thoughtTextView"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distortionTextView"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorSecondary"
+                tools:text="Расстройства"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:id="@+id/feelingsTextView"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/emotionTextView"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorSecondaryVariant"
+                tools:text="Эмоции: ЪУЪ" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:id="@+id/actionsTextView"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:showDividers="middle|beginning"
+                android:orientation="vertical"
+                android:divider="@drawable/separator">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:textStyle="bold"
-            android:id="@+id/rationalTextView"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:id="@+id/intensityTextView"
+                    tools:text="Интенсивность невероятная" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:id="@+id/situationTextView"
+                    tools:text="Ситуация"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:id="@+id/thoughtTextView"
+                    tools:text="Мысли"/>
 
-</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:id="@+id/feelingsTextView"
+                    tools:text="Чувства"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:id="@+id/actionsTextView"
+                    tools:text="Действия"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:textStyle="bold"
+                    android:id="@+id/rationalTextView"
+                    tools:text="Рациональный ответ"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

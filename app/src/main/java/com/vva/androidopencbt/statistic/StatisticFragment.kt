@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -136,9 +137,10 @@ class StatisticFragment : Fragment() {
             mustTv.text = it[7].toString()
             labelingTv.text = it[8].toString()
             personTv.text = it[9].toString()
-            //emptyTv.text = it[10].toString()
 
             //отобразить на donut
+
+
             val list : List<DonutSection> = listOf(
                     DonutSection(getString(R.string.dist_all_or_nothing), ContextCompat.getColor(requireContext(), R.color.colorAllOrNothing), it[0].toFloat()),
                     DonutSection(getString(R.string.dist_overgeneralizing), ContextCompat.getColor(requireContext(), R.color.colorOvergeneralizing), it[1].toFloat()),
@@ -150,9 +152,8 @@ class StatisticFragment : Fragment() {
                     DonutSection(getString(R.string.dist_must_statement), ContextCompat.getColor(requireContext(), R.color.colorMust),it[7].toFloat()),
                     DonutSection(getString(R.string.dist_labeling), ContextCompat.getColor(requireContext(), R.color.colorLabeling),it[8].toFloat()),
                     DonutSection(getString(R.string.dist_personalistion), ContextCompat.getColor(requireContext(), R.color.colorPerson),it[9].toFloat()))
-
        //     distortionDonut.cap = it.sum().toFloat()
-            distortionsDonut.submitData(list)
+            distortionsDonut.submitData(list.sortedBy { it.amount })
 
         })
 
@@ -170,7 +171,7 @@ class StatisticFragment : Fragment() {
                             DonutSection("Day", ContextCompat.getColor(requireContext(), R.color.colorDay),it[2].toFloat()),
                             DonutSection("Evening", ContextCompat.getColor(requireContext(), R.color.colorEvening),it[3].toFloat()),
                     )
-                    timeDonut.submitData(list)
+                    timeDonut.submitData(list.sortedBy { it.amount })
                 })
 
         return ll

@@ -14,66 +14,101 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Настройки отображения">
+    <PreferenceCategory app:title="Настройки отображения"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:defaultValue="false"
+            app:iconSpaceReserved="false"
             app:key="desc_ordering"
             app:title="Сначала новые записи"/>
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_quotes"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_quotes"/>
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_percents"
+            app:dependency="enable_intensity"
+            app:summary="@string/pref_summ_percents"
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_percents"/>
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_night_theme"
+            app:iconSpaceReserved="false"
+            app:title="Ночная тема" />
+
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_intensity_indication"
+            app:iconSpaceReserved="false"
+            app:title="Индикация интенсивности на главном экране" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_columns">
+    <PreferenceCategory app:title="@string/pref_columns"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_situation"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_situation" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_thoughts"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_thoughts" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_emotions"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_emotions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_intensity"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_intensity" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
+            app:iconSpaceReserved="false"
             app:key="enable_feelings"
             app:title="@string/pref_feelings" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_actions"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_actions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_distortions"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_distortions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_rational"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_disput" />
     </PreferenceCategory>
     <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="Экспорт" >
         <ListPreference
             app:key="default_export"
+            app:iconSpaceReserved="false"
             app:entries="@array/export_settings_entries"
             app:entryValues="@array/export_settings_values"
             app:useSimpleSummaryProvider="true"
@@ -81,11 +116,13 @@
             app:title="Формат по умолчанию" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Защита пин-кодом" >
+    <PreferenceCategory app:title="Защита входа"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
             app:defaultValue="false"
+            app:iconSpaceReserved="false"
             app:key="enable_pin_protection"
-            app:title="Включить защиту пин-кодом" />
+            app:title="Включить защиту входа" />
     </PreferenceCategory>
 
 </PreferenceScreen>

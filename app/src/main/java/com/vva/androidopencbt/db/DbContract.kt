@@ -24,6 +24,7 @@ object DbContract {
         const val GET_ALL_SQL = ("SELECT * FROM $TABLE_NAME")
         const val GET_RECORD_BY_ID = ("SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
         const val GET_ALL_SQL_ORDERED = ("SELECT * FROM $TABLE_NAME ORDER BY CASE WHEN :order = 0 THEN $COLUMN_DATETIME END DESC, CASE WHEN :order = 1 THEN $COLUMN_DATETIME END ASC")
+        const val DELETE_BY_ID = ("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")
 
         //---statistic
 

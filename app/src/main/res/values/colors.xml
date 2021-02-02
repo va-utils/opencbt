@@ -4,7 +4,7 @@
     <color name="colorEmotions">#4480AD</color>
     <color name="colorPrimaryDark">#2F5777</color>
     <color name="colorAccent">#4E9AD6</color>
-    <color name="colorSeparator">#E7E7E9</color>
+    <color name="colorSeparator">#D3D3DC</color>
 
     <color name="colorNight">#25306C</color>
     <color name="colorMorning">#ff9966</color>
@@ -23,5 +23,35 @@
     <color name="colorPerson">#81C784</color>
     <color name="colorEmpty">#E9EAE2</color>
 
+    <color name="primaryColor">#38709a</color>
+    <color name="primaryLightColor">#6b9ecb</color>
+    <color name="primaryDarkColor">#00456c</color>
+<!--    <color name="secondaryColor">#006064</color>-->
+<!--    <color name="secondaryLightColor">#428e92</color>-->
+<!--    <color name="secondaryDarkColor">#00363a</color>-->
+    <color name="secondaryColor">#00456c</color>
+    <color name="secondaryLightColor">#41709a</color>
+    <color name="secondaryDarkColor">#001e41</color>
+    <color name="primaryTextColor">@color/black</color>
+    <color name="secondaryTextColor">#000000</color>
 
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Цвета для индикаци интенсивности на главном экране -->
+    <color name="intensity_high">#D32F2F</color>
+    <color name="intensity_mid_high">#E64A19</color>
+    <color name="intensity_mid">#F57C00</color>
+    <color name="intensity_low">#388E3C</color>
+    <color name="intensity_zero">#64C83C</color>
+
+    <!--Подбор цветов для ночной темы-->
+
+    <color name="n_forBack">#161a1f</color>
+
+    <color name="list_selection_color">#c7c7c7</color>
+    <color name="action_mode_background">@color/primaryDarkColor</color>
+    <color name="colorOnText">@color/black</color>
+    <color name="gray_A700">#616161</color>
+    <color name="blue_50">#EEF0F2</color>
 </resources>

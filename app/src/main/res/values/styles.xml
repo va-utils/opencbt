@@ -1,25 +1,46 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="LongDistortionsStyle">
         <item name="maxLines">2</item>
         <item name="singleLine">false</item>
+    </style>
+    <style name="AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
+        <item name="endIconMode">clear_text</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+    <style name="AppTheme.Widget.AppCompat.EditText" parent="Widget.AppCompat.EditText" >
+        <item name="singleLine">false</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">text|textMultiLine|textCapSentences|textAutoComplete</item>
+        <item name="maxLines">4</item>
+    </style>
+    <style name="AppTheme.Widget.Widget.MaterialComponents.CompoundButton.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox" >
+        <item name="useMaterialThemeColors">true</item>
+    </style>
+    <style name="AppTheme.Widget.MaterialComponents.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton" >
+    </style>
+
+    <style name="Widget.AppTheme.Dark.AppBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="Widget.AppTheme.Night.MaterialCardView" parent="Widget.MaterialComponents.CardView" >
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+
+    <style name="Widget.AppTheme.ActionMode" parent="Base.Widget.AppCompat.ActionMode" >
+        <item name="background">?attr/colorSecondary</item>
+    </style>
+    <style name="Widget.AppTheme.AppBarStyle" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" >
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.AppBar</item>
+    </style>
+    <style name="ThemeOverlay.AppTheme.AppBar" parent="" >
+<!--        <item name="colorOnPrimary">?attr/colorOnPrimary</item>-->
     </style>
 </resources>

@@ -29,7 +29,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
-    private val _isHtmlExportInProgress = MutableLiveData<Boolean>()
+    private val _isExportInProgress = MutableLiveData<Boolean>()
 
     //---для периода
     private val _beginDate = MutableLiveData(DateTime().beginOfMonth())
@@ -39,6 +39,10 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private val _endDate = MutableLiveData(DateTime().endOfDay())
     val endDate: LiveData<DateTime>
         get() = _endDate
+
+    private val _totalDiary = MutableLiveData(false)
+    val totalDiary : LiveData<Boolean>
+        get() = _totalDiary
     //--------------
 
     private val _format = MutableLiveData<String>(PreferenceManager.getDefaultSharedPreferences(application.applicationContext).getString("default_export","HTML"))
@@ -46,8 +50,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     val format : LiveData<String>
     get() = _format
 
-    fun setFormat(s : String)
-    {
+    fun setFormat(s : String) {
         _format.value = s
     }
 
@@ -59,65 +62,112 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _endDate.value = dateTime
     }
 
-    val isHtmlExportInProgress: LiveData<Boolean>
-        get() = _isHtmlExportInProgress
+    fun setTotalDiary(total : Boolean) {
+        _totalDiary.value = total
+    }
 
-    private val _isHtmlFileReady = MutableLiveData<Boolean>()
-    val isHtmlFileReady: LiveData<Boolean>
-        get() = _isHtmlFileReady
+    val isExportInProgress: LiveData<Boolean>
+        get() = _isExportInProgress
+
+    private val _isExportFileReady = MutableLiveData<Boolean>()
+    val isExportFileReady: LiveData<Boolean>
+        get() = _isExportFileReady
 
     fun htmlFileShared() {
-        _isHtmlFileReady.value = false
+        _isExportFileReady.value = false
     }
 
-    fun makeExportFile(context: Context) {
-        when (format.value/*PreferenceManager.getDefaultSharedPreferences(context).getString("default_export", "HTML")*/) {
-            "JSON" -> {
-                makeJsonExportFile()
+//    fun makeExportFile(context: Context) {
+//        when (format.value) {
+//            "JSON" -> {
+//                makeJsonExportFile()
+//            }
+//            "HTML" -> {
+//                makeHtmlExportFile(context)
+//            }
+//            else -> {
+//                throw IllegalArgumentException("No such format")
+//            }
+//        }
+//    }
+
+//    fun makeHtmlExportFile(context: Context) {
+//        _isExportInProgress.value = true
+//        _isExportFileReady.value = false
+//        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.html"
+//        uiScope.launch {
+//            val records = withContext(Dispatchers.IO) {
+//                if(_totalDiary.value==false)
+//                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+//                else
+//                    dao.getAllList()
+//            }
+//            val exportString = withContext(Dispatchers.Default) {
+//                makeHtmlString(records, context)
+//            }
+//            withContext(Dispatchers.IO) {
+//                saveStringToFile(exportString, fileName)
+//            }
+//        }
+//    }
+
+//    fun makeJsonExportFile() {
+//        _isExportInProgress.value = true
+//        _isExportFileReady.value = false
+//        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.json"
+//        uiScope.launch {
+//            val records = withContext(Dispatchers.IO) {
+//                if(_totalDiary.value==false)
+//                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+//                else
+//                    dao.getAllList()
+//            }
+//            val exportString = withContext(Dispatchers.Default) {
+//                Json.encodeToString(records)
+//            }
+//            withContext(Dispatchers.IO) {
+//                saveStringToFile(exportString, fileName)
+//            }
+//        }
+//    }
+
+    fun makeExportFile(list: List<DbRecord>? = null, context: Context) {
+        _isExportInProgress.value = true
+        _isExportFileReady.value = false
+
+        uiScope.launch(Dispatchers.IO) {
+            val exportData = if (list == null) {
+                _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}"
+                if(_totalDiary.value == false)
+                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
+                else
+                    dao.getAllList()
+            } else {
+                _fileName = "${FILE_NAME_PREFIX}_selected"
+                list
             }
-            "HTML" -> {
-                makeHtmlExportFile(context)
+
+            val exportString = when(_format.value) {
+                "JSON" -> {
+                    _fileName = "$_fileName.json"
+                    Json.encodeToString(exportData)
+
+                }
+                "HTML" -> {
+                    _fileName = "$_fileName.html"
+                    makeHtmlString(exportData, context)
+                }
+                else -> {
+                    throw IllegalArgumentException("No such format")
+                }
             }
-            else -> {
-                throw IllegalArgumentException("No such format")
-            }
+
+            saveStringToFile(exportString, fileName)
         }
     }
 
-    fun makeHtmlExportFile(context: Context) {
-        _isHtmlExportInProgress.value = true
-        _isHtmlFileReady.value = false
-        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.html"
-        uiScope.launch {
-            val records = withContext(Dispatchers.IO) {
-                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
-            }
-            val exportString = withContext(Dispatchers.Default) {
-                makeHtmlString(records, context)
-            }
-            withContext(Dispatchers.IO) {
-                saveStringToFile(exportString, fileName)
-            }
-        }
-    }
-
-    fun makeJsonExportFile() {
-        _isHtmlExportInProgress.value = true
-        _isHtmlFileReady.value = false
-        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.json"
-        uiScope.launch {
-            val records = withContext(Dispatchers.IO) {
-                dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
-            }
-            val exportString = withContext(Dispatchers.Default) {
-//                GsonBuilder()
-//                Gson().toJson(records)
-                Json.encodeToString(records)
-            }
-            withContext(Dispatchers.IO) {
-                saveStringToFile(exportString, fileName)
-            }
-        }
+    fun exportSelected(data: List<DbRecord>?, context: Context) {
+        makeExportFile(data, context)
     }
 
     private suspend fun makeHtmlString(records: List<DbRecord>, context: Context): String {
@@ -177,13 +227,13 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                                 close()
 
                                 withContext(Dispatchers.Main) {
-                                    _isHtmlFileReady.value = true
-                                    _isHtmlExportInProgress.value = false
+                                    _isExportFileReady.value = true
+                                    _isExportInProgress.value = false
                                 }
                             } catch (e: IOException) {
                                 withContext(Dispatchers.Main) {
-                                    _isHtmlFileReady.value = false
-                                    _isHtmlExportInProgress.value = false
+                                    _isExportFileReady.value = false
+                                    _isExportInProgress.value = false
                                 }
                             }
                         }

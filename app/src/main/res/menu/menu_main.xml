@@ -4,7 +4,7 @@
     tools:context="com.vva.androidopencbt.MainActivity">
 
     <item
-        android:id="@+id/detailsFragment"
+        android:id="@+id/detailsFragmentMaterial"
         android:orderInCategory="100"
         android:title="@string/action_newrecord"
         app:showAsAction="never" />

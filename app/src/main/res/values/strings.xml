@@ -9,15 +9,15 @@
 
     <string name="action_help">Справка</string>
 
-    <string name="newrecord_text_situation">Ситуация при которой возникла мысль:</string>
-    <string name="newrecord_text_thought">Ваша автоматическая мысль:</string>
-    <string name="newrecord_text_rational">Ваш рациональный ответ:</string>
-    <string name="newrecord_text_emotions">Ваши эмоции (что Вы чувствуете?):</string>
-    <string name="newrecord_text_intensity">Отметьте уровень дискомфорта: </string>
-    <string name="newrecord_text_distortions">Отметить искажения:</string>
-    <string name="newrecord_text_feelings">Телесные ощущения:</string>
-    <string name="newrecord_text_actions">Предпринятые действия:</string>
-    <string name="newrecord_button_add">Сохранить в дневник</string>
+    <string name="newrecord_text_situation">Ситуация при которой возникла мысль</string>
+    <string name="newrecord_text_thought">Ваша автоматическая мысль</string>
+    <string name="newrecord_text_rational">Ваш рациональный ответ</string>
+    <string name="newrecord_text_emotions">Ваши эмоции (что Вы чувствуете?)</string>
+    <string name="newrecord_text_intensity">Отметьте уровень дискомфорта </string>
+    <string name="newrecord_text_distortions">Отметьте искажения</string>
+    <string name="newrecord_text_feelings">Телесные ощущения</string>
+    <string name="newrecord_text_actions">Предпринятые действия</string>
+    <string name="newrecord_button_add">Сохранить</string>
     <string name="newrecord_button_delete">Удалить</string>
 
     <string name="adapter_situation">Ситуация: %1$s</string>
@@ -59,16 +59,17 @@
 
     <string name="about">Android OpenCBT — свободное и бесплатное приложение для ведения дневника автоматических мыслей
     из когнитивно-поведенческой терапии.\nЕго можно использовать для саморазвития, а также для облегчения симптомов тревоги или депрессии. Приложение не имеет доступа к Вашей телефонной книге и файлам, хранящимся в телефоне,
-    не подключается к Интернету.\nЕсли Вы столкнулись с проблемой или неправильной работой приложения, пожалуйста, сообщите об этом мне, и я постараюсь это исправить.</string>
+    не подключается к Интернету.\nЕсли Вы столкнулись с проблемой или неправильной работой приложения, пожалуйста, сообщите об этом нам, и мы постараемся это исправить.</string>
 
     <string name="about_button_send">Сообщить о проблеме</string>
     <string name="about_button_website">Сайт приложения</string>
     <string name="about_button_cbt">Узнать больше о КПТ</string>
+    <string name="about_button_versions">Все версии</string>
 
     <string name="title_about">О приложении</string>
     <string name="title_newrecord">Запись в дневник</string>
 
-    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2020\nВерсия: %1$s (%2$s)</string>
+    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2021\nВерсия: %1$s (%2$s)</string>
     <string name="title_activity_settings">Настройки</string>
 
     <string name="pref_columns">Что записываем в дневник? (предлагается заполнить для новых записей)</string>
@@ -82,6 +83,11 @@
     <string name="pref_distortions">Когнитивные искажения</string>
     <string name="pref_empty">Должно быть выбрано хотя бы одно поле для записи в дневник</string>
     <string name="pref_quotes">Мысль в кавычках</string>
+    <string name="pref_percents">Проценты всегда</string>
+    <string name="pref_pin_problem">Для использования этой функции, необходимо чтобы в настройках телефона была включена блокировка экрана. Открыть настройки телефона?</string>
+    <string name="pref_pin_title">Защита входа</string>
+
+    <string name="pref_summ_percents">Уровень дискомфорта как в v0.3</string>
 
     <string name="savehtml_welcome">Вы можете отправить свой дневник на электронную почту или в мессенджер, например, для того, чтобы передать его специалисту.
         Дневник будет оформлен в виде таблицы.\nБудьте внимательны, когда выбираете, куда Вы хотите отправить свои записи.</string>
@@ -91,6 +97,7 @@
     <string name="savehtml_button_send">Отправить по почте</string>
     <string name="savehtml_text_startdate">Начало периода:</string>
     <string name="savehtml_text_enddate">Конец периода:</string>
+    <string name="savehtml_text_alldiary">Дневник полностью</string>
     <string name="savehtml_text_share">Выберите приложение, через которое хотите отправить дневник:</string>
     <string name="savehtml_error">Не удалось отправить дневник.</string>
 
@@ -164,12 +171,28 @@
     <string name="import_nodata">Нет данных для импорта</string>
     <string name="import_cancel">Отмена</string>
 
-    <string name="cquestion_welcome">Вы собираетесь использовать авторизацию по PIN-коду.
-        На случай, если Вы его забудете, просим заполнить ответ на контрольный вопрос</string>
-    <string name="cquestion_dreams">Кем Вы хотели стать в детстве?</string>
-    <string name="cquestion_place">Ваше любимое место?</string>
-    <string name="cquestion_phone">Фирма вашего первого мобильника?</string>
-    <string name="cquestion_answer">Ваш ответ:</string>
-    <string name="cquestion_next">Продолжить установку</string>
     <string name="cancel">Отмена</string>
+    <string name="details_fragment_confirm_dialog_title">Отменить изменения?</string>
+    <string name="details_fragment_confirm_dialog_message">Были внесены изменения. Выйти?</string>
+    <string name="save">Сохранить</string>
+    <string name="exit">Выйти</string>
+    <string name="selection_action_cancel">Отмена</string>
+    <string name="selection_action_delete">Удалить</string>
+    <string name="selection_action_select_all">Выделить все</string>
+    <string name="selection_action_export">Экспортировать</string>
+    <plurals name="import_cancel" >
+        <item quantity="one">Импортирована %d запись</item>
+        <item quantity="few">Импортировано %d записи</item>
+        <item quantity="other">Импортировано %d записей</item>
+    </plurals>
+    <plurals name="delete_cancel" >
+        <item quantity="one">Удалена %d запись</item>
+        <item quantity="few">Удалено %d записи</item>
+        <item quantity="other">Удалено %d записей</item>
+    </plurals>
+
+    <string name="details_fragment_remove_confirm_dialog_title">Удалить запись?</string>
+    <string name="details_fragment_remove_confirm_dialog_message">Вы действительно хотите удалить эту запись?</string>
+    <string name="remove">Удалить</string>
+
 </resources>
