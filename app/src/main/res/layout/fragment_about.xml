@@ -34,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sendButton"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:text="@string/about_button_send"
         />
 
@@ -41,18 +42,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/websiteButton"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:text="@string/about_button_website"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cbdButton"
+        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
         android:text="@string/about_button_cbt"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/allVersionButton"
+            style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
             android:text="@string/about_button_versions"/>
 
     <TextView
