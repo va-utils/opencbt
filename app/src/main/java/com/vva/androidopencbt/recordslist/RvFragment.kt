@@ -115,6 +115,10 @@ class RvFragment: Fragment() {
             actionMode?.invalidate()
         }
 
+        prefs.defaultExportFormat.observe(viewLifecycleOwner)
+        {
+            exportViewModel.setFormat(it)
+        }
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
             val fileType = when (prefs.defaultExportFormat.value) {
                 "JSON" -> {

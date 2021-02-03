@@ -73,6 +73,8 @@ class ExportToHtmlFragment: Fragment() {
         ll = inflater.inflate(R.layout.fragment_export_html, container, false) as LinearLayout
         prefs = (requireActivity().application as App).preferenceRepository
 
+
+
         //---для выбора периода
         startEditText = ll.findViewById(R.id.startEditText)
         endEditText = ll.findViewById(R.id.endEditText)
@@ -101,6 +103,8 @@ class ExportToHtmlFragment: Fragment() {
                 R.id.htmlRb -> exportViewModel.setFormat("HTML")
             }
         }
+
+
 
         exportViewModel.totalDiary.observe(viewLifecycleOwner) {
              totalDiaryCb.isChecked = it

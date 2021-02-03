@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import com.vva.androidopencbt.App
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
@@ -45,7 +46,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         get() = _totalDiary
     //--------------
 
-    private val _format = MutableLiveData<String>(PreferenceManager.getDefaultSharedPreferences(application.applicationContext).getString("default_export","HTML"))
+    private val _format = MutableLiveData<String>((application as App).preferenceRepository.defaultExportFormat.value)
 
     val format : LiveData<String>
     get() = _format
@@ -64,6 +65,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setTotalDiary(total : Boolean) {
         _totalDiary.value = total
+
     }
 
     val isExportInProgress: LiveData<Boolean>
