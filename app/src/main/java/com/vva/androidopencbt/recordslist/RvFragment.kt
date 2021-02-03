@@ -227,6 +227,12 @@ class RvFragment: Fragment() {
             dataAdapter.quotes = it
         }
 
+        prefs.isDividersEnabled.observe(viewLifecycleOwner)
+        {
+            Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+            dataAdapter.dividers = it
+        }
+
         rv.adapter = dataAdapter
         viewModel.importInAction.observe(viewLifecycleOwner) {
             if (it == null)

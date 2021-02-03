@@ -51,6 +51,13 @@
             app:key="enable_intensity_indication"
             app:iconSpaceReserved="false"
             app:title="Индикация интенсивности на главном экране" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="enable_dividers"
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_dividers"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns"

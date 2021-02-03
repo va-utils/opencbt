@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:showDividers="middle|beginning"
                 android:orientation="vertical"
+                android:id="@+id/item_ll"
                 android:divider="@drawable/separator">
 
                 <TextView

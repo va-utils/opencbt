@@ -23,6 +23,15 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isQuotesEnabled: LiveData<Boolean>
         get() = _isQuotesEnabled
 
+
+    private val _isDividersEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
+    }
+
+    val isDividersEnabled : LiveData<Boolean>
+        get() = _isDividersEnabled
+
+
     private val _isDescOrder = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
     }
@@ -77,5 +86,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         private const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
         private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
         private const val PREFERENCE_DEFAULT_EXPORT = "default_export"
+        private const val PREFERENCE_DIVIDERS_ENABLED = "enable_dividers"
     }
 }

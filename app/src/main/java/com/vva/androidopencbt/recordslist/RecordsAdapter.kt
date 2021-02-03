@@ -3,6 +3,7 @@ package com.vva.androidopencbt.recordslist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +16,7 @@ import com.vva.androidopencbt.getDateTimeString
 
 class RecordsAdapter(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false
+    var dividers = true
     var intensityIndication = false
 
     private var _selectedItems = HashMap<DbRecord, Boolean>()
@@ -24,7 +26,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, position, _selectedItems)
+        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, dividers, position, _selectedItems)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -38,10 +40,10 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         private val distortionTextView: TextView = itemView.findViewById(R.id.distortionTextView)
         private val intensityTextView: TextView = itemView.findViewById(R.id.intensityTextView)
         private val cardView: MaterialCardView = itemView.findViewById(R.id.card_view)
-
+        private val ll : LinearLayout  = itemView.findViewById(R.id.item_ll);
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
             cardView.setOnClickListener {
                 onClickListener.onClick(it, record, position)
             }
@@ -49,6 +51,11 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
             cardView.setOnLongClickListener {
                 onLongListener.onClick(it, record, position)
             }
+
+            if (dividers)
+                ll.showDividers = LinearLayout.SHOW_DIVIDER_BEGINNING or LinearLayout.SHOW_DIVIDER_MIDDLE
+            else
+                ll.showDividers = LinearLayout.SHOW_DIVIDER_NONE
 
             if (selection[record] == true) {
                 cardView.background.setTint(ResourcesCompat.getColor(res, R.color.list_selection_color, null))
