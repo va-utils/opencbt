@@ -229,7 +229,6 @@ class RvFragment: Fragment() {
 
         prefs.isDividersEnabled.observe(viewLifecycleOwner)
         {
-            Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
             dataAdapter.dividers = it
         }
 
