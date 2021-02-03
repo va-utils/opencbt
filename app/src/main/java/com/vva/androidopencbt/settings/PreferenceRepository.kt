@@ -72,6 +72,10 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     PREFERENCE_DEFAULT_EXPORT -> {
                         _defaultExportFormat.value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
                     }
+                    PREFERENCE_DIVIDERS_ENABLED ->
+                    {
+                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
+                    }
                 }
             }
 
