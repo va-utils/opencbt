@@ -26,6 +26,8 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     val fileName: String
         get() = _fileName
 
+    var format = (application as App).preferenceRepository.defaultExportFormat.value
+
     private val dao = CbdDatabase.getInstance(application).databaseDao
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
@@ -46,14 +48,14 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         get() = _totalDiary
     //--------------
 
-    private val _format = MutableLiveData<String>((application as App).preferenceRepository.defaultExportFormat.value)
+//    private val _format = MutableLiveData<String>((application as App).preferenceRepository.defaultExportFormat.value)
 
-    val format : LiveData<String>
-    get() = _format
-
-    fun setFormat(s : String) {
-        _format.value = s
-    }
+//    val format : LiveData<String>
+//    get() = _format
+//
+//    fun setFormat(s : String) {
+//        _format.value = s
+//    }
 
     fun setBeginDate(dateTime: DateTime) {
         _beginDate.value = dateTime
@@ -149,7 +151,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                 list
             }
 
-            val exportString = when(_format.value) {
+            val exportString = when(format) {
                 "JSON" -> {
                     _fileName = "$_fileName.json"
                     Json.encodeToString(exportData)

@@ -18,8 +18,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -115,14 +113,14 @@ class RvFragment: Fragment() {
             actionMode?.invalidate()
         }
 
-        prefs.defaultExportFormat.observe(viewLifecycleOwner)
-        {
-            exportViewModel.setFormat(it)
+        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
+            exportViewModel.format = it
         }
+
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
-            val fileType = when (prefs.defaultExportFormat.value) {
+            val fileType = when (exportViewModel.format) {
                 "JSON" -> {
-                    "application/json"
+                    "application/octet-stream"
                 }
                 "HTML" -> {
                     "application/html"
@@ -231,8 +229,7 @@ class RvFragment: Fragment() {
             dataAdapter.quotes = it
         }
 
-        prefs.isDividersEnabled.observe(viewLifecycleOwner)
-        {
+        prefs.isDividersEnabled.observe(viewLifecycleOwner) {
             dataAdapter.dividers = it
         }
 

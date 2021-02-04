@@ -73,8 +73,6 @@ class ExportToHtmlFragment: Fragment() {
         ll = inflater.inflate(R.layout.fragment_export_html, container, false) as LinearLayout
         prefs = (requireActivity().application as App).preferenceRepository
 
-
-
         //---для выбора периода
         startEditText = ll.findViewById(R.id.startEditText)
         endEditText = ll.findViewById(R.id.endEditText)
@@ -99,8 +97,8 @@ class ExportToHtmlFragment: Fragment() {
         rg.setOnCheckedChangeListener{
             g : RadioGroup, id : Int ->
             when(id) {
-                R.id.jsonRb -> exportViewModel.setFormat("JSON")
-                R.id.htmlRb -> exportViewModel.setFormat("HTML")
+                R.id.jsonRb -> exportViewModel.format = "JSON"
+                R.id.htmlRb -> exportViewModel.format = "HTML"
             }
         }
 
@@ -112,7 +110,7 @@ class ExportToHtmlFragment: Fragment() {
              endEditText.isEnabled = !it
         }
 
-        exportViewModel.format.observe(viewLifecycleOwner) {
+        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
             when(it) {
                 "JSON" -> {
                     jsonRb.isChecked = true
@@ -130,10 +128,9 @@ class ExportToHtmlFragment: Fragment() {
         exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            val fileType = when (prefs.getString("default_export", "HTML")) {
+            val fileType = when (exportViewModel.format) {
                 "JSON" -> {
-                   "application/json"
+                   "application/octet-stream"
                 }
                 "HTML" -> {
                     "application/html"
