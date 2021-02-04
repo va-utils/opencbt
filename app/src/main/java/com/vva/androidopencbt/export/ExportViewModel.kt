@@ -5,12 +5,13 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
+import com.vva.androidopencbt.App
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.endOfDay
 import com.vva.androidopencbt.getShortDateTime
+import com.vva.androidopencbt.settings.ExportFormats
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -24,6 +25,8 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
     private var _fileName = ""
     val fileName: String
         get() = _fileName
+
+    var format = (application as App).preferenceRepository.defaultExportFormat.value
 
     private val dao = CbdDatabase.getInstance(application).databaseDao
     private val vmJob = Job()
@@ -45,14 +48,14 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         get() = _totalDiary
     //--------------
 
-    private val _format = MutableLiveData<String>(PreferenceManager.getDefaultSharedPreferences(application.applicationContext).getString("default_export","HTML"))
+//    private val _format = MutableLiveData<String>((application as App).preferenceRepository.defaultExportFormat.value)
 
-    val format : LiveData<String>
-    get() = _format
-
-    fun setFormat(s : String) {
-        _format.value = s
-    }
+//    val format : LiveData<String>
+//    get() = _format
+//
+//    fun setFormat(s : String) {
+//        _format.value = s
+//    }
 
     fun setBeginDate(dateTime: DateTime) {
         _beginDate.value = dateTime
@@ -64,6 +67,7 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setTotalDiary(total : Boolean) {
         _totalDiary.value = total
+
     }
 
     val isExportInProgress: LiveData<Boolean>
@@ -147,13 +151,13 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
                 list
             }
 
-            val exportString = when(_format.value) {
-                "JSON" -> {
+            val exportString = when(format) {
+                ExportFormats.JSON -> {
                     _fileName = "$_fileName.json"
                     Json.encodeToString(exportData)
 
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     _fileName = "$_fileName.html"
                     makeHtmlString(exportData, context)
                 }

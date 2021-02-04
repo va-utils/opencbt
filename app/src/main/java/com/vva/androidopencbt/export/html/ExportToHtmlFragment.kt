@@ -15,12 +15,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.BuildConfig
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.getDateString
+import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import org.joda.time.DateTime
 import java.io.File
@@ -97,10 +97,12 @@ class ExportToHtmlFragment: Fragment() {
         rg.setOnCheckedChangeListener{
             g : RadioGroup, id : Int ->
             when(id) {
-                R.id.jsonRb -> exportViewModel.setFormat("JSON")
-                R.id.htmlRb -> exportViewModel.setFormat("HTML")
+                R.id.jsonRb -> exportViewModel.format = ExportFormats.JSON
+                R.id.htmlRb -> exportViewModel.format = ExportFormats.HTML
             }
         }
+
+
 
         exportViewModel.totalDiary.observe(viewLifecycleOwner) {
              totalDiaryCb.isChecked = it
@@ -108,15 +110,18 @@ class ExportToHtmlFragment: Fragment() {
              endEditText.isEnabled = !it
         }
 
-        exportViewModel.format.observe(viewLifecycleOwner) {
+        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
             when(it) {
-                "JSON" -> {
+                ExportFormats.JSON -> {
                     jsonRb.isChecked = true
                     exportWelcomeTv.text = getString(R.string.savejson_welcome)
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     htmlRb.isChecked = true
                     exportWelcomeTv.text = getString(R.string.savehtml_welcome)
+                }
+                else -> {
+
                 }
             }
         }
@@ -126,12 +131,11 @@ class ExportToHtmlFragment: Fragment() {
         exportViewModel.endDate.observe(viewLifecycleOwner, { endEditText.setText(it.getDateString()) })
 
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            val fileType = when (prefs.getString("default_export", "HTML")) {
-                "JSON" -> {
-                   "application/json"
+            val fileType = when (exportViewModel.format) {
+                ExportFormats.JSON -> {
+                   "application/octet-stream"
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     "application/html"
                 }
                 else -> {

@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.vva.androidopencbt.db.CbdDatabase
 import kotlinx.coroutines.*
 import java.util.*
-
 class StatisticViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = CbdDatabase.getInstance(application)

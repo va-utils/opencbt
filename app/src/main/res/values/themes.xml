@@ -38,6 +38,7 @@
         <item name="actionModeCloseDrawable">@drawable/ic_baseline_close_24</item>
         <item name="actionModeStyle">@style/Widget.AppTheme.ActionMode</item>
         <item name="actionBarTheme">@style/Widget.AppTheme.AppBarStyle</item>
+        <item name="materialButtonStyle">@style/AppTheme.Widget.MaterialComponents.Button.TextButton</item>
     </style>
 
     <style name="Base.Theme.OpenCBT" parent="Theme.MaterialComponents.DayNight.NoActionBar" >

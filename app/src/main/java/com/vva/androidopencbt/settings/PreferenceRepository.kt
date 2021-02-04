@@ -23,6 +23,15 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isQuotesEnabled: LiveData<Boolean>
         get() = _isQuotesEnabled
 
+
+    private val _isDividersEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
+    }
+
+    val isDividersEnabled : LiveData<Boolean>
+        get() = _isDividersEnabled
+
+
     private val _isDescOrder = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
     }
@@ -35,10 +44,20 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
 
-    private val _defaultExportFormat = MutableLiveData<String>().apply {
-        value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+    private val _defaultExportFormat = MutableLiveData<ExportFormats>().apply {
+        value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
+            ExportFormats.JSON.formatString -> {
+                ExportFormats.JSON
+            }
+            ExportFormats.HTML.formatString -> {
+                ExportFormats.HTML
+            }
+            else -> {
+                throw IllegalStateException("No such format")
+            }
+        }
     }
-    val defaultExportFormat: LiveData<String>
+    val defaultExportFormat: LiveData<ExportFormats>
         get() = _defaultExportFormat
 
     private val preferenceChangeListener =
@@ -61,7 +80,21 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                         _isPinEnabled.value = sharedPreferences.getBoolean(PREFERENCE_ENABLE_PIN, false)
                     }
                     PREFERENCE_DEFAULT_EXPORT -> {
-                        _defaultExportFormat.value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+                        _defaultExportFormat.value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
+                            ExportFormats.JSON.formatString -> {
+                                ExportFormats.JSON
+                            }
+                            ExportFormats.HTML.formatString -> {
+                                ExportFormats.HTML
+                            }
+                            else -> {
+                                throw IllegalStateException("No such format")
+                            }
+                        }
+                    }
+                    PREFERENCE_DIVIDERS_ENABLED ->
+                    {
+                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
                     }
                 }
             }
@@ -77,5 +110,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         private const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
         private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
         private const val PREFERENCE_DEFAULT_EXPORT = "default_export"
+        private const val PREFERENCE_DIVIDERS_ENABLED = "enable_dividers"
     }
 }

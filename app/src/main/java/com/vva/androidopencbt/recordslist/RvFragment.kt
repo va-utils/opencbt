@@ -18,8 +18,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,6 +29,7 @@ import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.ExportViewModel
+import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
@@ -115,12 +114,16 @@ class RvFragment: Fragment() {
             actionMode?.invalidate()
         }
 
+        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
+            exportViewModel.format = it
+        }
+
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
-            val fileType = when (prefs.defaultExportFormat.value) {
-                "JSON" -> {
-                    "application/json"
+            val fileType = when (exportViewModel.format) {
+                ExportFormats.JSON -> {
+                    "application/octet-stream"
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     "application/html"
                 }
                 else -> {
@@ -225,6 +228,10 @@ class RvFragment: Fragment() {
 
         prefs.isQuotesEnabled.observe(viewLifecycleOwner) {
             dataAdapter.quotes = it
+        }
+
+        prefs.isDividersEnabled.observe(viewLifecycleOwner) {
+            dataAdapter.dividers = it
         }
 
         rv.adapter = dataAdapter
