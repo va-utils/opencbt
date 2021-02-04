@@ -5,13 +5,13 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.endOfDay
 import com.vva.androidopencbt.getShortDateTime
+import com.vva.androidopencbt.settings.ExportFormats
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -152,12 +152,12 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             val exportString = when(format) {
-                "JSON" -> {
+                ExportFormats.JSON -> {
                     _fileName = "$_fileName.json"
                     Json.encodeToString(exportData)
 
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     _fileName = "$_fileName.html"
                     makeHtmlString(exportData, context)
                 }

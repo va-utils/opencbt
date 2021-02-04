@@ -29,6 +29,7 @@ import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.ExportViewModel
+import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
@@ -119,10 +120,10 @@ class RvFragment: Fragment() {
 
         exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
             val fileType = when (exportViewModel.format) {
-                "JSON" -> {
+                ExportFormats.JSON -> {
                     "application/octet-stream"
                 }
-                "HTML" -> {
+                ExportFormats.HTML -> {
                     "application/html"
                 }
                 else -> {

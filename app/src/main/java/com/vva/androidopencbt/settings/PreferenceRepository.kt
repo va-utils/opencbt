@@ -44,10 +44,20 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
 
-    private val _defaultExportFormat = MutableLiveData<String>().apply {
-        value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+    private val _defaultExportFormat = MutableLiveData<ExportFormats>().apply {
+        value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
+            ExportFormats.JSON.formatString -> {
+                ExportFormats.JSON
+            }
+            ExportFormats.HTML.formatString -> {
+                ExportFormats.HTML
+            }
+            else -> {
+                throw IllegalStateException("No such format")
+            }
+        }
     }
-    val defaultExportFormat: LiveData<String>
+    val defaultExportFormat: LiveData<ExportFormats>
         get() = _defaultExportFormat
 
     private val preferenceChangeListener =
@@ -70,7 +80,17 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                         _isPinEnabled.value = sharedPreferences.getBoolean(PREFERENCE_ENABLE_PIN, false)
                     }
                     PREFERENCE_DEFAULT_EXPORT -> {
-                        _defaultExportFormat.value = sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, "JSON")
+                        _defaultExportFormat.value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
+                            ExportFormats.JSON.formatString -> {
+                                ExportFormats.JSON
+                            }
+                            ExportFormats.HTML.formatString -> {
+                                ExportFormats.HTML
+                            }
+                            else -> {
+                                throw IllegalStateException("No such format")
+                            }
+                        }
                     }
                     PREFERENCE_DIVIDERS_ENABLED ->
                     {
