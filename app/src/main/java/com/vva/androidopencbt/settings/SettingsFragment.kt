@@ -1,5 +1,6 @@
 package com.vva.androidopencbt.settings
 
+import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -84,32 +86,23 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
         }
 
-//        (findPreference<Preference>("desc_ordering") as SwitchPreferenceCompat).setOnPreferenceChangeListener {
-//            _, newValue ->
-//            viewModel.setOrder(newValue as Boolean)
-//
-//            true
-//        }
-
-//        (findPreference<Preference>("enable_quotes") as SwitchPreferenceCompat).setOnPreferenceChangeListener {
-//            _, newValue ->
-//            viewModel.setQuotes(newValue as Boolean)
-//
-//            true
-//        }
-
         findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
             _, _ ->
             val km = requireActivity().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure) {
                 val i = km.createConfirmDeviceCredentialIntent(null, null)
-                startActivityForResult(i, REQUEST_CODE_KG_PROTECTION)
-            }
-            else
-            {
+//                startActivityForResult(i, REQUEST_CODE_KG_PROTECTION)
+
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+                    if (activityResult.resultCode == AppCompatActivity.RESULT_OK) {
+                        findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                            it.isChecked = !it.isChecked
+                        }
+                    }
+                }.launch(i)
+            } else {
                 val builder = AlertDialog.Builder(requireContext())
-                with(builder)
-                {
+                with(builder) {
                     setMessage(getString(R.string.pref_pin_problem))
                     setTitle(getString(R.string.pref_pin_title))
                     setPositiveButton("OK") { dialog, _ -> startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))}

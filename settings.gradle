@@ -1,2 +1,3 @@
+include ':gdrive_backup_feature'
 include ':app'
 rootProject.name='Android OpenCBT'

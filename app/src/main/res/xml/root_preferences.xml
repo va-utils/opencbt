@@ -14,8 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="Настройки отображения"
         app:iconSpaceReserved="false">
@@ -130,6 +130,15 @@
             app:iconSpaceReserved="false"
             app:key="enable_pin_protection"
             app:title="Включить защиту входа" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="GDrive интеграция"
+        app:iconSpaceReserved="false" >
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_gdrive_integration"
+            app:iconSpaceReserved="false"
+            app:title="Включить интеграцию" />
     </PreferenceCategory>
 
 </PreferenceScreen>

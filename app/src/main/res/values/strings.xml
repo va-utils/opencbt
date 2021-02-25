@@ -182,12 +182,12 @@
     <string name="selection_action_delete">Удалить</string>
     <string name="selection_action_select_all">Выделить все</string>
     <string name="selection_action_export">Экспортировать</string>
-    <plurals name="import_cancel" >
+    <plurals name="import_cancel">
         <item quantity="one">Импортирована %d запись</item>
         <item quantity="few">Импортировано %d записи</item>
         <item quantity="other">Импортировано %d записей</item>
     </plurals>
-    <plurals name="delete_cancel" >
+    <plurals name="delete_cancel">
         <item quantity="one">Удалена %d запись</item>
         <item quantity="few">Удалено %d записи</item>
         <item quantity="other">Удалено %d записей</item>
@@ -196,5 +196,8 @@
     <string name="details_fragment_remove_confirm_dialog_title">Удалить запись?</string>
     <string name="details_fragment_remove_confirm_dialog_message">Вы действительно хотите удалить эту запись?</string>
     <string name="remove">Удалить</string>
+    <string name="title_gdrive_backup_feature">Google Drive backup</string>
+    <string name="downloads_channel_name">Загрузки</string>
+    <string name="downloads_channel_description">Информация о загрузке функционала</string>
 
 </resources>

@@ -1,14 +1,19 @@
 package com.vva.androidopencbt
 
 import android.app.KeyguardManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
@@ -28,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        createNotifyChannels()
 
         preferences = (application as App).preferenceRepository
         database = CbdDatabase.getInstance(this)
@@ -84,6 +91,21 @@ class MainActivity : AppCompatActivity() {
             vm.deactivateSelection()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun createNotifyChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.downloads_channel_name)
+            val descriptionText = getString(R.string.downloads_channel_description)
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val channel = NotificationChannel(DOWNLOADS_CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+            val nm = ContextCompat.getSystemService(applicationContext,
+                    NotificationManager::class.java) as NotificationManager
+            nm.createNotificationChannel(channel)
         }
     }
 }

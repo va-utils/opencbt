@@ -1,5 +1,8 @@
 package com.vva.androidopencbt
 
+import android.app.NotificationManager
+import android.content.Context
+import androidx.core.app.NotificationCompat
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -45,4 +48,17 @@ object DateTimeAsTimestampSerializer: KSerializer<DateTime> {
     override fun serialize(encoder: Encoder, value: DateTime) {
         encoder.encodeLong(value.millis)
     }
+}
+
+const val DOWNLOADS_CHANNEL_ID = "com.vva.androidopencbt.downloads_channel_id"
+const val DOWNLOADS_CHANNEL_TAG = 0x123
+
+fun NotificationManager.sendDownloadNotification(context: Context) {
+    val builder = NotificationCompat.Builder(context, DOWNLOADS_CHANNEL_ID)
+            .setContentTitle("Загрузка функционала")
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setOngoing(true)
+
+    notify(DOWNLOADS_CHANNEL_TAG, builder.build())
 }

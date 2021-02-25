@@ -23,14 +23,11 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isQuotesEnabled: LiveData<Boolean>
         get() = _isQuotesEnabled
 
-
     private val _isDividersEnabled = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
     }
-
     val isDividersEnabled : LiveData<Boolean>
         get() = _isDividersEnabled
-
 
     private val _isDescOrder = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
@@ -43,6 +40,10 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     }
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
+
+    private val _isDriveIntegrationEnabled = MutableLiveData(sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false))
+    val isDriveIntegrationEnabled: LiveData<Boolean>
+        get() = _isDriveIntegrationEnabled
 
     private val _defaultExportFormat = MutableLiveData<ExportFormats>().apply {
         value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
@@ -92,9 +93,11 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                             }
                         }
                     }
-                    PREFERENCE_DIVIDERS_ENABLED ->
-                    {
-                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
+                    PREFERENCE_DIVIDERS_ENABLED -> {
+                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED, true)
+                    }
+                    PREFERENCE_GDRIVE_ENABLED -> {
+                        _isDriveIntegrationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false)
                     }
                 }
             }
@@ -111,5 +114,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
         private const val PREFERENCE_DEFAULT_EXPORT = "default_export"
         private const val PREFERENCE_DIVIDERS_ENABLED = "enable_dividers"
+        private const val PREFERENCE_GDRIVE_ENABLED = "enable_gdrive_integration"
     }
 }
