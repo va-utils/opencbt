@@ -43,6 +43,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_rvFragment_to_driveFileListFragment"
+            app:destination="@id/driveFileListFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -70,4 +73,9 @@
             android:defaultValue="0L"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/driveFileListFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveFileListFragment"
+        app:moduleName="Android_OpenCBT.gdrive_backup_feature"
+        android:label="DriveFileListFragment" />
 </navigation>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/file_name_tv"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="2dp"
+        android:inputType="text"
+        android:lines="2"
+        android:maxLines="2"
+        android:minLines="2"
+        app:layout_constraintBottom_toTopOf="@+id/file_size_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="@+id/icon"
+        tools:text="CBT_backup.json" />
+
+    <TextView
+        android:id="@+id/file_size_tv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/icon"
+        app:layout_constraintEnd_toStartOf="@+id/file_date_tv"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/file_name_tv"
+        tools:text="55 kb" />
+
+    <TextView
+        android:id="@+id/file_date_tv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/file_size_tv"
+        app:layout_constraintEnd_toEndOf="@+id/file_name_tv"
+        app:layout_constraintStart_toEndOf="@+id/file_size_tv"
+        app:layout_constraintTop_toTopOf="@+id/file_size_tv"
+        tools:text="25.02.2021 12:01:55" />
+</androidx.constraintlayout.widget.ConstraintLayout>

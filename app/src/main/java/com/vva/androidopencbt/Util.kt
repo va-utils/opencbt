@@ -56,8 +56,8 @@ const val DOWNLOADS_CHANNEL_TAG = 0x123
 fun NotificationManager.sendDownloadNotification(context: Context) {
     val builder = NotificationCompat.Builder(context, DOWNLOADS_CHANNEL_ID)
             .setContentTitle("Загрузка функционала")
-            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setSmallIcon(R.mipmap.ic_launcher)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
 
     notify(DOWNLOADS_CHANNEL_TAG, builder.build())

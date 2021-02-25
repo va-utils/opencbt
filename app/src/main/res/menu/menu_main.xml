@@ -37,4 +37,8 @@
         android:orderInCategory="100"
         android:title="@string/action_about" />
 
+    <item
+        android:id="@+id/driveFileListFragment"
+        android:orderInCategory="100"
+        android:title="Dynamic test" />
 </menu>

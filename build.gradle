@@ -1,6 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.versions = [
+            'compileSdk'        : 30,
+            'minSdk'            : 21,
+            'targetSdk'         : 30,
+            'playcore'          : '1.9.1',
+    ]
     ext.kotlin_version = '1.4.30'
     ext.futured_donut_version = '2.0.0'
     repositories {

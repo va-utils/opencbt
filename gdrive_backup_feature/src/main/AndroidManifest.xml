@@ -7,25 +7,10 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <dist:module
-        dist:instant="true"
         dist:title="@string/title_gdrive_backup_feature">
         <dist:delivery>
             <dist:on-demand />
         </dist:delivery>
         <dist:fusing dist:include="false" />
     </dist:module>
-    <application
-        android:name="com.vva.androidopencbt.App"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-    </application>
-
 </manifest>

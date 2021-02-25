@@ -86,6 +86,14 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
         }
 
+        val pendingActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == AppCompatActivity.RESULT_OK) {
+                findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    it.isChecked = !it.isChecked
+                }
+            }
+        }
+
         findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
             _, _ ->
             val km = requireActivity().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
@@ -93,13 +101,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 val i = km.createConfirmDeviceCredentialIntent(null, null)
 //                startActivityForResult(i, REQUEST_CODE_KG_PROTECTION)
 
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-                    if (activityResult.resultCode == AppCompatActivity.RESULT_OK) {
-                        findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
-                            it.isChecked = !it.isChecked
-                        }
-                    }
-                }.launch(i)
+                pendingActivity.launch(i)
             } else {
                 val builder = AlertDialog.Builder(requireContext())
                 with(builder) {

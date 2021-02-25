@@ -1,27 +1,31 @@
 plugins {
-    id 'com.android.application'
-//    id 'com.android.dynamic-feature'
+    id 'com.android.dynamic-feature'
     id 'kotlin-android'
 }
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+//    compileSdkVersion 30
+//    buildToolsVersion "29.0.3"
 
+//    defaultConfig {
+//        applicationId "com.vva.androidopencbt.gdrivefeature"
+//        minSdkVersion 21
+//        targetSdkVersion 30
+//        versionCode 1
+//        versionName "1.0"
+//
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//    }
+//
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
+    compileSdkVersion versions.compileSdk
     defaultConfig {
-        applicationId "com.vva.androidopencbt.gdrivefeature"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -42,7 +46,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
 
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation('com.google.api-client:google-api-client-android:1.26.0') {
         exclude group: 'org.apache.httpcomponents'
