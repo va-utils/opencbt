@@ -76,6 +76,6 @@
     <fragment
         android:id="@+id/driveFileListFragment"
         android:name="com.vva.androidopencbt.gdrivefeature.DriveFileListFragment"
-        app:moduleName="Android_OpenCBT.gdrive_backup_feature"
+        app:moduleName="gdrive_backup_feature"
         android:label="DriveFileListFragment" />
 </navigation>

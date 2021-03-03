@@ -1,9 +1,15 @@
 package com.vva.androidopencbt.gdrivefeature
 
+import android.content.Context
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -13,7 +19,7 @@ import java.io.InputStreamReader
 import java.util.*
 import java.util.concurrent.Executors
 
-class DriveServiceHelper(private val mDriveService: Drive) {
+class DriveServiceHelper private constructor(private val mDriveService: Drive) {
     private val mExecutor = Executors.newSingleThreadExecutor()
 
     fun createFile(parents: String, mimeType: String, fileName: String): Task<String> {
@@ -73,6 +79,23 @@ class DriveServiceHelper(private val mDriveService: Drive) {
 
                 }
             }
+        }
+    }
+
+    companion object {
+        private val INSTANCE: DriveServiceHelper? = null
+
+        fun getInstance(credential: GoogleAccountCredential): DriveServiceHelper {
+            return INSTANCE ?: DriveServiceHelper(getDrive(credential))
+        }
+
+        private fun getDrive(credential: GoogleAccountCredential): Drive {
+            return Drive.Builder(
+                    AndroidHttp.newCompatibleTransport(),
+                    GsonFactory(),
+                    credential
+            ).setApplicationName("OpenCBT")
+                    .build()
         }
     }
 }

@@ -1,14 +1,55 @@
 package com.vva.androidopencbt.gdrivefeature
 
-import android.content.Context
-import android.content.Intent
-import androidx.lifecycle.ViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.Scope
+import androidx.lifecycle.*
+import com.google.api.services.drive.model.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class DriveFileListViewModel: ViewModel() {
+    var driveServiceHelper: DriveServiceHelper? = null
+        set(value) {
+            field = value
+            refreshFileList()
+        }
 
+    private val _isLogInSuccessful = MutableLiveData<Boolean?>(null)
+    val isLogInSuccessful: LiveData<Boolean?>
+        get() = _isLogInSuccessful
+
+    fun setLogInSuccessful() {
+        _isLogInSuccessful.value = true
+    }
+
+    fun setLogInUnsuccessful() {
+        _isLogInSuccessful.value = false
+    }
+
+    private val _isRequestIsActive = MutableLiveData<Boolean>()
+    val isRequestIsActive: LiveData<Boolean>
+        get() = _isRequestIsActive
+
+    private val _driveFileList = MutableLiveData<List<File>>()
+    val driveFileList: LiveData<List<File>>
+        get() = _driveFileList
+
+    fun refreshFileList() {
+        makeRequest {
+            withContext(Dispatchers.IO) {
+                val result = driveServiceHelper?.queryFiles()?.await()
+                withContext(Dispatchers.Main) {
+                    _driveFileList.value = result?.files
+                }
+            }
+        }
+    }
+
+    private fun makeRequest(block: suspend () -> Unit) {
+        viewModelScope.launch {
+            _isRequestIsActive.value = true
+            block()
+            _isRequestIsActive.value = false
+        }
+    }
 }
