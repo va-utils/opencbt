@@ -199,5 +199,7 @@
     <string name="title_gdrive_backup_feature">Google Drive backup</string>
     <string name="downloads_channel_name">Загрузки</string>
     <string name="downloads_channel_description">Информация о загрузке функционала</string>
+    <string name="import_export">Импорт/Экспорт</string>
+    <string name="settings_category_help">Помощь</string>
 
 </resources>

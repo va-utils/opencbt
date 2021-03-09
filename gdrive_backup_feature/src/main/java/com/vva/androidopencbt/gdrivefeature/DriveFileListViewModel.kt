@@ -34,12 +34,27 @@ class DriveFileListViewModel: ViewModel() {
     val driveFileList: LiveData<List<File>>
         get() = _driveFileList
 
+    private val _driveFile = MutableLiveData<Pair<String, String>>()
+    val driveFile: LiveData<Pair<String, String>>
+        get() = _driveFile
+
     fun refreshFileList() {
         makeRequest {
             withContext(Dispatchers.IO) {
                 val result = driveServiceHelper?.queryFiles()?.await()
                 withContext(Dispatchers.Main) {
                     _driveFileList.value = result?.files
+                }
+            }
+        }
+    }
+
+    fun getFile(fileId: String) {
+        makeRequest {
+            withContext(Dispatchers.IO) {
+                val result = driveServiceHelper?.readFile(fileId)?.await()
+                withContext(Dispatchers.Main) {
+                    _driveFile.value = result!!
                 }
             }
         }

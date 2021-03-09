@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.settings
 
-import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
@@ -14,14 +13,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.*
+import com.google.android.play.core.splitinstall.SplitInstallManager
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
+import com.vva.androidopencbt.RecordsViewModel
 
 private const val REQUEST_CODE_KG_PROTECTION = 0x99
+const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
@@ -46,17 +50,26 @@ class SettingsFragmentRoot: Fragment() {
 
 class SettingsFragmentNew : PreferenceFragmentCompat() {
     private lateinit var prefs: Array<SwitchPreferenceCompat>
-//    private val viewModel: RecordsViewModel by activityViewModels()
     private lateinit var preferenceRepository: PreferenceRepository
+    private lateinit var manager: SplitInstallManager
+    private val listViewModel: RecordsViewModel by viewModels()
+
+    private val backupPicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        it?.data?.data?.let { uri ->
+            requireActivity().contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            findNavController().popBackStack()
+            listViewModel.importRecordsFromFile(uri, requireContext())
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
-
-        /* возможно понадобится
-        val themeSwitch = findPreference<Preference>("enable_night_theme") as SwitchPreferenceCompat
-        themeSwitch.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P */
+        manager = SplitInstallManagerFactory.create(requireContext())
 
         prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
@@ -94,7 +107,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
         }
 
-        findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.setOnPreferenceChangeListener {
+        findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_ENABLE_PIN)?.setOnPreferenceChangeListener {
             _, _ ->
             val km = requireActivity().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure) {
@@ -113,6 +126,52 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             }
             false
         }
+
+        findPreference<Preference>(PreferenceRepository.PREFERENCE_ABOUT)?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.action_settingsFragmentRoot_to_aboutFragment)
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_GDRIVE_ENABLED)
+                ?.setOnPreferenceChangeListener { preference, newValue ->
+                    if (!manager.installedModules.contains(GDRIVE_MODULE_NAME) && newValue == true) {
+                        DriveDownloader(requireContext(), preference).download()
+                    }
+                    true
+        }
+
+        findPreference<Preference>(PreferenceRepository.PREFERENCE_GDRIVE_IMPORT)?.setOnPreferenceClickListener {
+            if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
+                Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
+            } else {
+                findNavController().navigate(R.id.action_settingsFragmentRoot_to_driveFileListFragment)
+            }
+
+            true
+        }
+
+        findPreference<Preference>(PreferenceRepository.PREFERENCE_GDRIVE_EXPORT)?.setOnPreferenceClickListener {
+            if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
+                Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
+            } else {
+            }
+
+            true
+        }
+
+        findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_EXPORT)?.setOnPreferenceClickListener {
+            true
+        }
+
+        findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_IMPORT)?.setOnPreferenceClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                type = "application/octet-stream"
+                addCategory(Intent.CATEGORY_DEFAULT)
+            }
+            backupPicker.launch(intent)
+
+            true
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -120,7 +179,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         when (requestCode) {
             REQUEST_CODE_KG_PROTECTION -> {
                 if (resultCode == AppCompatActivity.RESULT_OK) {
-                    findPreference<SwitchPreferenceCompat>("enable_pin_protection")?.let {
+                    findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_ENABLE_PIN)?.let {
                         it.isChecked = !it.isChecked
                     }
                 }

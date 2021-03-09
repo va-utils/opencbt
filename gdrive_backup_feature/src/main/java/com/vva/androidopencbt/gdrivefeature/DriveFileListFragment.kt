@@ -148,7 +148,13 @@ class DriveFileListFragment: Fragment() {
             viewModel.refreshFileList()
         }
 
-        mDataAdapter = DriveListAdapter()
+        mDataAdapter = DriveListAdapter(OnClickListener {
+            viewModel.getFile(it.id)
+        })
+        viewModel.driveFile.observe(viewLifecycleOwner) {
+            Log.d("TEST", it.toString())
+
+        }
         viewModel.driveFileList.observe(viewLifecycleOwner) {
             mDataAdapter.submitList(it)
         }

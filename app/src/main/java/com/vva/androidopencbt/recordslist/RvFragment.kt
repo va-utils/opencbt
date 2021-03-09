@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.recordslist
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -68,18 +67,8 @@ class RvFragment: Fragment() {
                         .setPopEnterAnim(R.anim.slide_in_left)
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
-                when (val id = it.itemId) {
-                    R.id.openDocumentPicker -> {
-                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                            type = "application/octet-stream"
-                            addCategory(Intent.CATEGORY_DEFAULT)
-                        }
-                        startActivityForResult(intent, 0x33)
-                    }
-                    else -> {
-                        findNavController().navigate(id, null, navOptions)
-                    }
-                }
+                findNavController().navigate(it.itemId, null, navOptions)
+
                 return@setOnMenuItemClickListener super.onOptionsItemSelected(it)
             }
         }
@@ -261,20 +250,6 @@ class RvFragment: Fragment() {
         }
 
         return ll
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 0x33 && resultCode == Activity.RESULT_OK) {
-            data?.data?.also {
-                requireActivity().contentResolver.takePersistableUriPermission(
-                        it,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                viewModel.importRecordsFromFile(it, requireContext())
-            }
-        }
     }
 
     override fun onPause() {

@@ -15,7 +15,8 @@
   -->
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:iconSpaceReserved="false">
 
     <PreferenceCategory app:title="Настройки отображения"
         app:iconSpaceReserved="false">
@@ -112,15 +113,40 @@
     </PreferenceCategory>
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="Экспорт" >
+        app:title="Резервное копирование" >
         <ListPreference
             app:key="default_export"
             app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false"
             app:entries="@array/export_settings_entries"
             app:entryValues="@array/export_settings_values"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="HTML"
             app:title="Формат по умолчанию" />
+        <Preference
+            app:title="Выгрузить записи локально"
+            app:iconSpaceReserved="false"
+            app:key="setting_export_local" />
+        <Preference
+            app:title="Загрузить записи локально"
+            app:iconSpaceReserved="false"
+            app:key="setting_import_local" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_gdrive_integration"
+            app:iconSpaceReserved="false"
+            app:title="Включить интеграцию" />
+        <Preference
+            app:title="Выгрузить записи в GDrive"
+            app:iconSpaceReserved="false"
+            app:key="setting_export_gdrive"
+            app:dependency="enable_gdrive_integration" />
+        <Preference
+            app:title="Загрузить записи из GDrive"
+            app:iconSpaceReserved="false"
+            app:key="setting_import_gdrive"
+            app:dependency="enable_gdrive_integration" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Защита входа"
@@ -132,13 +158,12 @@
             app:title="Включить защиту входа" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="GDrive интеграция"
-        app:iconSpaceReserved="false" >
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:key="enable_gdrive_integration"
-            app:iconSpaceReserved="false"
-            app:title="Включить интеграцию" />
+    <PreferenceCategory
+        app:title="@string/settings_category_help"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:title="@string/action_about"
+            app:key="setting_about"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
-
 </PreferenceScreen>

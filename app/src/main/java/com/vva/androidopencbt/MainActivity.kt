@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.play.core.splitcompat.SplitCompat
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.recordslist.RecordListViewModel
 import com.vva.androidopencbt.recordslist.RecordListViewModelFactory
@@ -29,6 +30,11 @@ class MainActivity : AppCompatActivity() {
     private val vm: RecordsViewModel by viewModels()
     private lateinit var preferences: PreferenceRepository
     private lateinit var database: CbdDatabase
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        SplitCompat.installActivity(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
