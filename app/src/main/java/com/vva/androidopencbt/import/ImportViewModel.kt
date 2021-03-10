@@ -15,47 +15,27 @@ import java.io.FileReader
 import java.lang.Exception
 
 class ImportViewModel(private val dao: RecordDao): ViewModel() {
-    private val _isImportInAction = MutableLiveData<Boolean>()
-    val isImportInAction: LiveData<Boolean>
-        get() = _isImportInAction
+    private val _importState = MutableLiveData<ImportStates?>(null)
+    val importState: LiveData<ImportStates?>
+        get() = _importState
 
     private var importedRecordIds: List<Long>? = null
 
     fun importRecordsFromFile(docUri: Uri, context: Context) {
         import {
             val string = getStringFromFile(docUri, context)
-            if (string == null) {
-                importedRecordIds = null
-            } else {
-                val list = parseJson(string)
-                val currentList = withContext(Dispatchers.IO){
-                    dao.getAllList()
-                }
-                val listToImport = list.filter { parsed ->
-                    var flag = true
-                    currentList.forEach {
-                        if (parsed.equalsIgnoreId(it)) {
-                            flag = false
-                            return@forEach
-                        }
-                    }
-                    flag
-                }
-                importedRecordIds = listToImport.map {
-                    it.id
-                }
-                withContext(Dispatchers.IO) {
-                    listToImport.forEach {
-                        dao.addRecord(it)
-                    }
-                }
+            val listForImport = parseJson(string)
+            val currentList = withContext(Dispatchers.IO){
+                dao.getAllList()
             }
+            val listToImport = getListForImport(listForImport, currentList)
+            importedRecordIds = addRecordsToDatabase(listToImport)
         }
     }
 
     fun rollbackLastImport() {
-        importedRecordIds?.let { list ->
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            importedRecordIds?.let { list ->
                 list.forEach {
                     dao.deleteById(it)
                 }
@@ -63,30 +43,64 @@ class ImportViewModel(private val dao: RecordDao): ViewModel() {
         }
     }
 
-    private fun parseJson(json: String): List<DbRecord> {
-        return try {
-            Json.decodeFromString(json)
-        } catch (e: Exception) {
-            emptyList()
+    fun lastBackupRecordsCount(): Int {
+        return importedRecordIds?.size ?: 0
+    }
+
+    private suspend fun addRecordsToDatabase(list: List<DbRecord>): List<Long> {
+        val ids = ArrayList<Long>()
+        withContext(Dispatchers.IO) {
+            list.forEach {
+                ids.add(dao.addRecord(it))
+            }
+        }
+        return ids
+    }
+
+    private fun getListForImport(list1: List<DbRecord>, list2: List<DbRecord>): List<DbRecord> {
+        return list1.filter { parsed ->
+            var flag = true
+            list2.forEach {
+                if (parsed.equalsIgnoreId(it)) {
+                    flag = false
+                    return@forEach
+                }
+            }
+            flag
         }
     }
 
-    private suspend fun getStringFromFile(docUri: Uri, context: Context): String? {
+    private fun parseJson(json: String): List<DbRecord> {
+        return Json.decodeFromString(json)
+    }
+
+    private suspend fun getStringFromFile(docUri: Uri, context: Context): String {
         return withContext(Dispatchers.IO) {
             context.contentResolver.openFileDescriptor(docUri, "r")?.use {
                 BufferedReader(FileReader(it.fileDescriptor)).readLine()
-            }
+            } ?: throw Exception("No data to import, input string is null")
         }
     }
 
     private fun import(block: suspend () -> Unit) {
-        _isImportInAction.value = true
+        _importState.value = ImportStates.InProgress
         viewModelScope.launch {
-            block()
+            try {
+                block()
+                _importState.value = ImportStates.Success
+            } catch (e: Exception) {
+                _importState.value = ImportStates.Failure(e)
+            } finally {
+                _importState.value = null
+            }
         }
-        _isImportInAction.value = false
     }
+}
 
+sealed class ImportStates {
+    object InProgress : ImportStates()
+    object Success : ImportStates()
+    data class Failure(val e: Exception): ImportStates()
 }
 
 class ImportViewModelFactory(private val dao: RecordDao): ViewModelProvider.Factory {

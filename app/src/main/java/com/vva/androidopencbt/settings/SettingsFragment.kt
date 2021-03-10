@@ -4,6 +4,7 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,17 +19,27 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.db.RecordDao
+import com.vva.androidopencbt.import.ImportStates
+import com.vva.androidopencbt.import.ImportViewModel
+import com.vva.androidopencbt.import.ImportViewModelFactory
 
 private const val REQUEST_CODE_KG_PROTECTION = 0x99
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
+    private lateinit var dao: RecordDao
+    private val importViewModel: ImportViewModel by viewModels {
+        ImportViewModelFactory(dao)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -39,6 +50,7 @@ class SettingsFragmentRoot: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         linearLayout = inflater.inflate(R.layout.fragment_settings, container, false) as LinearLayout
+        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         parentFragmentManager.beginTransaction()
                 .replace(R.id.settings_container, SettingsFragmentNew())
@@ -52,7 +64,10 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     private lateinit var prefs: Array<SwitchPreferenceCompat>
     private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var manager: SplitInstallManager
-    private val listViewModel: RecordsViewModel by viewModels()
+    private lateinit var dao: RecordDao
+    private val importViewModel: ImportViewModel by viewModels {
+        ImportViewModelFactory(dao)
+    }
 
     private val backupPicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it?.data?.data?.let { uri ->
@@ -60,14 +75,15 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
-            findNavController().popBackStack()
-            listViewModel.importRecordsFromFile(uri, requireContext())
+            importViewModel.importRecordsFromFile(uri, requireContext())
         }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         manager = SplitInstallManagerFactory.create(requireContext())
 
@@ -171,6 +187,31 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             backupPicker.launch(intent)
 
             true
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        importViewModel.importState.observe(viewLifecycleOwner) {
+            when(it) {
+                is ImportStates.Success -> {
+                    val count = importViewModel.lastBackupRecordsCount()
+                    if (count == 0) {
+                        Toast.makeText(requireContext(), resources.getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
+                        return@observe
+                    }
+                    Snackbar.make(requireView(), resources.getQuantityString(R.plurals.import_cancel, count, count), Snackbar.LENGTH_LONG)
+                            .setAction(resources.getString(R.string.import_cancel)) {
+                                importViewModel.rollbackLastImport()
+                            }.show()
+                }
+                is ImportStates.InProgress -> {
+
+                }
+                is ImportStates.Failure -> {
+                    Toast.makeText(requireContext(), resources.getString(R.string.import_error_readfile), Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
