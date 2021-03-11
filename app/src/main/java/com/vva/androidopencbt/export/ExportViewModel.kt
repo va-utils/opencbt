@@ -17,6 +17,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
 import java.io.IOException
+import java.lang.Exception
 
 private const val FILE_NAME_PREFIX = "CBT_diary"
 

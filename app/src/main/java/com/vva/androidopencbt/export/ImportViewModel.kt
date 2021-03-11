@@ -1,4 +1,4 @@
-package com.vva.androidopencbt.import
+package com.vva.androidopencbt.export
 
 import android.content.Context
 import android.net.Uri
@@ -15,8 +15,8 @@ import java.io.FileReader
 import java.lang.Exception
 
 class ImportViewModel(private val dao: RecordDao): ViewModel() {
-    private val _importState = MutableLiveData<ImportStates?>(null)
-    val importState: LiveData<ImportStates?>
+    private val _importState = MutableLiveData<ProcessStates?>(null)
+    val importState: LiveData<ProcessStates?>
         get() = _importState
 
     private var importedRecordIds: List<Long>? = null
@@ -74,6 +74,7 @@ class ImportViewModel(private val dao: RecordDao): ViewModel() {
         return Json.decodeFromString(json)
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun getStringFromFile(docUri: Uri, context: Context): String {
         return withContext(Dispatchers.IO) {
             context.contentResolver.openFileDescriptor(docUri, "r")?.use {
@@ -83,13 +84,13 @@ class ImportViewModel(private val dao: RecordDao): ViewModel() {
     }
 
     private fun import(block: suspend () -> Unit) {
-        _importState.value = ImportStates.InProgress
+        _importState.value = ProcessStates.InProgress
         viewModelScope.launch {
             try {
                 block()
-                _importState.value = ImportStates.Success
+                _importState.value = ProcessStates.Success
             } catch (e: Exception) {
-                _importState.value = ImportStates.Failure(e)
+                _importState.value = ProcessStates.Failure(e)
             } finally {
                 _importState.value = null
             }
@@ -97,10 +98,10 @@ class ImportViewModel(private val dao: RecordDao): ViewModel() {
     }
 }
 
-sealed class ImportStates {
-    object InProgress : ImportStates()
-    object Success : ImportStates()
-    data class Failure(val e: Exception): ImportStates()
+sealed class ProcessStates {
+    object InProgress : ProcessStates()
+    object Success : ProcessStates()
+    data class Failure(val e: Exception): ProcessStates()
 }
 
 class ImportViewModelFactory(private val dao: RecordDao): ViewModelProvider.Factory {

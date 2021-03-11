@@ -64,6 +64,9 @@
         <action
             android:id="@+id/action_settingsFragmentRoot_to_driveFileListFragment"
             app:destination="@id/driveFileListFragment" />
+        <action
+            android:id="@+id/action_settingsFragmentRoot_to_exportFragment"
+            app:destination="@id/exportFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragmentMaterial"
@@ -79,4 +82,12 @@
         android:name="com.vva.androidopencbt.gdrivefeature.DriveFileListFragment"
         app:moduleName="gdrive_backup_feature"
         android:label="DriveFileListFragment" />
+    <fragment
+        android:id="@+id/exportFragment"
+        android:name="com.vva.androidopencbt.export.ExportFragment"
+        android:label="@string/title_export_to">
+        <argument
+            android:name="format"
+            app:argType="integer" />
+    </fragment>
 </navigation>

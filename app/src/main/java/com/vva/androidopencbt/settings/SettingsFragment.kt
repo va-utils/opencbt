@@ -4,7 +4,6 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +23,11 @@ import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
-import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
-import com.vva.androidopencbt.import.ImportStates
-import com.vva.androidopencbt.import.ImportViewModel
-import com.vva.androidopencbt.import.ImportViewModelFactory
+import com.vva.androidopencbt.export.ImportViewModel
+import com.vva.androidopencbt.export.ImportViewModelFactory
+import com.vva.androidopencbt.export.ProcessStates
 
 private const val REQUEST_CODE_KG_PROTECTION = 0x99
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
@@ -128,7 +126,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             val km = requireActivity().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure) {
                 val i = km.createConfirmDeviceCredentialIntent(null, null)
-//                startActivityForResult(i, REQUEST_CODE_KG_PROTECTION)
 
                 pendingActivity.launch(i)
             } else {
@@ -176,6 +173,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_EXPORT)?.setOnPreferenceClickListener {
+            findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(0))
             true
         }
 
@@ -194,7 +192,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         super.onResume()
         importViewModel.importState.observe(viewLifecycleOwner) {
             when(it) {
-                is ImportStates.Success -> {
+                is ProcessStates.Success -> {
                     val count = importViewModel.lastBackupRecordsCount()
                     if (count == 0) {
                         Toast.makeText(requireContext(), resources.getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
@@ -205,24 +203,11 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                                 importViewModel.rollbackLastImport()
                             }.show()
                 }
-                is ImportStates.InProgress -> {
+                is ProcessStates.InProgress -> {
 
                 }
-                is ImportStates.Failure -> {
+                is ProcessStates.Failure -> {
                     Toast.makeText(requireContext(), resources.getString(R.string.import_error_readfile), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_CODE_KG_PROTECTION -> {
-                if (resultCode == AppCompatActivity.RESULT_OK) {
-                    findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_ENABLE_PIN)?.let {
-                        it.isChecked = !it.isChecked
-                    }
                 }
             }
         }
