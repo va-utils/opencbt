@@ -16,13 +16,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
-            android:id="@+id/action_rvFragment_to_exportToHtmlFragment"
-            app:destination="@id/exportToHtmlFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-        <action
             android:id="@+id/action_rvFragment_to_settingsFragmentRoot"
             app:destination="@id/settingsFragmentRoot"
             app:enterAnim="@anim/slide_in_right"
@@ -46,10 +39,6 @@
         android:name="com.vva.androidopencbt.statistic.StatisticFragment"
         android:label="@string/action_statistics"
         tools:layout="@layout/fragment_statistic" />
-    <fragment
-        android:id="@+id/exportToHtmlFragment"
-        android:name="com.vva.androidopencbt.export.html.ExportToHtmlFragment"
-        android:label="@string/title_export_to" />
     <fragment
         android:id="@+id/settingsFragmentRoot"
         android:name="com.vva.androidopencbt.settings.SettingsFragmentRoot"

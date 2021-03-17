@@ -76,10 +76,10 @@ class DetailsFragmentMaterial: Fragment() {
                         MaterialAlertDialogBuilder(requireContext())
                                 .setTitle(R.string.details_fragment_confirm_dialog_title)
                                 .setMessage(R.string.details_fragment_confirm_dialog_message)
-                                .setNegativeButton(R.string.exit) { dialogInterface: DialogInterface, i: Int ->
+                                .setNegativeButton(R.string.exit) { _: DialogInterface, _: Int ->
                                     navController.navigateUp()
                                 }
-                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, i: Int ->
+                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, _: Int ->
                                     dialogInterface.dismiss()
                                 }
                                 .show()
@@ -135,12 +135,12 @@ class DetailsFragmentMaterial: Fragment() {
 
             MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.details_fragment_remove_confirm_dialog_title).
                     setMessage(R.string.details_fragment_remove_confirm_dialog_message).
-                    setNegativeButton(R.string.remove) { dialogInterface: DialogInterface, i: Int ->
+                    setNegativeButton(R.string.remove) { _: DialogInterface, _: Int ->
                         detailsViewModel.deleteRecordById(id)
                         findNavController().popBackStack()
                     }
                     .setNeutralButton(R.string.cancel)
-                    { dialogInterface: DialogInterface, i: Int ->
+                    { dialogInterface: DialogInterface, _: Int ->
                         dialogInterface.dismiss()
                     }.show()
         }

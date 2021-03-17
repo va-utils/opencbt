@@ -90,7 +90,7 @@ class RvFragment: Fragment() {
         prefs = (requireActivity().application as App).preferenceRepository
         database = CbdDatabase.getInstance(requireContext())
 
-        dataAdapter = RecordsAdapter(RecordListener { view: View, dbRecord: DbRecord, position: Int ->
+        dataAdapter = RecordsAdapter(RecordListener { _: View, dbRecord: DbRecord, _: Int ->
             when (listViewModel.onItemClick(dbRecord)) {
                 null -> {
                     findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = dbRecord.id })

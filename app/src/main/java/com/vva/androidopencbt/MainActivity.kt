@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -30,6 +31,13 @@ class MainActivity : AppCompatActivity() {
     private val vm: RecordsViewModel by viewModels()
     private lateinit var preferences: PreferenceRepository
     private lateinit var database: CbdDatabase
+    private val authActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_CANCELED)
+            this.finishAffinity()
+        if (it.resultCode == RESULT_OK) {
+            vm.authSuccessful()
+        }
+    }
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
@@ -50,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
                 if (km.isKeyguardSecure) {
                     val i = km.createConfirmDeviceCredentialIntent(null, null)
-                    startActivityForResult(i, 0x999)
+                    authActivity.launch(i)
                 }
             } else {
                 preferences.isNightThemeLive.observe(this) {
@@ -74,18 +82,6 @@ class MainActivity : AppCompatActivity() {
 
     fun addNewRecord(view: View) {
         findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 0x999) {
-            if (resultCode == RESULT_CANCELED)
-                this.finishAffinity()
-            if (resultCode == RESULT_OK) {
-                vm.authSuccessful()
-            }
-        }
     }
 
     override fun onBackPressed() {

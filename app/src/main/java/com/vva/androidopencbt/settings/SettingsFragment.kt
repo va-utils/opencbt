@@ -134,7 +134,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 with(builder) {
                     setMessage(getString(R.string.pref_pin_problem))
                     setTitle(getString(R.string.pref_pin_title))
-                    setPositiveButton("OK") { dialog, _ -> startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))}
+                    setPositiveButton("OK") { _, _ -> startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))}
                     setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.cancel()}
                 }.create().show()
             }
