@@ -89,5 +89,8 @@
         <argument
             android:name="format"
             app:argType="integer" />
+        <argument
+            android:name="destination"
+            app:argType="integer" />
     </fragment>
 </navigation>

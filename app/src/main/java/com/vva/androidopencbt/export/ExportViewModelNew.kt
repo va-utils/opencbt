@@ -49,15 +49,16 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
     fun export(export: Export) {
         fileName = export.fileName
         process {
-            val list = withContext(Dispatchers.IO) {
-                if (export.isWholeDiary) {
-                    dao.getAllList()
-                } else if (export.begin != null && export.end != null) {
-                    dao.getRecordsForPeriod(export.begin, export.end)
-                } else {
-                    throw IllegalStateException("Dates is null")
-                }
-            }
+            val list = export.list
+                    ?: withContext(Dispatchers.IO) {
+                        if (export.isWholeDiary) {
+                            dao.getAllList()
+                        } else if (export.begin != null && export.end != null) {
+                            dao.getRecordsForPeriod(export.begin, export.end)
+                        } else {
+                            throw IllegalStateException("Dates is null")
+                        }
+                    }
 
             val string = when (export.format) {
                 ExportFormats.JSON -> {
@@ -68,7 +69,11 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
                 }
             }
 
-            saveStringToFile(string, export.fileName)
+            if (export.isCloud) {
+
+            } else {
+                saveStringToFile(string, export.fileName)
+            }
         }
     }
 
@@ -150,13 +155,30 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
 
 class Export private constructor(val fileName: String, val format: ExportFormats,
                                  val isWholeDiary: Boolean,
-                                 val begin: DateTime? = null, val end: DateTime? = null) {
+                                 val begin: DateTime? = null, val end: DateTime? = null,
+                                 val list: List<DbRecord>? = null,
+                                 val isCloud: Boolean) {
     class Builder {
         private var isWholeDiary = true
         private var beginDate: DateTime? = null
         private var endDate: DateTime? = null
         private var format = ExportFormats.JSON
         private var fileName: String = ""
+        private var exportList: List<DbRecord>? = null
+        private var isCloud: Boolean = false
+
+        fun cloud() : Builder {
+            isCloud = true
+
+            return this
+        }
+
+        fun setExportList(list: List<DbRecord>): Builder {
+            isWholeDiary = false
+            exportList = list
+
+            return this
+        }
 
         fun setPeriod(begin: DateTime, end: DateTime): Builder {
             if (!begin.isBefore(end)) {
@@ -194,7 +216,12 @@ class Export private constructor(val fileName: String, val format: ExportFormats
                 }
             }
 
-            return Export(name, format, isWholeDiary, beginDate, endDate)
+            return Export(name, format, isWholeDiary, beginDate, endDate, exportList, isCloud)
         }
+    }
+
+    companion object {
+        const val DESTINATION_LOCAL = 0
+        const val DESTINATION_CLOUD = 1
     }
 }

@@ -3,12 +3,15 @@ package com.vva.androidopencbt.recordslist
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +22,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.vva.androidopencbt.App
@@ -27,8 +31,9 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
-import com.vva.androidopencbt.export.ExportViewModel
-import com.vva.androidopencbt.settings.ExportFormats
+import com.vva.androidopencbt.export.Export
+import com.vva.androidopencbt.export.ExportViewModelNew
+import com.vva.androidopencbt.export.ProcessStates
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
@@ -39,7 +44,8 @@ class RvFragment: Fragment() {
     private val listViewModel: RecordListViewModel by viewModels {
         RecordListViewModelFactory(database.databaseDao, prefs)
     }
-    private val exportViewModel: ExportViewModel by activityViewModels()
+//    private val exportViewModel: ExportViewModel by activityViewModels()
+    private val exportViewModelNew: ExportViewModelNew by activityViewModels()
 
     private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
@@ -103,36 +109,69 @@ class RvFragment: Fragment() {
             actionMode?.invalidate()
         }
 
-        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
-            exportViewModel.format = it
-        }
+//        prefs.defaultExportFormat.observe(viewLifecycleOwner) {
+//            exportViewModel.format = it
+//        }
+//
+//        exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
+//            val fileType = when (exportViewModel.format) {
+//                ExportFormats.JSON -> {
+//                    "application/octet-stream"
+//                }
+//                ExportFormats.HTML -> {
+//                    "application/html"
+//                }
+//                else -> {
+//                    throw IllegalArgumentException("No such format")
+//                }
+//            }
+//            if (it) {
+//                val file = File(requireActivity().filesDir, exportViewModel.fileName)
+//                val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
+//                val forSendIntent = Intent(Intent.ACTION_SEND)
+//                forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                forSendIntent.setDataAndType(uri, fileType)
+//
+//                val pm: PackageManager = requireActivity().packageManager
+//                if (forSendIntent.resolveActivity(pm) != null) {
+//                    startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+//                    exportViewModel.htmlFileShared()
+//                } else {
+//                    Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
 
-        exportViewModel.isExportFileReady.observe(viewLifecycleOwner) {
-            val fileType = when (exportViewModel.format) {
-                ExportFormats.JSON -> {
-                    "application/octet-stream"
+        val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
+        exportViewModelNew.exportState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ProcessStates.InProgress -> {
+                    alertDialog.show()
                 }
-                ExportFormats.HTML -> {
-                    "application/html"
-                }
-                else -> {
-                    throw IllegalArgumentException("No such format")
-                }
-            }
-            if (it) {
-                val file = File(requireActivity().filesDir, exportViewModel.fileName)
-                val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
-                val forSendIntent = Intent(Intent.ACTION_SEND)
-                forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                forSendIntent.setDataAndType(uri, fileType)
+                is ProcessStates.Success -> {
+                    alertDialog.dismiss()
+                    val file = File(requireActivity().filesDir, exportViewModelNew.fileName)
+                    val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
+                    val forSendIntent = Intent(Intent.ACTION_SEND)
+                    forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                    forSendIntent.setDataAndType(uri, "application/octet-stream")
 
-                val pm: PackageManager = requireActivity().packageManager
-                if (forSendIntent.resolveActivity(pm) != null) {
-                    startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
-                    exportViewModel.htmlFileShared()
-                } else {
-                    Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+                    val pm: PackageManager = requireActivity().packageManager
+                    if (forSendIntent.resolveActivity(pm) != null) {
+                        startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+                    } else {
+                        Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is ProcessStates.Failure -> {
+                    alertDialog.dismiss()
+                    Log.d("Export", "error", it.e)
+                    Toast.makeText(requireContext(), "Что-то пошло не так, выгрузка не удалась", Toast.LENGTH_LONG).show()
+                }
+                null -> {
+                    alertDialog.dismiss()
                 }
             }
         }
@@ -168,7 +207,12 @@ class RvFragment: Fragment() {
                                 true
                             }
                             R.id.action_export -> {
-                                exportViewModel.exportSelected(listViewModel.selectedItems.value?.keys?.toList(), requireContext())
+//                                exportViewModel.exportSelected(listViewModel.selectedItems.value?.keys?.toList(), requireContext())
+                                val export = Export.Builder()
+                                        .setFileName("CBT_diary_selected")
+                                        .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
+                                        .build()
+                                exportViewModelNew.export(export)
                                 mode.finish()
                                 true
                             }
@@ -250,6 +294,15 @@ class RvFragment: Fragment() {
         }
 
         return ll
+    }
+
+    private fun makeIndeterminateProgressDialog(): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext())
+                .setBackground(ResourcesCompat.getDrawable(resources, R.drawable.pg_back, null))
+                .setView(R.layout.progress_bar)
+                .setCancelable(false)
+                .create()
+
     }
 
     override fun onPause() {

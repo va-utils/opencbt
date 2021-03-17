@@ -9,14 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
@@ -57,7 +59,7 @@ class ExportFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
-        ll = inflater.inflate(R.layout.wizard_pager2, container, false) as LinearLayout
+        ll = inflater.inflate(R.layout.export_wizard, container, false) as LinearLayout
         wholeDiary = ll.findViewById(R.id.whole_cb)
         goBtn = ll.findViewById(R.id.exportBtn)
 
@@ -75,39 +77,43 @@ class ExportFragment: Fragment() {
         val args = ExportFragmentArgs.fromBundle(requireArguments())
 
         goBtn.setOnClickListener {
-            val format = when (args.format) {
+            val exportBuilder = Export.Builder()
+
+            when (args.format) {
                 0 -> {
-                    ExportFormats.JSON
+                    exportBuilder.setFormat(ExportFormats.JSON)
                 }
                 else -> {
-                    ExportFormats.HTML
+                    exportBuilder.setFormat(ExportFormats.HTML)
                 }
             }
-            val export = if (wholeDiary.isChecked) {
-                Export.Builder()
+            when (args.destination) {
+                Export.DESTINATION_CLOUD -> {
+                    exportBuilder.cloud()
+                }
+                else -> {
+                }
+            }
+            if (wholeDiary.isChecked) {
+                exportBuilder
                         .setFileName("CBT_diary")
-                        .setFormat(format)
-                        .build()
             } else {
-                Export.Builder()
+                exportBuilder
                         .setFileName("CBT_diary_${exportViewModelNew.beginDateTime.toString("dd-MM-yyy")}_${exportViewModelNew.endDateTime.toString("dd-MM-yyyy")}")
-                        .setFormat(format)
                         .setPeriod(exportViewModelNew.beginDateTime, exportViewModelNew.endDateTime)
-                        .build()
             }
 
-            exportViewModelNew.export(export)
+            exportViewModelNew.export(exportBuilder.build())
         }
 
+        val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
         exportViewModelNew.exportState.observe(viewLifecycleOwner) {
             when(it) {
                 is ProcessStates.InProgress -> {
-                    ll.findViewById<ProgressBar>(R.id.progressBar).visibility = View.VISIBLE
-                    ll.findViewById<ConstraintLayout>(R.id.cl).isEnabled = false
+                    alertDialog.show()
                 }
                 is ProcessStates.Success -> {
-                    ll.findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
-                    ll.findViewById<ConstraintLayout>(R.id.cl).isEnabled = true
+                    alertDialog.dismiss()
 
                     val file = File(requireActivity().filesDir, exportViewModelNew.fileName)
                     val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
@@ -125,17 +131,25 @@ class ExportFragment: Fragment() {
 
                 }
                 is ProcessStates.Failure -> {
+                    alertDialog.dismiss()
                     Log.d("Export", "error", it.e)
                     Toast.makeText(requireContext(), "Что-то пошло не так, выгрузка не удалась", Toast.LENGTH_LONG).show()
                 }
                 null -> {
-                    ll.findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
-                    ll.findViewById<ConstraintLayout>(R.id.cl).isEnabled = true
+                    alertDialog.dismiss()
                 }
             }
         }
 
         return ll
+    }
+
+    private fun makeIndeterminateProgressDialog(): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext())
+                .setBackground(ResourcesCompat.getDrawable(resources, R.drawable.pg_back, null))
+                .setView(R.layout.progress_bar)
+                .setCancelable(false)
+                .create()
     }
 
     private fun initDateEditText() {

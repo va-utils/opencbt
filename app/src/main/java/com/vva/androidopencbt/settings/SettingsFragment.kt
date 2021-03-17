@@ -25,6 +25,7 @@ import com.vva.androidopencbt.App
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
+import com.vva.androidopencbt.export.Export
 import com.vva.androidopencbt.export.ImportViewModel
 import com.vva.androidopencbt.export.ImportViewModelFactory
 import com.vva.androidopencbt.export.ProcessStates
@@ -167,13 +168,14 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(0, Export.DESTINATION_CLOUD))
             }
 
             true
         }
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_EXPORT)?.setOnPreferenceClickListener {
-            findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(0))
+            findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(0, Export.DESTINATION_LOCAL))
             true
         }
 

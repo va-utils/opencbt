@@ -27,7 +27,6 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
-import kotlinx.android.synthetic.main.fragment_details_material.*
 import org.joda.time.DateTime
 
 class DetailsFragmentMaterial: Fragment() {
@@ -115,7 +114,7 @@ class DetailsFragmentMaterial: Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        ll = inflater.inflate(R.layout.fragment_details_material, container, false) as LinearLayout
+        ll = inflater.inflate(R.layout.fragment_details, container, false) as LinearLayout
         args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
         database = CbdDatabase.getInstance(requireActivity().application)
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
