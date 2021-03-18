@@ -380,7 +380,7 @@ class DetailsFragmentMaterial: Fragment() {
             view.performClick()
             if (view.hasFocus()) {
                 view.parent.requestDisallowInterceptTouchEvent(true)
-                when ((event.action).and(MotionEvent.ACTION_MASK)) {
+                when (event.action.and(MotionEvent.ACTION_MASK)) {
                     MotionEvent.ACTION_SCROLL -> {
                         view.parent.requestDisallowInterceptTouchEvent(false)
                         return@OnTouchListener true

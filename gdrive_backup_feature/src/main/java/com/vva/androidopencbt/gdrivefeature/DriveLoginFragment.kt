@@ -7,17 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -29,18 +25,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-class DriveFileListFragment: Fragment() {
+class DriveLoginFragment: Fragment() {
     private val job = Job()
     private val fragmentScope = CoroutineScope(Dispatchers.Main + job)
-
-    private lateinit var mDriveServiceHelper: DriveServiceHelper
+    private val viewModel: DriveFileListViewModel by activityViewModels()
     private lateinit var googleClient: GoogleSignInClient
-    private lateinit var mDataAdapter: DriveListAdapter
-
-    private val viewModel: DriveFileListViewModel by viewModels()
-
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var recyclerView: RecyclerView
 
     private val requestDriveAccountActivity = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -52,38 +41,21 @@ class DriveFileListFragment: Fragment() {
         }
     }
 
-    private lateinit var ll: LinearLayout
-    private lateinit var toolbar: Toolbar
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        toolbar = view.findViewById<Toolbar>(R.id.rv_toolbar).apply {
-            setupWithNavController(navController, appBarConfiguration)
-            title = "Google Drive backups"
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        ll = inflater.inflate(R.layout.fragment_list, container, false) as LinearLayout
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        requestSignIn()
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
-            when(it) {
-                null -> {
-                    requestSignIn()
-                }
-                false -> {
-                    findNavController().popBackStack()
-                }
+            when (it) {
                 true -> {
-                    proceed()
+                    findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment())
+                }
+                else -> {
+                    findNavController().popBackStack()
                 }
             }
         }
 
-        return ll
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     private fun requestSignIn() {
@@ -98,11 +70,9 @@ class DriveFileListFragment: Fragment() {
             task.result?.let {
                 val credential = GoogleAccountCredential.usingOAuth2(context,
                         Collections.singleton(DriveScopes.DRIVE_FILE)).apply {
-                            selectedAccount = it.account
+                    selectedAccount = it.account
                 }
-
-                mDriveServiceHelper = DriveServiceHelper.getInstance(credential)
-                viewModel.setLoginSuccessful()
+                loginSuccessful(credential, it, googleClient)
             }
         } else {
             fragmentScope.launch(Dispatchers.IO) {
@@ -125,47 +95,30 @@ class DriveFileListFragment: Fragment() {
                 val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
                 val credential = GoogleAccountCredential.usingOAuth2(requireContext(),
                         listOf(DriveScopes.DRIVE_FILE)).apply {
-                            selectedAccount = account.account
+                    selectedAccount = account.account
                 }
-                mDriveServiceHelper = DriveServiceHelper.getInstance(credential)
-                withContext(Dispatchers.Main) {
-                    viewModel.setLoginSuccessful()
-                }
+                loginSuccessful(credential, account, googleClient)
             } catch (e: ApiException) {
-                withContext(Dispatchers.Main) {
-                    viewModel.setLoginUnsuccessful()
-                }
+                loginFailed()
+                Log.d("DRIVE_LOGIN", "failed", e)
             }
         }
     }
 
-    private fun proceed() {
-//        viewModel.driveServiceHelper = mDriveServiceHelper
-        recyclerView = ll.findViewById(R.id.rv)
-        swipeRefreshLayout = ll.findViewById(R.id.list_swipe)
-        swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshFileList()
-        }
-
-        mDataAdapter = DriveListAdapter(OnClickListener {
-            viewModel.getFile(it.id)
-        })
-        viewModel.driveFile.observe(viewLifecycleOwner) {
-            Log.d("TEST", it.toString())
-
-        }
-        viewModel.driveFileList.observe(viewLifecycleOwner) {
-            mDataAdapter.submitList(it)
-        }
-
-        recyclerView.adapter = mDataAdapter
-//        viewModel.isRequestIsActive.observe(viewLifecycleOwner) {
-//            swipeRefreshLayout.isRefreshing = it
-//        }
+    private fun loginSuccessful(credentials: GoogleAccountCredential, account: GoogleSignInAccount, client: GoogleSignInClient) {
+        viewModel.setLoginSuccessful()
+        viewModel.driveCredentials = credentials
+        viewModel.driveAccount = account
+        viewModel.driveClient = client
     }
 
-    override fun onStop() {
-        fragmentScope.cancel()
-        super.onStop()
+    private fun loginFailed() {
+        viewModel.setLoginUnsuccessful()
+    }
+
+    override fun onDestroy() {
+        job.cancel()
+
+        super.onDestroy()
     }
 }

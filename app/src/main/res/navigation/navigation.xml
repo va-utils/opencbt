@@ -51,11 +51,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_settingsFragmentRoot_to_driveFileListFragment"
-            app:destination="@id/driveFileListFragment" />
-        <action
             android:id="@+id/action_settingsFragmentRoot_to_exportFragment"
             app:destination="@id/exportFragment" />
+        <action
+            android:id="@+id/action_settingsFragmentRoot_to_driveLoginFragment"
+            app:destination="@id/driveLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragmentMaterial"
@@ -67,11 +67,6 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/driveFileListFragment"
-        android:name="com.vva.androidopencbt.gdrivefeature.DriveFileListFragment"
-        app:moduleName="gdrive_backup_feature"
-        android:label="DriveFileListFragment" />
-    <fragment
         android:id="@+id/exportFragment"
         android:name="com.vva.androidopencbt.export.ExportFragment"
         android:label="@string/title_export_to">
@@ -82,4 +77,19 @@
             android:name="destination"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/driveLoginFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveLoginFragment"
+        app:moduleName="gdrive_backup_feature"
+        android:label="DriveLoginFragment" >
+        <action
+            android:id="@+id/action_driveLoginFragment_to_driveListFragment"
+            app:destination="@id/driveListFragment"
+            app:popUpTo="@id/settingsFragmentRoot" />
+    </fragment>
+    <fragment
+        android:id="@+id/driveListFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
+        app:moduleName="gdrive_backup_feature"
+        android:label="DriveListFragment" />
 </navigation>

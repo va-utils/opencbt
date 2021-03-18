@@ -1,6 +1,10 @@
 package com.vva.androidopencbt.gdrivefeature
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.model.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,27 +12,33 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class DriveFileListViewModel: ViewModel() {
-    var driveServiceHelper: DriveServiceHelper? = null
+    private var driveServiceHelper: DriveServiceHelper? = null
+
+    var driveClient: GoogleSignInClient? = null
+    var driveAccount: GoogleSignInAccount? = null
+    var driveCredentials: GoogleAccountCredential? = null
         set(value) {
             field = value
-            refreshFileList()
+            driveServiceHelper = driveCredentials?.let {
+                DriveServiceHelper.getInstance(it)
+            }
         }
 
-    private val _isLogInSuccessful = MutableLiveData<Boolean?>(null)
-    val isLogInSuccessful: LiveData<Boolean?>
-        get() = _isLogInSuccessful
+    private val _isLoginSuccessful = MutableLiveData<Boolean?>(null)
+    val isLoginSuccessful: LiveData<Boolean?>
+        get() = _isLoginSuccessful
 
-    fun setLogInSuccessful() {
-        _isLogInSuccessful.value = true
+    fun setLoginSuccessful() {
+        viewModelScope.launch(Dispatchers.Main) {
+            _isLoginSuccessful.value = true
+        }
     }
 
-    fun setLogInUnsuccessful() {
-        _isLogInSuccessful.value = false
+    fun setLoginUnsuccessful() {
+        viewModelScope.launch(Dispatchers.Main) {
+            _isLoginSuccessful.value = false
+        }
     }
-
-    private val _isRequestIsActive = MutableLiveData<Boolean>()
-    val isRequestIsActive: LiveData<Boolean>
-        get() = _isRequestIsActive
 
     private val _driveFileList = MutableLiveData<List<File>>()
     val driveFileList: LiveData<List<File>>
@@ -51,20 +61,52 @@ class DriveFileListViewModel: ViewModel() {
 
     fun getFile(fileId: String) {
         makeRequest {
-            withContext(Dispatchers.IO) {
-                val result = driveServiceHelper?.readFile(fileId)?.await()
-                withContext(Dispatchers.Main) {
-                    _driveFile.value = result!!
-                }
+            val result = withContext(Dispatchers.IO) {
+                driveServiceHelper?.readFile(fileId)?.await()
+            }
+            _driveFile.value = result!!
+        }
+    }
+
+    fun getFileList() {
+        makeRequest {
+            val result = withContext(Dispatchers.IO) {
+                driveServiceHelper?.queryFiles()?.await()
+            }
+
+            _driveFileList.value = result?.files
+        }
+    }
+
+    fun signOut() {
+        driveClient?.let {
+            makeRequest {
+                it.signOut().await()
             }
         }
     }
 
+    private val _requestStatus = MutableLiveData<RequestStatus?>(null)
+    val requestStatus: LiveData<RequestStatus?>
+        get() = _requestStatus
+
     private fun makeRequest(block: suspend () -> Unit) {
         viewModelScope.launch {
-            _isRequestIsActive.value = true
-            block()
-            _isRequestIsActive.value = false
+            _requestStatus.value = RequestStatus.InProgress
+            try {
+                block()
+                _requestStatus.value = RequestStatus.Success
+            } catch (e: Exception) {
+                _requestStatus.value = RequestStatus.Failure(e)
+            } finally {
+                _requestStatus.value = null
+            }
         }
     }
+}
+
+sealed class RequestStatus {
+    object InProgress : RequestStatus()
+    object Success : RequestStatus()
+    class Failure(val e: Exception): RequestStatus()
 }

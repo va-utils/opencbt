@@ -158,7 +158,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(R.id.action_settingsFragmentRoot_to_driveFileListFragment)
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment())
             }
 
             true

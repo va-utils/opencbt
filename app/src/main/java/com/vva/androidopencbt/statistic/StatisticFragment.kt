@@ -93,8 +93,6 @@ class StatisticFragment : Fragment() {
         intensityTv = ll.findViewById(R.id.intensityTv)
 
 
-        
-
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
             if (it != null) {
                 totalTv.text = it.toString()

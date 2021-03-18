@@ -59,7 +59,7 @@ class AboutFragment : Fragment() {
         fbIntent.data = Uri.parse("mailto:")
         fbIntent.putExtra(Intent.EXTRA_EMAIL, Array<String>(1){"androidopencbt@yandex.ru"})
         fbIntent.putExtra(Intent.EXTRA_SUBJECT, "Android OpenCBT")
-        if(fbIntent.resolveActivity((requireActivity().packageManager))!=null) {
+        if(fbIntent.resolveActivity(requireActivity().packageManager) != null) {
             activity?.startActivity(fbIntent)
         }
     }
