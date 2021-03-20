@@ -19,7 +19,7 @@ import java.util.concurrent.Executors
 class DriveServiceHelper private constructor(private val mDriveService: Drive) {
     private val mExecutor = Executors.newSingleThreadExecutor()
 
-    fun createFile(parents: String, mimeType: String, fileName: String): Task<String> {
+    fun createFile(parents: String?, mimeType: String, fileName: String): Task<String> {
         return Tasks.call(mExecutor) {
             val metadata = File()
                     .setParents(Collections.singletonList(parents))

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -43,13 +42,15 @@ class DriveLoginFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         requestSignIn()
+        viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
                     findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment())
                 }
-                else -> {
+                false -> {
+                    Log.d("Login", "login failed")
                     findNavController().popBackStack()
                 }
             }

@@ -32,7 +32,7 @@ import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.Export
-import com.vva.androidopencbt.export.ExportViewModelNew
+import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.export.ProcessStates
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
@@ -45,7 +45,7 @@ class RvFragment: Fragment() {
         RecordListViewModelFactory(database.databaseDao, prefs)
     }
 //    private val exportViewModel: ExportViewModel by activityViewModels()
-    private val exportViewModelNew: ExportViewModelNew by activityViewModels()
+    private val exportViewModel: ExportViewModel by activityViewModels()
 
     private lateinit var ll: LinearLayout
     private lateinit var rv: RecyclerView
@@ -143,38 +143,38 @@ class RvFragment: Fragment() {
 //            }
 //        }
 
-        val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
-        exportViewModelNew.exportState.observe(viewLifecycleOwner) {
-            when (it) {
-                is ProcessStates.InProgress -> {
-                    alertDialog.show()
-                }
-                is ProcessStates.Success -> {
-                    alertDialog.dismiss()
-                    val file = File(requireActivity().filesDir, exportViewModelNew.fileName)
-                    val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
-                    val forSendIntent = Intent(Intent.ACTION_SEND)
-                    forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                    forSendIntent.setDataAndType(uri, "application/octet-stream")
-
-                    val pm: PackageManager = requireActivity().packageManager
-                    if (forSendIntent.resolveActivity(pm) != null) {
-                        startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
-                    } else {
-                        Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
-                    }
-                }
-                is ProcessStates.Failure -> {
-                    alertDialog.dismiss()
-                    Log.d("Export", "error", it.e)
-                    Toast.makeText(requireContext(), "Что-то пошло не так, выгрузка не удалась", Toast.LENGTH_LONG).show()
-                }
-                null -> {
-                    alertDialog.dismiss()
-                }
-            }
-        }
+//        val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
+//        exportViewModel.exportState.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is ProcessStates.InProgress -> {
+//                    alertDialog.show()
+//                }
+//                is ProcessStates.Success -> {
+//                    alertDialog.dismiss()
+//                    val file = File(requireActivity().filesDir, exportViewModel.fileName)
+//                    val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
+//                    val forSendIntent = Intent(Intent.ACTION_SEND)
+//                    forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                    forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                    forSendIntent.setDataAndType(uri, "application/octet-stream")
+//
+//                    val pm: PackageManager = requireActivity().packageManager
+//                    if (forSendIntent.resolveActivity(pm) != null) {
+//                        startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+//                    } else {
+//                        Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//                is ProcessStates.Failure -> {
+//                    alertDialog.dismiss()
+//                    Log.d("Export", "error", it.e)
+//                    Toast.makeText(requireContext(), "Что-то пошло не так, выгрузка не удалась", Toast.LENGTH_LONG).show()
+//                }
+//                null -> {
+//                    alertDialog.dismiss()
+//                }
+//            }
+//        }
 
         viewModel.isSelectionActive.observe(viewLifecycleOwner) {
             if (!it) {
@@ -212,7 +212,7 @@ class RvFragment: Fragment() {
                                         .setFileName("CBT_diary_selected")
                                         .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
                                         .build()
-                                exportViewModelNew.export(export)
+                                exportViewModel.export(export)
                                 mode.finish()
                                 true
                             }
@@ -268,30 +268,30 @@ class RvFragment: Fragment() {
         }
 
         rv.adapter = dataAdapter
-        viewModel.importInAction.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
-            else if (!it) {
-                if (viewModel.importData.value == null) {
-                    Toast.makeText(requireContext(), getString(R.string.import_error_readfile), Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.importData.value.let { list ->
-                        if (list?.isEmpty()!!) {
-                            Toast.makeText(requireContext(), getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
-                        } else {
-                            val count = list.size
-                            Snackbar.make(ll, resources.getQuantityString(R.plurals.import_cancel, count, count), Snackbar.LENGTH_SHORT)
-                                    .setAction(getString(R.string.import_cancel)) { _ ->
-                                        list.forEach { id ->
-                                            viewModel.deleteRecord(id)
-                                        }
-                                    }.show()
-                        }
-                    }
-                }
-                viewModel.doneImporting()
-            }
-        }
+//        viewModel.importInAction.observe(viewLifecycleOwner) {
+//            if (it == null)
+//                return@observe
+//            else if (!it) {
+//                if (viewModel.importData.value == null) {
+//                    Toast.makeText(requireContext(), getString(R.string.import_error_readfile), Toast.LENGTH_SHORT).show()
+//                } else {
+//                    viewModel.importData.value.let { list ->
+//                        if (list?.isEmpty()!!) {
+//                            Toast.makeText(requireContext(), getString(R.string.import_nodata), Toast.LENGTH_SHORT).show()
+//                        } else {
+//                            val count = list.size
+//                            Snackbar.make(ll, resources.getQuantityString(R.plurals.import_cancel, count, count), Snackbar.LENGTH_SHORT)
+//                                    .setAction(getString(R.string.import_cancel)) { _ ->
+//                                        list.forEach { id ->
+//                                            viewModel.deleteRecord(id)
+//                                        }
+//                                    }.show()
+//                        }
+//                    }
+//                }
+//                viewModel.doneImporting()
+//            }
+//        }
 
         return ll
     }

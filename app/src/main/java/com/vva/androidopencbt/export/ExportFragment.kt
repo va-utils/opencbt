@@ -35,7 +35,8 @@ class ExportFragment: Fragment() {
     private lateinit var goBtn: Button
 
     private lateinit var dao: RecordDao
-    private val exportViewModelNew: ExportViewModelNew by activityViewModels()
+    private val exportViewModel: ExportViewModel by activityViewModels()
+    private val mainViewModel: RecordsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,12 +49,12 @@ class ExportFragment: Fragment() {
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        exportViewModelNew.setBeginDate(DateTime(year, month+1, dayOfMonth, 0, 0))
+        exportViewModel.setBeginDate(DateTime(year, month+1, dayOfMonth, 0, 0))
     }
 
     private val endDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-        exportViewModelNew.setEndDate(DateTime(year, month+1, dayOfMonth, 23, 59))
+        exportViewModel.setEndDate(DateTime(year, month+1, dayOfMonth, 23, 59))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -99,38 +100,33 @@ class ExportFragment: Fragment() {
                         .setFileName("CBT_diary")
             } else {
                 exportBuilder
-                        .setFileName("CBT_diary_${exportViewModelNew.beginDateTime.toString("dd-MM-yyy")}_${exportViewModelNew.endDateTime.toString("dd-MM-yyyy")}")
-                        .setPeriod(exportViewModelNew.beginDateTime, exportViewModelNew.endDateTime)
+                        .setFileName("CBT_diary_${exportViewModel.beginDateTime.toString("dd-MM-yyy")}_${exportViewModel.endDateTime.toString("dd-MM-yyyy")}")
+                        .setPeriod(exportViewModel.beginDateTime, exportViewModel.endDateTime)
             }
 
-            exportViewModelNew.export(exportBuilder.build())
+            exportViewModel.export(exportBuilder.build())
         }
 
         val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
-        exportViewModelNew.exportState.observe(viewLifecycleOwner) {
+        exportViewModel.exportState.observe(viewLifecycleOwner) {
             when(it) {
-                is ProcessStates.InProgress -> {
+                is ExportStates.InProgress -> {
                     alertDialog.show()
                 }
-                is ProcessStates.Success -> {
+                is ExportStates.Success -> {
                     alertDialog.dismiss()
 
-                    val file = File(requireActivity().filesDir, exportViewModelNew.fileName)
-                    val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
-                    val forSendIntent = Intent(Intent.ACTION_SEND)
-                    forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                    forSendIntent.setDataAndType(uri, "application/octet-stream")
-
-                    val pm: PackageManager = requireActivity().packageManager
-                    if (forSendIntent.resolveActivity(pm) != null) {
-                        startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
-                    } else {
-                        Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+                    when (args.destination) {
+                        Export.DESTINATION_LOCAL -> {
+                            sendLocalFile(it.fileName)
+                        }
+                        Export.DESTINATION_CLOUD -> {
+                            mainViewModel.exportJsonString = it.fileContent
+                            sendCloud(it.fileName)
+                        }
                     }
-
                 }
-                is ProcessStates.Failure -> {
+                is ExportStates.Failure -> {
                     alertDialog.dismiss()
                     Log.d("Export", "error", it.e)
                     Toast.makeText(requireContext(), "Что-то пошло не так, выгрузка не удалась", Toast.LENGTH_LONG).show()
@@ -142,6 +138,26 @@ class ExportFragment: Fragment() {
         }
 
         return ll
+    }
+
+    private fun sendCloud(fileName: String) {
+        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveLoginFragment(fileName))
+    }
+
+    private fun sendLocalFile(fileName: String) {
+        val file = File(requireActivity().filesDir, fileName)
+        val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
+        val forSendIntent = Intent(Intent.ACTION_SEND)
+        forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        forSendIntent.setDataAndType(uri, "application/octet-stream")
+
+        val pm: PackageManager = requireActivity().packageManager
+        if (forSendIntent.resolveActivity(pm) != null) {
+            startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun makeIndeterminateProgressDialog(): AlertDialog {
@@ -156,19 +172,19 @@ class ExportFragment: Fragment() {
         beginDate = ll.findViewById(R.id.startDate_et)
         endDate = ll.findViewById(R.id.endDate_et)
 
-        exportViewModelNew.beginDate.observe(viewLifecycleOwner) {
+        exportViewModel.beginDate.observe(viewLifecycleOwner) {
             beginDate.setText(it.getDateString())
         }
-        exportViewModelNew.endDate.observe(viewLifecycleOwner) {
+        exportViewModel.endDate.observe(viewLifecycleOwner) {
             endDate.setText(it.getDateString())
         }
 
         beginDate.setOnClickListener {
-            val date = exportViewModelNew.beginDateTime
+            val date = exportViewModel.beginDateTime
             DatePickerDialog(requireContext(), beginDpListener, date.year, date.monthOfYear-1, date.dayOfMonth).show()
         }
         endDate.setOnClickListener {
-            val date = exportViewModelNew.endDateTime
+            val date = exportViewModel.endDateTime
             DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear-1, date.dayOfMonth).show()
         }
     }

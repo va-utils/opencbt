@@ -30,15 +30,10 @@ import com.vva.androidopencbt.export.ImportViewModel
 import com.vva.androidopencbt.export.ImportViewModelFactory
 import com.vva.androidopencbt.export.ProcessStates
 
-private const val REQUEST_CODE_KG_PROTECTION = 0x99
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
-    private lateinit var dao: RecordDao
-    private val importViewModel: ImportViewModel by viewModels {
-        ImportViewModelFactory(dao)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val navController = findNavController()
@@ -49,7 +44,6 @@ class SettingsFragmentRoot: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         linearLayout = inflater.inflate(R.layout.fragment_settings, container, false) as LinearLayout
-        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         parentFragmentManager.beginTransaction()
                 .replace(R.id.settings_container, SettingsFragmentNew())
@@ -146,19 +140,24 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             true
         }
 
+        initDriveImExportListeners()
+        initLocalImExportListeners()
+    }
+
+    private fun initDriveImExportListeners() {
         findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_GDRIVE_ENABLED)
                 ?.setOnPreferenceChangeListener { preference, newValue ->
                     if (!manager.installedModules.contains(GDRIVE_MODULE_NAME) && newValue == true) {
                         DriveDownloader(requireContext(), preference).download()
                     }
                     true
-        }
+                }
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_GDRIVE_IMPORT)?.setOnPreferenceClickListener {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment())
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(""))
             }
 
             true
@@ -173,7 +172,9 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
             true
         }
+    }
 
+    private fun initLocalImExportListeners() {
         findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_EXPORT)?.setOnPreferenceClickListener {
             findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(0, Export.DESTINATION_LOCAL))
             true

@@ -76,6 +76,9 @@
         <argument
             android:name="destination"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_exportFragment_to_driveLoginFragment"
+            app:destination="@id/driveLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/driveLoginFragment"
@@ -86,6 +89,9 @@
             android:id="@+id/action_driveLoginFragment_to_driveListFragment"
             app:destination="@id/driveListFragment"
             app:popUpTo="@id/settingsFragmentRoot" />
+        <argument
+            android:name="fileName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/driveListFragment"

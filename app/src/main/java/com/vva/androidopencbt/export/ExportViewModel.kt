@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
 
 @Suppress("BlockingMethodInNonBlockingContext")
-class ExportViewModelNew(application: Application): AndroidViewModel(application) {
+class ExportViewModel(application: Application): AndroidViewModel(application) {
     private val dao = CbdDatabase.getInstance(application).databaseDao
 
     private val _beginDate = MutableLiveData(DateTime().beginOfMonth())
@@ -40,15 +40,15 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
         _endDate.value = dateTime
     }
 
-    private val _exportState = MutableLiveData<ProcessStates?>(null)
-    val exportState: LiveData<ProcessStates?>
+    private val _exportState = MutableLiveData<ExportStates?>(null)
+    val exportState: LiveData<ExportStates?>
         get() = _exportState
 
-    var fileName: String = ""
+//    private var fileName: String = ""
 
     fun export(export: Export) {
-        fileName = export.fileName
-        process {
+//        fileName = export.fileName
+        process(export.fileName) {
             val list = export.list
                     ?: withContext(Dispatchers.IO) {
                         if (export.isWholeDiary) {
@@ -70,9 +70,10 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
             }
 
             if (export.isCloud) {
-
+                string
             } else {
                 saveStringToFile(string, export.fileName)
+                ""
             }
         }
     }
@@ -128,14 +129,14 @@ class ExportViewModelNew(application: Application): AndroidViewModel(application
         }
     }
 
-    private fun process(block: suspend () -> Unit) {
+    private fun process(fileName: String, block: suspend () -> String) {
         viewModelScope.launch {
-            _exportState.value = ProcessStates.InProgress
+            _exportState.value = ExportStates.InProgress
             try {
-                block()
-                _exportState.value = ProcessStates.Success
+                val content = block()
+                _exportState.value = ExportStates.Success(fileName, content)
             } catch (e: Exception) {
-                _exportState.value = ProcessStates.Failure(e)
+                _exportState.value = ExportStates.Failure(e)
             } finally {
                 _exportState.value = null
             }
@@ -224,4 +225,10 @@ class Export private constructor(val fileName: String, val format: ExportFormats
         const val DESTINATION_LOCAL = 0
         const val DESTINATION_CLOUD = 1
     }
+}
+
+sealed class ExportStates {
+    object InProgress : ExportStates()
+    data class Success(val fileName: String, val fileContent: String = "") : ExportStates()
+    data class Failure(val e: java.lang.Exception): ExportStates()
 }

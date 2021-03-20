@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.gdrivefeature
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -12,6 +11,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class DriveFileListViewModel: ViewModel() {
+    var fileName: String = ""
     private var driveServiceHelper: DriveServiceHelper? = null
 
     var driveClient: GoogleSignInClient? = null
@@ -75,6 +75,15 @@ class DriveFileListViewModel: ViewModel() {
             }
 
             _driveFileList.value = result?.files
+        }
+    }
+
+    fun saveFile(parents: String?, content: String, type: String) {
+        driveServiceHelper?.let {
+            makeRequest {
+                val fileId = it.createFile(parents, type, fileName).await()
+                it.saveFile(fileId, fileName, content, type).await()
+            }
         }
     }
 

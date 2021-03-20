@@ -9,15 +9,16 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.vva.androidopencbt.RecordsViewModel
 
 class DriveListFragment: Fragment() {
     private lateinit var ll: LinearLayout
+    private val mainViewModel: RecordsViewModel by activityViewModels()
     private val viewModel: DriveFileListViewModel by activityViewModels()
     private lateinit var rv: RecyclerView
     private lateinit var sr: SwipeRefreshLayout
@@ -56,6 +57,11 @@ class DriveListFragment: Fragment() {
                 }
         )
 
+        if (mainViewModel.exportJsonString.isNotEmpty()) {
+            viewModel.saveFile(null, mainViewModel.exportJsonString, "plain/text")
+            viewModel.getFileList()
+        }
+
         viewModel.getFileList()
         viewModel.driveFileList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -70,6 +76,7 @@ class DriveListFragment: Fragment() {
                     sr.isRefreshing = true
                 }
                 is RequestStatus.Failure -> {
+                    Log.e("DRIVE_FEATURE", "request error", it.e)
                     sr.isRefreshing = false
                 }
                 null -> {
