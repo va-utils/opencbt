@@ -14,11 +14,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.vva.androidopencbt.RecordsViewModel
+
+const val ROOT_FOLDER = "OpenCBT"
 
 class DriveListFragment: Fragment() {
+    private val logTag = javaClass.canonicalName
     private lateinit var ll: LinearLayout
-    private val mainViewModel: RecordsViewModel by activityViewModels()
     private val viewModel: DriveFileListViewModel by activityViewModels()
     private lateinit var rv: RecyclerView
     private lateinit var sr: SwipeRefreshLayout
@@ -46,6 +47,14 @@ class DriveListFragment: Fragment() {
         ll = inflater.inflate(R.layout.fragment_list, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         sr = ll.findViewById(R.id.list_swipe)
+        viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
+            when (it) {
+                false -> {
+                    Log.d(logTag, "logOut")
+                    findNavController().popBackStack()
+                }
+            }
+        }
 
         sr.setOnRefreshListener {
             viewModel.getFileList()
@@ -57,9 +66,8 @@ class DriveListFragment: Fragment() {
                 }
         )
 
-        if (mainViewModel.exportJsonString.isNotEmpty()) {
-            viewModel.saveFile(null, mainViewModel.exportJsonString, "plain/text")
-            viewModel.getFileList()
+        if (viewModel.fileName.isNotEmpty() && viewModel.filePath.isNotEmpty()) {
+            viewModel.uploadFile(listOf(viewModel.appDirId), viewModel.fileName, viewModel.filePath)
         }
 
         viewModel.getFileList()
@@ -76,7 +84,7 @@ class DriveListFragment: Fragment() {
                     sr.isRefreshing = true
                 }
                 is RequestStatus.Failure -> {
-                    Log.e("DRIVE_FEATURE", "request error", it.e)
+                    Log.e(logTag, "request error", it.e)
                     sr.isRefreshing = false
                 }
                 null -> {

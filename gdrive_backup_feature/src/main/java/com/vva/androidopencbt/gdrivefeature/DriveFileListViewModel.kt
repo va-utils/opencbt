@@ -1,5 +1,6 @@
 package com.vva.androidopencbt.gdrivefeature
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -11,9 +12,12 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class DriveFileListViewModel: ViewModel() {
+    private val tagLog = javaClass.canonicalName
+    var appDirId = ""
     var fileName: String = ""
-    private var driveServiceHelper: DriveServiceHelper? = null
+    var filePath: String = ""
 
+    private var driveServiceHelper: DriveServiceHelper? = null
     var driveClient: GoogleSignInClient? = null
     var driveAccount: GoogleSignInAccount? = null
     var driveCredentials: GoogleAccountCredential? = null
@@ -51,7 +55,7 @@ class DriveFileListViewModel: ViewModel() {
     fun refreshFileList() {
         makeRequest {
             withContext(Dispatchers.IO) {
-                val result = driveServiceHelper?.queryFiles()?.await()
+                val result = driveServiceHelper?.queryFiles(appDirId)?.await()
                 withContext(Dispatchers.Main) {
                     _driveFileList.value = result?.files
                 }
@@ -71,7 +75,7 @@ class DriveFileListViewModel: ViewModel() {
     fun getFileList() {
         makeRequest {
             val result = withContext(Dispatchers.IO) {
-                driveServiceHelper?.queryFiles()?.await()
+                driveServiceHelper?.queryFiles(appDirId)?.await()
             }
 
             _driveFileList.value = result?.files
@@ -87,10 +91,40 @@ class DriveFileListViewModel: ViewModel() {
         }
     }
 
+    fun uploadFile(parents: List<String>, fileName: String, filePath: String) {
+        driveServiceHelper?.let {
+            makeRequest {
+                it.uploadFile(parents, fileName, filePath)
+            }
+        }
+    }
+
     fun signOut() {
         driveClient?.let {
-            makeRequest {
-                it.signOut().await()
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    it.signOut().await()
+                    withContext(Dispatchers.Main) {
+                        _isLoginSuccessful.value = false
+                        _isLoginSuccessful.value = null
+                    }
+                } catch (e: Exception) {
+                    Log.e(tagLog, "exception", e)
+                }
+            }
+        }
+    }
+
+    private suspend fun checkAndMakeRootFolder() {
+        driveServiceHelper?.let {
+            withContext(Dispatchers.IO) {
+                val result = it.checkFolderExist(ROOT_FOLDER).await()
+                if (result.files.isEmpty()) {
+                    val file = it.createFolder(listOf("root"), ROOT_FOLDER).await()
+                    appDirId = file.id
+                } else {
+                    appDirId = result.files[0].id
+                }
             }
         }
     }
@@ -103,6 +137,7 @@ class DriveFileListViewModel: ViewModel() {
         viewModelScope.launch {
             _requestStatus.value = RequestStatus.InProgress
             try {
+                checkAndMakeRootFolder()
                 block()
                 _requestStatus.value = RequestStatus.Success
             } catch (e: Exception) {

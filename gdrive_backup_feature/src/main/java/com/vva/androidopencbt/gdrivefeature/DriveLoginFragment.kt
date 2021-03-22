@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -25,10 +26,12 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class DriveLoginFragment: Fragment() {
+    private val logTag = javaClass.canonicalName
     private val job = Job()
     private val fragmentScope = CoroutineScope(Dispatchers.Main + job)
     private val viewModel: DriveFileListViewModel by activityViewModels()
     private lateinit var googleClient: GoogleSignInClient
+    private lateinit var cl: ConstraintLayout
 
     private val requestDriveAccountActivity = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -40,9 +43,10 @@ class DriveLoginFragment: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        requestSignIn()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        cl = inflater.inflate(R.layout.fragment_login, container, false) as ConstraintLayout
         viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
+        viewModel.filePath = DriveLoginFragmentArgs.fromBundle(requireArguments()).filePath
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
@@ -50,13 +54,15 @@ class DriveLoginFragment: Fragment() {
                     findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment())
                 }
                 false -> {
-                    Log.d("Login", "login failed")
+                    Log.e(logTag, "login failed")
                     findNavController().popBackStack()
                 }
             }
         }
 
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        requestSignIn()
+
+        return cl
     }
 
     private fun requestSignIn() {
@@ -78,8 +84,14 @@ class DriveLoginFragment: Fragment() {
         } else {
             fragmentScope.launch(Dispatchers.IO) {
                 try {
-                    task.await()
+                    val account = task.await()
+                    val credentials = GoogleAccountCredential.usingOAuth2(context,
+                        listOf(DriveScopes.DRIVE_FILE)).apply {
+                            selectedAccount = account.account
+                    }
+                    loginSuccessful(credentials, account, googleClient)
                 } catch (e: ApiException) {
+                    Log.e(logTag, "login exception", e)
                     when(e.statusCode) {
                         CommonStatusCodes.SIGN_IN_REQUIRED -> {
                             requestDriveAccountActivity.launch(googleClient.signInIntent)
@@ -100,8 +112,8 @@ class DriveLoginFragment: Fragment() {
                 }
                 loginSuccessful(credential, account, googleClient)
             } catch (e: ApiException) {
+                Log.e(logTag, "failed", e)
                 loginFailed()
-                Log.d("DRIVE_LOGIN", "failed", e)
             }
         }
     }

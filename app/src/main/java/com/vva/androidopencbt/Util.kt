@@ -15,6 +15,7 @@ import org.joda.time.format.DateTimeFormat
 const val FORMAT_DATE_TIME = "HH:mm dd MMMM yyyy"
 const val FORMAT_DATE = "dd/MM/yyyy"
 const val FORMAT_DATE_TIME_FOR_STATS = "dd MMMM yyyy HH:mm"
+const val FORMAT_DATE_TIME_DRIVE = "dd MMMM yyyy HH:mm"
 
 fun DateTime.getDateTimeString(): String {
     return DateTimeFormat.forPattern(FORMAT_DATE_TIME).print(this)

@@ -92,10 +92,13 @@
         <argument
             android:name="fileName"
             app:argType="string" />
+        <argument
+            android:name="filePath"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/driveListFragment"
         android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
-        app:moduleName="gdrive_backup_feature"
-        android:label="DriveListFragment" />
+        android:label="@string/title_drive_backup_feature"
+        app:moduleName="gdrive_backup_feature" />
 </navigation>

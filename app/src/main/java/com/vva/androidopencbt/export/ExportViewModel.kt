@@ -44,10 +44,7 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
     val exportState: LiveData<ExportStates?>
         get() = _exportState
 
-//    private var fileName: String = ""
-
     fun export(export: Export) {
-//        fileName = export.fileName
         process(export.fileName) {
             val list = export.list
                     ?: withContext(Dispatchers.IO) {
@@ -69,12 +66,7 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
                 }
             }
 
-            if (export.isCloud) {
-                string
-            } else {
-                saveStringToFile(string, export.fileName)
-                ""
-            }
+            saveStringToFile(string, export.fileName)
         }
     }
 
@@ -143,13 +135,14 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    private suspend fun saveStringToFile(string: String, fileName: String) {
-        withContext(Dispatchers.IO) {
+    private suspend fun saveStringToFile(string: String, fileName: String): String {
+        return withContext(Dispatchers.IO) {
             getApplication<Application>()
                     .openFileOutput(fileName, Context.MODE_PRIVATE).apply {
                             write(string.toByteArray())
                             close()
                     }
+            "${getApplication<Application>().filesDir.absolutePath}/$fileName"
         }
     }
 }
@@ -229,6 +222,6 @@ class Export private constructor(val fileName: String, val format: ExportFormats
 
 sealed class ExportStates {
     object InProgress : ExportStates()
-    data class Success(val fileName: String, val fileContent: String = "") : ExportStates()
+    data class Success(val fileName: String, val filePath: String) : ExportStates()
     data class Failure(val e: java.lang.Exception): ExportStates()
 }

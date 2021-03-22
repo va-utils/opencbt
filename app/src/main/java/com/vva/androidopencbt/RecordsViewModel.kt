@@ -32,9 +32,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
     val isSelectionActive: LiveData<Boolean>
         get() = _isSelectionActive
 
-    // Json string used for export in GDrive module
-    var exportJsonString: String = ""
-
     fun askDetailsFragmentConfirmation() {
         _askChangesConfirm.value = true
     }
@@ -60,14 +57,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             _isSelectionActive.value = true
     }
 
-//    private val _importInAction = MutableLiveData<Boolean?>()
-//    val importInAction: LiveData<Boolean?>
-//        get() = _importInAction
-
-//    private val _importData = MutableLiveData<List<Long>?>()
-//    val importData: LiveData<List<Long>?>
-//        get() = _importData
-
     fun deleteRecord(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             db.databaseDao.deleteRecord(
@@ -83,63 +72,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             _recordsListUpdated.value = false
         }
     }
-
-//    private suspend fun parseJsonFile(documentUri: Uri, context: Context): List<DbRecord>? {
-//        return withContext(Dispatchers.IO) {
-//            val fileDescriptor = context.contentResolver.openFileDescriptor(documentUri, "r")
-//            var list: ArrayList<DbRecord>?
-//            try {
-//                val string = BufferedReader(FileReader(fileDescriptor?.fileDescriptor!!)).readLine()
-//                list =  Json.decodeFromString(string)
-//            } catch (e: Exception) {
-//                list = null
-//            }
-//
-//            list
-//        }
-//    }
-
-//    fun importRecordsFromFile(documentUri: Uri, context: Context) {
-//        _importInAction.value = true
-//        val ids = ArrayList<Long>()
-//
-//        uiScope.launch {
-//            val records = parseJsonFile(documentUri, context)
-//            if (records == null) {
-//                _importData.value = null
-//            } else {
-//                withContext(Dispatchers.IO) {
-//                    val currentRecords = withContext(Dispatchers.IO) {
-//                        db.databaseDao.getAllList()
-//                    }
-//
-//                    withContext(Dispatchers.Default) {
-//                        for (i in records.indices) {
-//                            var flag = true
-//                            for (j in currentRecords.indices) {
-//                                if (currentRecords[j].equalsIgnoreId(records[i])) {
-//                                    flag = false
-//                                    break
-//                                }
-//                            }
-//                            if (flag)
-//                                withContext(Dispatchers.IO) {
-//                                    ids.add(db.databaseDao.addRecord(records[i]))
-//                                }
-//                        }
-//                    }
-//                }
-//                _importData.value = ids
-//            }
-//
-//            _importInAction.value = false
-//        }
-//    }
-
-//    fun doneImporting() {
-//        _importInAction.value = null
-//    }
-
 
     fun restoreRecyclerView(rv: RecyclerView) {
         viewModelScope.launch {

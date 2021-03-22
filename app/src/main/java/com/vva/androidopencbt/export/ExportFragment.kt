@@ -118,11 +118,10 @@ class ExportFragment: Fragment() {
 
                     when (args.destination) {
                         Export.DESTINATION_LOCAL -> {
-                            sendLocalFile(it.fileName)
+                            sendLocalFile(it.filePath)
                         }
                         Export.DESTINATION_CLOUD -> {
-                            mainViewModel.exportJsonString = it.fileContent
-                            sendCloud(it.fileName)
+                            sendCloud(it.fileName, it.filePath)
                         }
                     }
                 }
@@ -140,12 +139,12 @@ class ExportFragment: Fragment() {
         return ll
     }
 
-    private fun sendCloud(fileName: String) {
-        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveLoginFragment(fileName))
+    private fun sendCloud(fileName: String, filePath: String) {
+        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveLoginFragment(fileName, filePath))
     }
 
-    private fun sendLocalFile(fileName: String) {
-        val file = File(requireActivity().filesDir, fileName)
+    private fun sendLocalFile(filePath: String) {
+        val file = File(filePath)
         val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
         val forSendIntent = Intent(Intent.ACTION_SEND)
         forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION

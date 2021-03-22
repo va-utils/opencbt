@@ -1,5 +1,6 @@
 package com.vva.androidopencbt.gdrivefeature
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.api.services.drive.model.File
+import com.vva.androidopencbt.FORMAT_DATE_TIME_DRIVE
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, DriveListAdapter.DriveViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriveViewHolder {
@@ -19,7 +23,7 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
         holder.bind(getItem(position), clickListener)
     }
 
-    class DriveViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    class DriveViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
         private val icon: ImageView = view.findViewById(R.id.icon)
         private val name: TextView = view.findViewById(R.id.file_name_tv)
         private val size: TextView = view.findViewById(R.id.file_size_tv)
@@ -29,10 +33,21 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
             view.setOnClickListener {
                 listener.onClick(item)
             }
-//            icon.setImageResource(R.drawable.ic_baseline_select_all_24)
+            when (item.name.substringAfterLast(".")) {
+                "json" -> {
+                    icon.setImageResource(R.drawable.ic_json_file)
+                }
+                "csv" -> {
+                    icon.setImageResource(R.drawable.ic_csv_file)
+                }
+                "html" -> {
+                    icon.setImageResource(R.drawable.ic_html_file)
+                }
+            }
             name.text = item.name
-            size.text = item.size.toString()
-//            date.text = item.createdTime.toStringRfc3339()
+            date.text = SimpleDateFormat(FORMAT_DATE_TIME_DRIVE, Locale.getDefault()).format(item.createdTime.value)
+            size.text = "${(item.getSize() / 1024)} KB"
+            Log.d("ADAPTER",item.toString())
         }
     }
 }

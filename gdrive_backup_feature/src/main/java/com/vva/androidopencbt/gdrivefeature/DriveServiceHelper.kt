@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.http.FileContent
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
@@ -30,6 +31,25 @@ class DriveServiceHelper private constructor(private val mDriveService: Drive) {
                     ?: throw IOException("Null result when requesting file creation")
 
             googleFile.id
+        }
+    }
+
+    fun createFolder(parents: List<String>, name: String): Task<File> {
+        return Tasks.call(mExecutor) {
+            val metadata = File()
+                    .setParents(parents)
+                    .setMimeType("application/vnd.google-apps.folder")
+                    .setName(name)
+
+            mDriveService.Files().create(metadata).execute()
+        }
+    }
+
+    fun checkFolderExist(name: String): Task<FileList> {
+        return Tasks.call(mExecutor){
+            mDriveService.files()
+                    .list()
+                    .setQ("name='$name' and mimeType = 'application/vnd.google-apps.folder'").execute()
         }
     }
 
@@ -60,9 +80,27 @@ class DriveServiceHelper private constructor(private val mDriveService: Drive) {
         }
     }
 
-    fun queryFiles(): Task<FileList> {
+    fun uploadFile(parents: List<String>, fileName: String, filePath: String): Task<File> {
+        val metadata = File()
+                .setParents(parents)
+                .setName(fileName)
+
+        val localFile = java.io.File(filePath)
+        val content = FileContent("application/octet-stream", localFile)
         return Tasks.call(mExecutor) {
-            mDriveService.files().list().setSpaces("drive").execute()
+            mDriveService.files()
+                    .create(metadata, content)
+                    .setFields("id")
+                    .execute()
+        }
+    }
+
+    fun queryFiles(folderId: String): Task<FileList> {
+        return Tasks.call(mExecutor) {
+            mDriveService.files().list()
+                    .setQ("parents in '$folderId'")
+                    .setFields("files(id, name, createdTime, size)")
+                    .execute()
         }
     }
 
