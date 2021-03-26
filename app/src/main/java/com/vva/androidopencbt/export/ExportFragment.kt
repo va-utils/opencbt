@@ -131,6 +131,7 @@ class ExportFragment: Fragment() {
                     when (args.destination) {
                         Export.DESTINATION_LOCAL -> {
                             sendLocalFile(it.filePath)
+                            findNavController().popBackStack()
                         }
                         Export.DESTINATION_CLOUD -> {
                             sendCloud(it.fileName, it.filePath)
