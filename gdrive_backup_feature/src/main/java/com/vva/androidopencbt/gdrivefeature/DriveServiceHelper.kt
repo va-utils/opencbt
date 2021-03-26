@@ -34,6 +34,22 @@ class DriveServiceHelper private constructor(private val mDriveService: Drive) {
         }
     }
 
+    fun readFile(fileId: String): Task<Pair<String, String>> {
+        return Tasks.call(mExecutor) {
+            val metadata = mDriveService
+                    .files()
+                    .get(fileId)
+                    .execute()
+            val name = metadata.name
+
+            mDriveService.files().get(fileId).executeMediaAsInputStream().use { inputStream ->
+                BufferedReader(InputStreamReader(inputStream)).use {
+                    Pair<String, String>(name, it.readText())
+                }
+            }
+        }
+    }
+
     fun createFolder(parents: List<String>, name: String): Task<File> {
         return Tasks.call(mExecutor) {
             val metadata = File()
@@ -50,22 +66,6 @@ class DriveServiceHelper private constructor(private val mDriveService: Drive) {
             mDriveService.files()
                     .list()
                     .setQ("name='$name' and mimeType = 'application/vnd.google-apps.folder'").execute()
-        }
-    }
-
-    fun readFile(fileId: String): Task<Pair<String, String>> {
-        return Tasks.call(mExecutor) {
-            val metadata = mDriveService
-                    .files()
-                    .get(fileId)
-                    .execute()
-            val name = metadata.name
-
-            mDriveService.files().get(fileId).executeAsInputStream().use { inputStream ->
-                BufferedReader(InputStreamReader(inputStream)).use { bufferedReader ->
-                    Pair<String, String>(name, bufferedReader.readText())
-                }
-            }
         }
     }
 
@@ -101,19 +101,6 @@ class DriveServiceHelper private constructor(private val mDriveService: Drive) {
                     .setQ("parents in '$folderId'")
                     .setFields("files(id, name, createdTime, size)")
                     .execute()
-        }
-    }
-
-    suspend fun queryLastFiles(): FileList {
-        return suspendCancellableCoroutine { continuation ->
-            val task = Tasks.call(mExecutor) {
-                mDriveService.files().list().setSpaces("drive").execute()
-            }
-            task.addOnCompleteListener {
-                continuation.resume(task.result!!) {
-
-                }
-            }
         }
     }
 

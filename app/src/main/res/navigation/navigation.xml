@@ -29,6 +29,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_rvFragment_to_exportFragment"
+            app:destination="@id/exportFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -77,8 +80,8 @@
             android:name="destination"
             app:argType="integer" />
         <action
-            android:id="@+id/action_exportFragment_to_driveLoginFragment"
-            app:destination="@id/driveLoginFragment" />
+            android:id="@+id/action_exportFragment_to_driveListFragment"
+            app:destination="@id/driveListFragment" />
     </fragment>
     <fragment
         android:id="@+id/driveLoginFragment"
@@ -89,6 +92,19 @@
             android:id="@+id/action_driveLoginFragment_to_driveListFragment"
             app:destination="@id/driveListFragment"
             app:popUpTo="@id/settingsFragmentRoot" />
+        <action
+            android:id="@+id/action_driveLoginFragment_to_exportFragment"
+            app:destination="@id/exportFragment"
+            app:popUpTo="@id/settingsFragmentRoot" />
+        <argument
+            android:name="isExport"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/driveListFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
+        android:label="@string/title_drive_backup_feature"
+        app:moduleName="gdrive_backup_feature" >
         <argument
             android:name="fileName"
             app:argType="string" />
@@ -96,9 +112,4 @@
             android:name="filePath"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/driveListFragment"
-        android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
-        android:label="@string/title_drive_backup_feature"
-        app:moduleName="gdrive_backup_feature" />
 </navigation>

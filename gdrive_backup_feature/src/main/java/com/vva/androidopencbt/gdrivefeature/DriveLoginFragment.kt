@@ -21,6 +21,8 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.DriveScopes
+import com.vva.androidopencbt.export.Export
+import com.vva.androidopencbt.settings.ExportFormats
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -45,13 +47,18 @@ class DriveLoginFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         cl = inflater.inflate(R.layout.fragment_login, container, false) as ConstraintLayout
-        viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
-        viewModel.filePath = DriveLoginFragmentArgs.fromBundle(requireArguments()).filePath
+//        viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
+//        viewModel.filePath = DriveLoginFragmentArgs.fromBundle(requireArguments()).filePath
+        val isExport = DriveLoginFragmentArgs.fromBundle(requireArguments()).isExport
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
-                    findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment())
+                    if (isExport) {
+                        findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToExportFragment(0, Export.DESTINATION_CLOUD))
+                    } else {
+                        findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment("", ""))
+                    }
                 }
                 false -> {
                     Log.e(logTag, "login failed")

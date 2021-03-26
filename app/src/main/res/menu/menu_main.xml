@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.vva.androidopencbt.MainActivity">
 
+    <item android:id="@+id/share"
+        android:icon="@drawable/ic_baseline_share"
+        android:title="@string/savehtml_button_save"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/detailsFragmentMaterial"
         android:orderInCategory="100"

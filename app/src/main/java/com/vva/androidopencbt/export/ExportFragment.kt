@@ -36,7 +36,6 @@ class ExportFragment: Fragment() {
 
     private lateinit var dao: RecordDao
     private val exportViewModel: ExportViewModel by activityViewModels()
-    private val mainViewModel: RecordsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,18 +73,31 @@ class ExportFragment: Fragment() {
         }
 
         formatGroup = ll.findViewById(R.id.radioGroup)
-        formatGroup.visibility = View.GONE
         val args = ExportFragmentArgs.fromBundle(requireArguments())
+        when (args.format) {
+            Export.FORMAT_PICK -> {
+                formatGroup.visibility = View.VISIBLE
+            }
+            else -> {
+                formatGroup.visibility = View.GONE
+            }
+        }
 
         goBtn.setOnClickListener {
             val exportBuilder = Export.Builder()
 
             when (args.format) {
-                0 -> {
+                Export.FORMAT_JSON -> {
                     exportBuilder.setFormat(ExportFormats.JSON)
                 }
-                else -> {
+                Export.FORMAT_HTML -> {
                     exportBuilder.setFormat(ExportFormats.HTML)
+                }
+                Export.FORMAT_CSV -> {
+                    exportBuilder.setFormat(ExportFormats.CSV)
+                }
+                Export.FORMAT_PICK -> {
+                    exportBuilder.setFormat(getPickedFormat())
                 }
             }
             when (args.destination) {
@@ -140,7 +152,7 @@ class ExportFragment: Fragment() {
     }
 
     private fun sendCloud(fileName: String, filePath: String) {
-        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveLoginFragment(fileName, filePath))
+        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveListFragment(fileName, filePath))
     }
 
     private fun sendLocalFile(filePath: String) {
@@ -185,6 +197,20 @@ class ExportFragment: Fragment() {
         endDate.setOnClickListener {
             val date = exportViewModel.endDateTime
             DatePickerDialog(requireContext(), endDpListener, date.year, date.monthOfYear-1, date.dayOfMonth).show()
+        }
+    }
+
+    private fun getPickedFormat(): ExportFormats {
+        return when (formatGroup.checkedRadioButtonId) {
+            R.id.html_rb -> {
+                ExportFormats.HTML
+            }
+            R.id.csv_rb -> {
+                ExportFormats.CSV
+            }
+            else -> {
+                throw IllegalStateException("No such format")
+            }
         }
     }
 }

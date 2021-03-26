@@ -6,10 +6,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.model.File
+import com.vva.androidopencbt.db.DbRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class DriveFileListViewModel: ViewModel() {
     private val tagLog = javaClass.canonicalName
@@ -63,12 +66,15 @@ class DriveFileListViewModel: ViewModel() {
         }
     }
 
-    fun getFile(fileId: String) {
-        makeRequest {
+    fun readFile(file: File): List<DbRecord>? {
+        return makeBlockingRequest {
             val result = withContext(Dispatchers.IO) {
-                driveServiceHelper?.readFile(fileId)?.await()
+                driveServiceHelper?.readFile(file.id)?.await()
             }
-            _driveFile.value = result!!
+
+            result?.second?.let {
+                Json.decodeFromString(it)
+            }
         }
     }
 
@@ -82,19 +88,10 @@ class DriveFileListViewModel: ViewModel() {
         }
     }
 
-    fun saveFile(parents: String?, content: String, type: String) {
+    fun uploadFileAppRoot(fileName: String, filePath: String) {
         driveServiceHelper?.let {
-            makeRequest {
-                val fileId = it.createFile(parents, type, fileName).await()
-                it.saveFile(fileId, fileName, content, type).await()
-            }
-        }
-    }
-
-    fun uploadFile(parents: List<String>, fileName: String, filePath: String) {
-        driveServiceHelper?.let {
-            makeRequest {
-                it.uploadFile(parents, fileName, filePath)
+            makeBlockingRequest {
+                it.uploadFile(listOf(appDirId), fileName, filePath)
             }
         }
     }
@@ -129,6 +126,15 @@ class DriveFileListViewModel: ViewModel() {
         }
     }
 
+    private suspend fun refresh() {
+        driveServiceHelper?.let {
+            val result = withContext(Dispatchers.IO) {
+                it.queryFiles(appDirId).await().files
+            }
+            _driveFileList.value = result
+        }
+    }
+
     private val _requestStatus = MutableLiveData<RequestStatus?>(null)
     val requestStatus: LiveData<RequestStatus?>
         get() = _requestStatus
@@ -139,13 +145,38 @@ class DriveFileListViewModel: ViewModel() {
             try {
                 checkAndMakeRootFolder()
                 block()
+                refresh()
                 _requestStatus.value = RequestStatus.Success
             } catch (e: Exception) {
+                Log.e(tagLog, "requestException", e)
                 _requestStatus.value = RequestStatus.Failure(e)
             } finally {
                 _requestStatus.value = null
             }
         }
+    }
+
+    private val _blockRequestStatus = MutableLiveData<RequestStatus?>()
+    val blockingRequestStatus: LiveData<RequestStatus?>
+        get() = _blockRequestStatus
+
+    private fun <T> makeBlockingRequest(block: suspend () -> T): T? {
+        var result: T? = null
+        viewModelScope.launch {
+            _blockRequestStatus.value = RequestStatus.InProgress
+            try {
+                checkAndMakeRootFolder()
+                result = block()
+                refresh()
+                _blockRequestStatus.value = RequestStatus.Success
+            } catch (e: Exception) {
+                Log.e(tagLog, "blockingRequestException", e)
+                _blockRequestStatus.value = RequestStatus.Failure(e)
+            } finally {
+                _blockRequestStatus.value = null
+            }
+        }
+        return result
     }
 }
 

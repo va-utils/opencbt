@@ -30,12 +30,12 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
         private val date: TextView = view.findViewById(R.id.file_date_tv)
 
         fun bind(item: File, listener: OnClickListener) {
-            view.setOnClickListener {
-                listener.onClick(item)
-            }
             when (item.name.substringAfterLast(".")) {
                 "json" -> {
                     icon.setImageResource(R.drawable.ic_json_file)
+                    view.setOnClickListener {
+                        listener.onClick(item)
+                    }
                 }
                 "csv" -> {
                     icon.setImageResource(R.drawable.ic_csv_file)
@@ -47,7 +47,6 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
             name.text = item.name
             date.text = SimpleDateFormat(FORMAT_DATE_TIME_DRIVE, Locale.getDefault()).format(item.createdTime.value)
             size.text = "${(item.getSize() / 1024)} KB"
-            Log.d("ADAPTER",item.toString())
         }
     }
 }

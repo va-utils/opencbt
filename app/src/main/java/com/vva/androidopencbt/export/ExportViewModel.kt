@@ -3,11 +3,10 @@ package com.vva.androidopencbt.export
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
-import com.vva.androidopencbt.beginOfMonth
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
-import com.vva.androidopencbt.endOfDay
-import com.vva.androidopencbt.getShortDateTime
 import com.vva.androidopencbt.settings.ExportFormats
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +14,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
+import java.io.File
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class ExportViewModel(application: Application): AndroidViewModel(application) {
@@ -64,10 +64,51 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
                 ExportFormats.HTML -> {
                     toHtml(list, getApplication())
                 }
+                ExportFormats.CSV -> {
+                    toCsv(list, export.fileName)
+                }
             }
 
             saveStringToFile(string, export.fileName)
         }
+    }
+
+    // Returns path to saved file
+    private fun toCsv(list: List<DbRecord>, fileName: String): String {
+        val strings = getApplication<App>().resources
+        val header = listOf(strings.getString(R.string.csv_header_datetime),
+                strings.getString(R.string.csv_header_situation),
+                strings.getString(R.string.csv_header_thoughts),
+                strings.getString(R.string.csv_header_emotions),
+                strings.getString(R.string.csv_header_intensity),
+                strings.getString(R.string.csv_header_feelings),
+                strings.getString(R.string.csv_header_actions),
+                strings.getString(R.string.csv_header_distortions),
+                strings.getString(R.string.csv_header_rational))
+
+        val filePath = "${getApplication<Application>().filesDir}${File.pathSeparator}$fileName"
+        val csvWriter = CsvWriter()
+        csvWriter.open(filePath) {
+            writeRow(header)
+            list.forEach {
+                writeRow(convertRecordToList(it))
+            }
+        }
+
+        return filePath
+    }
+
+    private fun convertRecordToList(record: DbRecord): List<String> {
+        return listOf(record.datetime.getShortDateTime(),
+                record.situation,
+                record.thoughts,
+                record.emotions,
+                record.intensity.toString(),
+                record.feelings,
+                record.actions,
+                record.getDistortionsString(getApplication()),
+                record.rational
+        )
     }
 
     private fun toJson(list: List<DbRecord>): String {
@@ -201,12 +242,15 @@ class Export private constructor(val fileName: String, val format: ExportFormats
             if (fileName.isEmpty())
                 throw IllegalStateException("No filename supplied")
 
-            val name = when(format) {
+            val name: String = when(format) {
                 ExportFormats.JSON -> {
                     "$fileName.json"
                 }
                 ExportFormats.HTML -> {
                     "$fileName.html"
+                }
+                ExportFormats.CSV -> {
+                    "$fileName.csv"
                 }
             }
 
@@ -217,6 +261,11 @@ class Export private constructor(val fileName: String, val format: ExportFormats
     companion object {
         const val DESTINATION_LOCAL = 0
         const val DESTINATION_CLOUD = 1
+
+        const val FORMAT_JSON = 0
+        const val FORMAT_HTML = 1
+        const val FORMAT_CSV = 2
+        const val FORMAT_PICK = 100
     }
 }
 

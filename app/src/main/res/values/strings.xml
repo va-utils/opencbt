@@ -201,4 +201,14 @@
     <string name="downloads_channel_description">Информация о загрузке функционала</string>
     <string name="import_export">Импорт/Экспорт</string>
     <string name="settings_category_help">Помощь</string>
+
+    <string name="csv_header_datetime">Дата и время</string>
+    <string name="csv_header_situation">Ситуации</string>
+    <string name="csv_header_thoughts">Авто. мысли</string>
+    <string name="csv_header_emotions">Эмоции</string>
+    <string name="csv_header_intensity">Дискомфорт (%)</string>
+    <string name="csv_header_feelings">Телесные ощущения</string>
+    <string name="csv_header_actions">Предпринятные действия</string>
+    <string name="csv_header_distortions">Когнитивные искажения</string>
+    <string name="csv_header_rational">Рациональный ответ</string>
 </resources>
