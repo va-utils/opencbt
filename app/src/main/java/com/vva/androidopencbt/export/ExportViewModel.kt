@@ -57,19 +57,17 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
                         }
                     }
 
-            val string = when (export.format) {
+            when (export.format) {
                 ExportFormats.JSON -> {
-                    toJson(list)
+                    saveStringToFile(toJson(list), export.fileName)
                 }
                 ExportFormats.HTML -> {
-                    toHtml(list, getApplication())
+                    saveStringToFile(toHtml(list, getApplication()), export.fileName)
                 }
                 ExportFormats.CSV -> {
                     toCsv(list, export.fileName)
                 }
             }
-
-            saveStringToFile(string, export.fileName)
         }
     }
 
@@ -86,7 +84,7 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
                 strings.getString(R.string.csv_header_distortions),
                 strings.getString(R.string.csv_header_rational))
 
-        val filePath = "${getApplication<Application>().filesDir}${File.pathSeparator}$fileName"
+        val filePath = "${getApplication<Application>().filesDir.absolutePath}/$fileName"
         val csvWriter = CsvWriter()
         csvWriter.open(filePath) {
             writeRow(header)
@@ -166,8 +164,8 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             _exportState.value = ExportStates.InProgress
             try {
-                val content = block()
-                _exportState.value = ExportStates.Success(fileName, content)
+                val filePath = block()
+                _exportState.value = ExportStates.Success(fileName, filePath)
             } catch (e: Exception) {
                 _exportState.value = ExportStates.Failure(e)
             } finally {
