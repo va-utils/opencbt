@@ -1,6 +1,7 @@
 package com.vva.androidopencbt.recordslist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -56,17 +57,28 @@ class RvFragment: Fragment() {
         toolbar.inflateMenu(R.menu.menu_main)
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
         toolbar.menu.forEach { menuItem ->
+            if (menuItem.hasSubMenu())
+                menuItem.subMenu.forEach {
+                    it.setOnMenuItemClickListener {
+                        findNavController().navigate(it.itemId, null, navOptions)
+
+                        super.onOptionsItemSelected(it)
+                    }
+                }
             menuItem.setOnMenuItemClickListener {
-                val navOptions = NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build()
                 when (it.itemId) {
                     R.id.share -> {
                         findNavController().navigate(RvFragmentDirections.actionRvFragmentToExportFragment(Export.FORMAT_PICK, Export.DESTINATION_LOCAL))
+                    }
+                    R.id.hidden_group -> {
+                        super.onOptionsItemSelected(it)
                     }
                     else -> {
                         findNavController().navigate(it.itemId, null, navOptions)
@@ -209,6 +221,21 @@ class RvFragment: Fragment() {
                 .setCancelable(false)
                 .create()
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+        when (item.itemId) {
+            R.id.detailsFragmentMaterial -> {
+                findNavController().navigate(item.itemId, null, navOptions)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPause() {
