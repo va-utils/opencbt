@@ -211,4 +211,8 @@
     <string name="csv_header_actions">Предпринятные действия</string>
     <string name="csv_header_distortions">Когнитивные искажения</string>
     <string name="csv_header_rational">Рациональный ответ</string>
+    <string name="export_wizard_export_btn">Выгрузить</string>
+    <string name="export_wizard_cloud_export_btn">В облако</string>
+    <string name="export_wizard_html_rb">HTML</string>
+    <string name="export_wizard_csv_rb">CSV</string>
 </resources>

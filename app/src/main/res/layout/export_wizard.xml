@@ -138,13 +138,13 @@
                     android:id="@+id/html_rb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="HTML таблица" />
+                    android:text="@string/export_wizard_html_rb" />
 
                 <RadioButton
                     android:id="@+id/csv_rb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CSV" />
+                    android:text="@string/export_wizard_csv_rb" />
             </RadioGroup>
 
             <Button
@@ -154,12 +154,21 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
-                android:text="Выгрузить"
+                android:text="@string/export_wizard_export_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_end"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_start"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <Button
+                android:id="@+id/cloudExportBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/export_wizard_cloud_export_btn"
+                app:layout_constraintBaseline_toBaselineOf="@+id/exportBtn"
+                app:layout_constraintStart_toStartOf="@+id/guideline_start" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

@@ -14,7 +14,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
-import java.io.File
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class ExportViewModel(application: Application): AndroidViewModel(application) {
@@ -45,7 +44,7 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         get() = _exportState
 
     fun export(export: Export) {
-        process(export.fileName) {
+        process(export.fileName, export.isCloud) {
             val list = export.list
                     ?: withContext(Dispatchers.IO) {
                         if (export.isWholeDiary) {
@@ -71,7 +70,11 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    // Returns path to saved file
+    /**
+     * @param list - list с данными для сохранения
+     * @param fileName имя создаваемого файла
+     * @return полный путь к созданному файлу
+     */
     private fun toCsv(list: List<DbRecord>, fileName: String): String {
         val strings = getApplication<App>().resources
         val header = listOf(strings.getString(R.string.csv_header_datetime),
@@ -160,12 +163,12 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    private fun process(fileName: String, block: suspend () -> String) {
+    private fun process(fileName: String, isCloud: Boolean, block: suspend () -> String) {
         viewModelScope.launch {
             _exportState.value = ExportStates.InProgress
             try {
                 val filePath = block()
-                _exportState.value = ExportStates.Success(fileName, filePath)
+                _exportState.value = ExportStates.Success(fileName, filePath, isCloud)
             } catch (e: Exception) {
                 _exportState.value = ExportStates.Failure(e)
             } finally {
@@ -174,6 +177,11 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    /**
+     * @param string - строка для записи в файл
+     * @param fileName - имя создаваемого файла
+     * @return полный путь к созданному файлу
+     */
     private suspend fun saveStringToFile(string: String, fileName: String): String {
         return withContext(Dispatchers.IO) {
             getApplication<Application>()
@@ -269,6 +277,6 @@ class Export private constructor(val fileName: String, val format: ExportFormats
 
 sealed class ExportStates {
     object InProgress : ExportStates()
-    data class Success(val fileName: String, val filePath: String) : ExportStates()
+    data class Success(val fileName: String, val filePath: String, val isCloud: Boolean) : ExportStates()
     data class Failure(val e: java.lang.Exception): ExportStates()
 }

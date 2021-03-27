@@ -33,6 +33,9 @@ class ExportFragment: Fragment() {
     private lateinit var wholeDiary: CheckBox
     private lateinit var formatGroup: RadioGroup
     private lateinit var goBtn: Button
+    private lateinit var cloudGoBtn: Button
+
+    private lateinit var args: ExportFragmentArgs
 
     private lateinit var dao: RecordDao
     private val exportViewModel: ExportViewModel by activityViewModels()
@@ -57,13 +60,13 @@ class ExportFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        dao = CbdDatabase.getInstance(requireContext()).databaseDao
-
         ll = inflater.inflate(R.layout.export_wizard, container, false) as LinearLayout
-        wholeDiary = ll.findViewById(R.id.whole_cb)
-        goBtn = ll.findViewById(R.id.exportBtn)
 
+        initViews()
         initDateEditText()
+        initExportButtons()
+
+        args = ExportFragmentArgs.fromBundle(requireArguments())
 
         wholeDiary.setOnCheckedChangeListener { _, b ->
             beginDate.isEnabled = !b
@@ -71,52 +74,17 @@ class ExportFragment: Fragment() {
             ll.findViewById<TextView>(R.id.endDate_tv).isEnabled = !b
             ll.findViewById<TextView>(R.id.beginDate_tv).isEnabled = !b
         }
+        wholeDiary.isChecked = true
 
         formatGroup = ll.findViewById(R.id.radioGroup)
-        val args = ExportFragmentArgs.fromBundle(requireArguments())
         when (args.format) {
             Export.FORMAT_PICK -> {
                 formatGroup.visibility = View.VISIBLE
+                formatGroup.check(R.id.csv_rb)
             }
             else -> {
                 formatGroup.visibility = View.GONE
             }
-        }
-
-        goBtn.setOnClickListener {
-            val exportBuilder = Export.Builder()
-
-            when (args.format) {
-                Export.FORMAT_JSON -> {
-                    exportBuilder.setFormat(ExportFormats.JSON)
-                }
-                Export.FORMAT_HTML -> {
-                    exportBuilder.setFormat(ExportFormats.HTML)
-                }
-                Export.FORMAT_CSV -> {
-                    exportBuilder.setFormat(ExportFormats.CSV)
-                }
-                Export.FORMAT_PICK -> {
-                    exportBuilder.setFormat(getPickedFormat())
-                }
-            }
-            when (args.destination) {
-                Export.DESTINATION_CLOUD -> {
-                    exportBuilder.cloud()
-                }
-                else -> {
-                }
-            }
-            if (wholeDiary.isChecked) {
-                exportBuilder
-                        .setFileName("CBT_diary")
-            } else {
-                exportBuilder
-                        .setFileName("CBT_diary_${exportViewModel.beginDateTime.toString("dd-MM-yyy")}_${exportViewModel.endDateTime.toString("dd-MM-yyyy")}")
-                        .setPeriod(exportViewModel.beginDateTime, exportViewModel.endDateTime)
-            }
-
-            exportViewModel.export(exportBuilder.build())
         }
 
         val alertDialog: AlertDialog = makeIndeterminateProgressDialog()
@@ -128,12 +96,12 @@ class ExportFragment: Fragment() {
                 is ExportStates.Success -> {
                     alertDialog.dismiss()
 
-                    when (args.destination) {
-                        Export.DESTINATION_LOCAL -> {
+                    when (it.isCloud) {
+                        false -> {
                             sendLocalFile(it.filePath)
                             findNavController().popBackStack()
                         }
-                        Export.DESTINATION_CLOUD -> {
+                        true -> {
                             sendCloud(it.fileName, it.filePath)
                         }
                     }
@@ -213,5 +181,82 @@ class ExportFragment: Fragment() {
                 throw IllegalStateException("No such format")
             }
         }
+    }
+
+    private fun initExportButtons() {
+        goBtn.setOnClickListener {
+            val exportBuilder = Export.Builder()
+
+            when (args.format) {
+                Export.FORMAT_JSON -> {
+                    exportBuilder.setFormat(ExportFormats.JSON)
+                }
+                Export.FORMAT_HTML -> {
+                    exportBuilder.setFormat(ExportFormats.HTML)
+                }
+                Export.FORMAT_CSV -> {
+                    exportBuilder.setFormat(ExportFormats.CSV)
+                }
+                Export.FORMAT_PICK -> {
+                    exportBuilder.setFormat(getPickedFormat())
+                }
+            }
+            when (args.destination) {
+                Export.DESTINATION_CLOUD -> {
+                    exportBuilder.cloud()
+                }
+                else -> {
+                }
+            }
+            if (wholeDiary.isChecked) {
+                exportBuilder
+                        .setFileName("CBT_diary")
+            } else {
+                exportBuilder
+                        .setFileName("CBT_diary_${exportViewModel.beginDateTime.toString("dd-MM-yyy")}_${exportViewModel.endDateTime.toString("dd-MM-yyyy")}")
+                        .setPeriod(exportViewModel.beginDateTime, exportViewModel.endDateTime)
+            }
+
+            exportViewModel.export(exportBuilder.build())
+        }
+
+        cloudGoBtn.setOnClickListener {
+            val exportBuilder = Export.Builder()
+                    .cloud()
+
+            when (args.format) {
+                Export.FORMAT_JSON -> {
+                    exportBuilder.setFormat(ExportFormats.JSON)
+                }
+                Export.FORMAT_HTML -> {
+                    exportBuilder.setFormat(ExportFormats.HTML)
+                }
+                Export.FORMAT_CSV -> {
+                    exportBuilder.setFormat(ExportFormats.CSV)
+                }
+                Export.FORMAT_PICK -> {
+                    exportBuilder.setFormat(getPickedFormat())
+                }
+            }
+
+            if (wholeDiary.isChecked) {
+                exportBuilder
+                        .setFileName("CBT_diary")
+            } else {
+                exportBuilder
+                        .setFileName("CBT_diary_${exportViewModel.beginDateTime.toString("dd-MM-yyy")}_${exportViewModel.endDateTime.toString("dd-MM-yyyy")}")
+                        .setPeriod(exportViewModel.beginDateTime, exportViewModel.endDateTime)
+            }
+
+            exportViewModel.export(exportBuilder.build())
+        }
+    }
+
+    private fun initViews() {
+        dao = CbdDatabase.getInstance(requireContext()).databaseDao
+
+        wholeDiary = ll.findViewById(R.id.whole_cb)
+        goBtn = ll.findViewById(R.id.exportBtn)
+        cloudGoBtn = ll.findViewById(R.id.cloudExportBtn)
     }
 }
