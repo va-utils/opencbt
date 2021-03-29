@@ -26,7 +26,7 @@ class DriveDownloader(context: Context, preference: Preference) {
             SplitInstallSessionStatus.DOWNLOADING -> {
                 val builder = NotificationCompat.Builder(appContext, DOWNLOADS_CHANNEL_ID)
                         .setContentText("Downloading modules")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_baseline_download)
                         .setProgress(it.totalBytesToDownload().toInt(), it.bytesDownloaded().toInt(), false)
                 Log.d("NOTIFY", it.bytesDownloaded().toString())
                 notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
@@ -39,7 +39,7 @@ class DriveDownloader(context: Context, preference: Preference) {
             SplitInstallSessionStatus.INSTALLED -> {
                 val builder = NotificationCompat.Builder(appContext, DOWNLOADS_CHANNEL_ID)
                         .setContentText("Downloading modules")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_baseline_download_done)
                         .setContentText("Module installed")
                 notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
 
@@ -47,7 +47,7 @@ class DriveDownloader(context: Context, preference: Preference) {
             SplitInstallSessionStatus.INSTALLING -> {
                 val builder = NotificationCompat.Builder(appContext, DOWNLOADS_CHANNEL_ID)
                         .setContentText("Installing modules")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_baseline_download_done)
                         .setProgress(0, 0, true)
                 notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
 
