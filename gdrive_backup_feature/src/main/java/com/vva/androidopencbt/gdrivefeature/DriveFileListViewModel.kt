@@ -36,15 +36,11 @@ class DriveFileListViewModel: ViewModel() {
         get() = _isLoginSuccessful
 
     fun setLoginSuccessful() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _isLoginSuccessful.value = true
-        }
+        _isLoginSuccessful.postValue(true)
     }
 
     fun setLoginUnsuccessful() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _isLoginSuccessful.value = false
-        }
+        _isLoginSuccessful.postValue(false)
     }
 
     private val _driveFileList = MutableLiveData<List<File>>()
@@ -66,16 +62,30 @@ class DriveFileListViewModel: ViewModel() {
         }
     }
 
-    fun readFile(file: File): List<DbRecord>? {
-        return makeBlockingRequest {
-            val result = withContext(Dispatchers.IO) {
-                driveServiceHelper?.readFile(file.id)?.await()
-            }
-
-            result?.second?.let {
-                Json.decodeFromString(it)
-            }
+    suspend fun readFile(file: File): List<DbRecord>? {
+        val result = withContext(Dispatchers.IO) {
+            driveServiceHelper?.readFile(file.id)?.await()
         }
+
+        return result?.second?.let {
+            Log.d("IMPORT", it)
+                val list: List<DbRecord> = Json.decodeFromString(it)
+                Log.d("IMPORT", list.toString())
+                list
+        }
+
+//        return makeBlockingRequest {
+//            val result = withContext(Dispatchers.IO) {
+//                driveServiceHelper?.readFile(file.id)?.await()
+//            }
+//
+//            result?.second?.let {
+//                Log.d("IMPORT", it)
+//                val list: List<DbRecord> = Json.decodeFromString(it)
+//                Log.d("IMPORT", list.toString())
+//                list
+//            }
+//        }
     }
 
     fun getFileList() {

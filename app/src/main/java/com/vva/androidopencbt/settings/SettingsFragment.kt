@@ -157,7 +157,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(false))
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(false, false))
             }
 
             true
@@ -167,7 +167,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(true))
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(true, false))
             }
 
             true

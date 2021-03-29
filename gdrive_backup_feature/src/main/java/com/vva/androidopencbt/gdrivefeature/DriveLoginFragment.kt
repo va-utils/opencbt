@@ -50,14 +50,20 @@ class DriveLoginFragment: Fragment() {
 //        viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
 //        viewModel.filePath = DriveLoginFragmentArgs.fromBundle(requireArguments()).filePath
         val isExport = DriveLoginFragmentArgs.fromBundle(requireArguments()).isExport
+        val isJust = DriveLoginFragmentArgs.fromBundle(requireArguments()).isJust
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
-                    if (isExport) {
-                        findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToExportFragment(0, Export.DESTINATION_CLOUD))
+                    if (isJust) {
+                        Log.e(logTag, "login succeeded popping back")
+                        findNavController().popBackStack()
                     } else {
-                        findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment("", ""))
+                        if (isExport) {
+                            findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToExportFragment(0, Export.DESTINATION_CLOUD))
+                        } else {
+                            findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment("", ""))
+                        }
                     }
                 }
                 false -> {

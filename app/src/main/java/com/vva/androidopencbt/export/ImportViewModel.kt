@@ -2,6 +2,7 @@ package com.vva.androidopencbt.export
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
@@ -15,6 +16,7 @@ import java.io.FileReader
 import java.lang.Exception
 
 class ImportViewModel(private val dao: RecordDao): ViewModel() {
+    private val logTag = javaClass.canonicalName
     private val _importState = MutableLiveData<ProcessStates?>(null)
     val importState: LiveData<ProcessStates?>
         get() = _importState
@@ -30,6 +32,35 @@ class ImportViewModel(private val dao: RecordDao): ViewModel() {
             }
             val listToImport = getListForImport(listForImport, currentList)
             importedRecordIds = addRecordsToDatabase(listToImport)
+        }
+    }
+
+    private suspend fun importRecordsFromList(list: List<DbRecord>?) {
+        if (list == null || list.isEmpty()) {
+            Log.d("IMPORT", "nullOrEmpty")
+            return
+        }
+        Log.d("IMPORT", list.toString())
+        val currentList = withContext(Dispatchers.IO){
+            dao.getAllList()
+        }
+        val listToImport = getListForImport(list, currentList)
+        importedRecordIds = addRecordsToDatabase(listToImport)
+    }
+
+    fun importFromList(block: suspend () -> List<DbRecord>?) {
+        _importState.value = ProcessStates.InProgress
+        viewModelScope.launch {
+            try {
+                val data = block()
+                importRecordsFromList(data)
+                _importState.value = ProcessStates.Success
+            } catch (e: Exception) {
+                _importState.value = ProcessStates.Failure(e)
+                Log.e(logTag, "", e)
+            } finally {
+                _importState.value = null
+            }
         }
     }
 

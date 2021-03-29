@@ -99,6 +99,9 @@
         <argument
             android:name="isExport"
             app:argType="boolean" />
+        <argument
+            android:name="isJust"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/driveListFragment"
@@ -111,5 +114,8 @@
         <argument
             android:name="filePath"
             app:argType="string" />
+        <action
+            android:id="@+id/action_driveListFragment_to_driveLoginFragment"
+            app:destination="@id/driveLoginFragment" />
     </fragment>
 </navigation>
