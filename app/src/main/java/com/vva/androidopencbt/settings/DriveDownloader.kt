@@ -60,6 +60,21 @@ class DriveDownloader(context: Context, preference: Preference) {
                 notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
                 (preference as SwitchPreferenceCompat).isChecked = false
             }
+            SplitInstallSessionStatus.CANCELED -> {
+                TODO()
+            }
+            SplitInstallSessionStatus.CANCELING -> {
+                TODO()
+            }
+            SplitInstallSessionStatus.DOWNLOADED -> {
+                TODO()
+            }
+            SplitInstallSessionStatus.PENDING -> {
+                TODO()
+            }
+            SplitInstallSessionStatus.UNKNOWN -> {
+                TODO()
+            }
         }
     }
 

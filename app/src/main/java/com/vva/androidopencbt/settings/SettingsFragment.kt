@@ -4,6 +4,7 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -29,6 +31,8 @@ import com.vva.androidopencbt.export.Export
 import com.vva.androidopencbt.export.ImportViewModel
 import com.vva.androidopencbt.export.ImportViewModelFactory
 import com.vva.androidopencbt.export.ProcessStates
+import com.vva.androidopencbt.playfeatures.FeatureDownloadViewModel
+import com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
 
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
@@ -54,6 +58,7 @@ class SettingsFragmentRoot: Fragment() {
 }
 
 class SettingsFragmentNew : PreferenceFragmentCompat() {
+    private val logTag = javaClass.canonicalName
     private lateinit var prefs: Array<SwitchPreferenceCompat>
     private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var manager: SplitInstallManager
@@ -61,6 +66,8 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     private val importViewModel: ImportViewModel by viewModels {
         ImportViewModelFactory(dao)
     }
+    private val featureDownloadViewModel: FeatureDownloadViewModel by activityViewModels()
+    private lateinit var driveEnabled: SwitchProgressPreference
 
     private val backupPicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         it?.data?.data?.let { uri ->
@@ -145,13 +152,21 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     }
 
     private fun initDriveImExportListeners() {
-        findPreference<SwitchPreferenceCompat>(PreferenceRepository.PREFERENCE_GDRIVE_ENABLED)
-                ?.setOnPreferenceChangeListener { preference, newValue ->
-                    if (!manager.installedModules.contains(GDRIVE_MODULE_NAME) && newValue == true) {
-                        DriveDownloader(requireContext(), preference).download()
-                    }
-                    true
-                }
+        driveEnabled = findPreference<SwitchProgressPreference>(PreferenceRepository.PREFERENCE_GDRIVE_ENABLED) as SwitchProgressPreference
+        driveEnabled.setOnPreferenceChangeListener { preference, newValue ->
+//            if (!manager.installedModules.contains(GDRIVE_MODULE_NAME) && newValue == true) {
+            if (newValue == true) {
+//                        DriveDownloader(requireContext(), preference).download()
+                featureDownloadViewModel.driveFeatureDownload()
+                false
+            } else {
+                true
+            }
+        }
+
+        driveEnabled.setOnCancelClickListener {
+            featureDownloadViewModel.driveInstallCancel()
+        }
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_GDRIVE_IMPORT)?.setOnPreferenceClickListener {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
@@ -211,6 +226,61 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 }
                 is ProcessStates.Failure -> {
                     Toast.makeText(requireContext(), resources.getString(R.string.import_error_readfile), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        featureDownloadViewModel.installState.observe(viewLifecycleOwner) {
+            when (it) {
+                is FeatureDownloadViewModel.ProcessState.InProgress -> {
+                    driveEnabled.isInProgress = true
+                    when (it.state) {
+                        is FeatureDownloadViewModel.InProgressState.Downloading -> {
+                            Log.d(logTag, "Downloading")
+                            driveEnabled.setProgress(it.state.max, it.state.progress, false)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.Downloaded -> {
+                            Log.d(logTag, "Downloaded")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.Cancelling -> {
+                            Log.d(logTag, "Cancelling")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.Installing -> {
+                            Log.d(logTag, "Installing")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.Pending -> {
+                            Log.d(logTag, "Pending")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.RequiresUserConfirmation -> {
+                            Log.d(logTag, "ReqUser Confirm")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                        is FeatureDownloadViewModel.InProgressState.Unknown -> {
+                            Log.d(logTag, "Unknown")
+                            driveEnabled.setProgress(0, 0, true)
+                        }
+                    }
+                }
+                is FeatureDownloadViewModel.ProcessState.Canceled -> {
+                    Log.d(logTag, "Cancelled")
+                    driveEnabled.isInProgress = false
+                    driveEnabled.isChecked = false
+                }
+                is FeatureDownloadViewModel.ProcessState.Failure -> {
+                    Log.d(logTag, "Failure")
+                    driveEnabled.isInProgress = false
+                    driveEnabled.isChecked = false
+                }
+                is FeatureDownloadViewModel.ProcessState.Success -> {
+                    Log.d(logTag, "Success")
+                    driveEnabled.isInProgress = false
+                    driveEnabled.isChecked = true
+                }
+                null -> {
                 }
             }
         }

@@ -15,7 +15,6 @@
   -->
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     app:iconSpaceReserved="false">
 
     <PreferenceCategory app:title="Настройки отображения"
@@ -131,8 +130,7 @@
             app:title="Загрузить записи локально"
             app:iconSpaceReserved="false"
             app:key="setting_import_local" />
-
-        <SwitchPreferenceCompat
+        <com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
             app:defaultValue="false"
             app:key="enable_gdrive_integration"
             app:iconSpaceReserved="false"
