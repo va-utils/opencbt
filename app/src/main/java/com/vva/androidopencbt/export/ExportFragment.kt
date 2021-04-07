@@ -134,7 +134,8 @@ class ExportFragment: Fragment() {
     }
 
     private fun sendCloud(fileName: String, filePath: String) {
-        findNavController().navigate(ExportFragmentDirections.actionExportFragmentToDriveListFragment(fileName, filePath))
+        findNavController()
+                .navigate(NavigationDirections.actionGlobalDriveListFragment(fileName, filePath))
     }
 
     private fun sendLocalFile(filePath: String) {

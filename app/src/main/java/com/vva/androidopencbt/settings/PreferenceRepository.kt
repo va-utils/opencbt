@@ -53,6 +53,9 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
             ExportFormats.HTML.formatString -> {
                 ExportFormats.HTML
             }
+            ExportFormats.CSV.formatString -> {
+                ExportFormats.CSV
+            }
             else -> {
                 throw IllegalStateException("No such format")
             }

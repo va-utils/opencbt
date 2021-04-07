@@ -32,9 +32,6 @@
         <action
             android:id="@+id/action_rvFragment_to_exportFragment"
             app:destination="@id/exportFragment" />
-        <action
-            android:id="@+id/action_rvFragment_to_driveListFragment"
-            app:destination="@id/driveListFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -82,9 +79,6 @@
         <argument
             android:name="destination"
             app:argType="integer" />
-        <action
-            android:id="@+id/action_exportFragment_to_driveListFragment"
-            app:destination="@id/driveListFragment" />
     </fragment>
     <fragment
         android:id="@+id/driveLoginFragment"
@@ -121,4 +115,5 @@
             android:id="@+id/action_driveListFragment_to_driveLoginFragment"
             app:destination="@id/driveLoginFragment" />
     </fragment>
+    <action android:id="@+id/action_global_driveListFragment" app:destination="@id/driveListFragment" />
 </navigation>

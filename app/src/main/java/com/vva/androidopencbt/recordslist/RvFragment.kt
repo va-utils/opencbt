@@ -250,7 +250,8 @@ class RvFragment: Fragment() {
                             (requireActivity() as MainActivity).sendLocalFile(it.filePath)
                         }
                         true -> {
-                            findNavController().navigate(RvFragmentDirections.actionRvFragmentToDriveListFragment(it.fileName, it.filePath))
+                            findNavController()
+                                    .navigate(NavigationDirections.actionGlobalDriveListFragment(it.fileName, it.filePath))
                         }
                     }
 
