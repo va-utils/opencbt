@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceViewHolder
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -20,7 +21,7 @@ class SwitchProgressPreference @JvmOverloads constructor(
         widgetLayoutResource = R.layout.setting_widget_switch_progress
     }
 
-    private lateinit var sw: SwitchMaterial
+    private lateinit var sw: SwitchCompat
     private lateinit var pg: ProgressBar
     private lateinit var ib: ImageButton
 
