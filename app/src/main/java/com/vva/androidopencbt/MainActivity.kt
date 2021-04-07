@@ -5,16 +5,19 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
@@ -24,6 +27,7 @@ import com.vva.androidopencbt.recordslist.RecordListViewModel
 import com.vva.androidopencbt.recordslist.RecordListViewModelFactory
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 import com.vva.androidopencbt.settings.PreferenceRepository
+import java.io.File
 
 
 @Suppress("UNUSED_PARAMETER")
@@ -77,6 +81,22 @@ class MainActivity : AppCompatActivity() {
                     super.onBackPressed()
                 }
             }
+        }
+    }
+
+    fun sendLocalFile(filePath: String) {
+        val file = File(filePath)
+        val uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file)
+        val forSendIntent = Intent(Intent.ACTION_SEND)
+        forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        forSendIntent.setDataAndType(uri, "application/octet-stream")
+
+        val pm: PackageManager = this.packageManager
+        if (forSendIntent.resolveActivity(pm) != null) {
+            startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
+        } else {
+            Toast.makeText(this, getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
         }
     }
 

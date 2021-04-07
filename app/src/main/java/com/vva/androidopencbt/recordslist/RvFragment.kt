@@ -1,12 +1,16 @@
 package com.vva.androidopencbt.recordslist
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
@@ -21,14 +25,14 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.vva.androidopencbt.App
-import com.vva.androidopencbt.R
-import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.Export
+import com.vva.androidopencbt.export.ExportStates
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.settings.PreferenceRepository
+import java.io.File
 
 class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
@@ -207,6 +211,27 @@ class RvFragment: Fragment() {
 
         prefs.isDividersEnabled.observe(viewLifecycleOwner) {
             dataAdapter.dividers = it
+        }
+
+        val dialog = makeIndeterminateProgressDialog()
+        exportViewModel.exportState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ExportStates.Failure -> {
+                    dialog.dismiss()
+                    Toast.makeText(requireContext(), "Something goes wrong", Toast.LENGTH_LONG).show()
+                }
+                is ExportStates.InProgress -> {
+                    dialog.show()
+
+                }
+                is ExportStates.Success -> {
+                    dialog.dismiss()
+                    (requireActivity() as MainActivity).sendLocalFile(it.filePath)
+                }
+                null -> {
+                    dialog.dismiss()
+                }
+            }
         }
 
         rv.adapter = dataAdapter
