@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_rvFragment_to_exportFragment"
             app:destination="@id/exportFragment" />
+        <action
+            android:id="@+id/action_rvFragment_to_driveListFragment"
+            app:destination="@id/driveListFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"

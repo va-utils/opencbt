@@ -13,10 +13,12 @@
     <string-array name="export_settings_entries" >
         <item>JSON</item>
         <item>HTML</item>
+        <item>CSV</item>
     </string-array>
     <string-array name="export_settings_values" >
         <item>JSON</item>
         <item>HTML</item>
+        <item>CSV</item>
     </string-array>
 
 </resources>

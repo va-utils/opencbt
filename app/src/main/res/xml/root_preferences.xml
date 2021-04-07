@@ -45,7 +45,6 @@
             app:iconSpaceReserved="false"
             app:title="Ночная тема" />
 
-
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="enable_intensity_indication"
@@ -61,7 +60,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_situation"
@@ -116,7 +116,6 @@
         <ListPreference
             app:key="default_export"
             app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false"
             app:entries="@array/export_settings_entries"
             app:entryValues="@array/export_settings_values"
             app:useSimpleSummaryProvider="true"

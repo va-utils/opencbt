@@ -83,7 +83,17 @@ class ExportFragment: Fragment() {
         when (args.format) {
             Export.FORMAT_PICK -> {
                 formatGroup.visibility = View.VISIBLE
-                formatGroup.check(R.id.csv_rb)
+                when (prefs.defaultExportFormat.value) {
+                    ExportFormats.CSV -> {
+                        formatGroup.check(R.id.csv_rb)
+                    }
+                    ExportFormats.HTML -> {
+                        formatGroup.check(R.id.html_rb)
+                    }
+                    else -> {
+                        formatGroup.check(R.id.csv_rb)
+                    }
+                }
             }
             else -> {
                 formatGroup.visibility = View.GONE

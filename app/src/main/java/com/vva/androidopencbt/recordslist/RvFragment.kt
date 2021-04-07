@@ -29,8 +29,10 @@ import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.Export
+import com.vva.androidopencbt.export.ExportFragmentDirections
 import com.vva.androidopencbt.export.ExportStates
 import com.vva.androidopencbt.export.ExportViewModel
+import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
@@ -136,6 +138,10 @@ class RvFragment: Fragment() {
                     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
                         menu.findItem(R.id.action_delete).isEnabled = itemForDeletionCount > 0
                         menu.findItem(R.id.action_export).isEnabled = itemForDeletionCount > 0
+                        menu.findItem(R.id.action_export_cloud).apply {
+                            isEnabled = itemForDeletionCount > 0
+                            isVisible = prefs.isDriveIntegrationEnabled.value == true
+                        }
                         return true
                     }
 
@@ -155,9 +161,22 @@ class RvFragment: Fragment() {
                             }
                             R.id.action_export -> {
                                 val export = Export.Builder()
+                                        .setFormat(prefs.defaultExportFormat.value ?: ExportFormats.JSON)
                                         .setFileName("CBT_diary_selected")
                                         .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
                                         .build()
+                                exportViewModel.export(export)
+                                mode.finish()
+                                true
+                            }
+                            R.id.action_export_cloud -> {
+                                val export = Export.Builder()
+                                        .setFormat(prefs.defaultExportFormat.value ?: ExportFormats.JSON)
+                                        .setFileName("CBT_diary_selected")
+                                        .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
+                                        .cloud()
+                                        .build()
+
                                 exportViewModel.export(export)
                                 mode.finish()
                                 true
@@ -226,7 +245,15 @@ class RvFragment: Fragment() {
                 }
                 is ExportStates.Success -> {
                     dialog.dismiss()
-                    (requireActivity() as MainActivity).sendLocalFile(it.filePath)
+                    when (it.isCloud) {
+                        false -> {
+                            (requireActivity() as MainActivity).sendLocalFile(it.filePath)
+                        }
+                        true -> {
+                            findNavController().navigate(RvFragmentDirections.actionRvFragmentToDriveListFragment(it.fileName, it.filePath))
+                        }
+                    }
+
                 }
                 null -> {
                     dialog.dismiss()

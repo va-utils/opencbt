@@ -215,4 +215,5 @@
     <string name="export_wizard_cloud_export_btn">В облако</string>
     <string name="export_wizard_html_rb">HTML</string>
     <string name="export_wizard_csv_rb">CSV</string>
+    <string name="selection_action_cloud_export">Экспортировать в облако</string>
 </resources>

@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_export_cloud"
+        android:title="@string/selection_action_cloud_export"
+        android:icon="@drawable/ic_baseline_cloud_download"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_baseline_save_alt"
         android:title="@string/selection_action_export"
