@@ -23,6 +23,7 @@ import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.ExportFormats
+import com.vva.androidopencbt.settings.PreferenceRepository
 import org.joda.time.DateTime
 import java.io.File
 
@@ -39,6 +40,7 @@ class ExportFragment: Fragment() {
 
     private lateinit var dao: RecordDao
     private val exportViewModel: ExportViewModel by activityViewModels()
+    private lateinit var prefs: PreferenceRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,6 +63,7 @@ class ExportFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.export_wizard, container, false) as LinearLayout
+        prefs = (requireActivity().application as App).preferenceRepository
 
         initViews()
         initDateEditText()
@@ -258,5 +261,11 @@ class ExportFragment: Fragment() {
         wholeDiary = ll.findViewById(R.id.whole_cb)
         goBtn = ll.findViewById(R.id.exportBtn)
         cloudGoBtn = ll.findViewById(R.id.cloudExportBtn)
+
+        prefs.isDriveIntegrationEnabled.observe(viewLifecycleOwner) {
+            if (!it) {
+                cloudGoBtn.visibility = View.GONE
+            }
+        }
     }
 }
