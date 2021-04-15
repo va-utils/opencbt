@@ -1,8 +1,11 @@
 package com.vva.androidopencbt
 
-import android.app.NotificationManager
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.core.app.NotificationCompat
+import android.graphics.Color
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.core.content.res.use
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -51,15 +54,14 @@ object DateTimeAsTimestampSerializer: KSerializer<DateTime> {
     }
 }
 
-const val DOWNLOADS_CHANNEL_ID = "com.vva.androidopencbt.downloads_channel_id"
-const val DOWNLOADS_CHANNEL_TAG = 0x123
-
-fun NotificationManager.sendDownloadNotification(context: Context) {
-    val builder = NotificationCompat.Builder(context, DOWNLOADS_CHANNEL_ID)
-            .setContentTitle("Загрузка функционала")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-
-    notify(DOWNLOADS_CHANNEL_TAG, builder.build())
+@ColorInt
+@SuppressLint("Recycle")
+fun Context.themeColor(
+        @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(
+            intArrayOf(themeAttrId)
+    ).use {
+        it.getColor(0, Color.MAGENTA)
+    }
 }

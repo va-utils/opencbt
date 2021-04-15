@@ -2,9 +2,7 @@ package com.vva.androidopencbt.gdrivefeature
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -18,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.export.ImportViewModel
@@ -43,18 +42,19 @@ class DriveListFragment: Fragment() {
 
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar = view.findViewById<Toolbar>(R.id.rv_toolbar)
+//        val toolbar = view.findViewById<Toolbar>(R.id.rv_toolbar)
 
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        toolbar.inflateMenu(R.menu.list_menu)
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.log_out -> {
-                    driveViewModel.signOut()
-                }
-            }
-            true
-        }
+//        toolbar.setupWithNavController(navController, appBarConfiguration)
+//        toolbar.inflateMenu(R.menu.list_menu)
+//        toolbar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//                R.id.log_out -> {
+//                    driveViewModel.signOut()
+//                }
+//            }
+//            true
+//        }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -179,5 +179,23 @@ class DriveListFragment: Fragment() {
                 .setView(R.layout.progress_bar)
                 .setCancelable(false)
                 .create()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.list_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.log_out -> {
+                driveViewModel.signOut()
+                true
+            }
+            else -> {
+                true
+            }
+        }
     }
 }

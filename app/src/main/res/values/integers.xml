@@ -2,4 +2,5 @@
 <resources>
     <integer name="slide">300</integer>
     <integer name="slide_delay">20</integer>
+    <integer name="record_motion_duration">300</integer>
 </resources>

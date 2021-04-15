@@ -12,11 +12,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -25,6 +27,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
 import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
@@ -40,7 +44,7 @@ class RvFragment: Fragment() {
     private val viewModel: RecordsViewModel by activityViewModels()
     private lateinit var database: CbdDatabase
     private lateinit var prefs: PreferenceRepository
-    private val listViewModel: RecordListViewModel by viewModels {
+    private val listViewModel: RecordListViewModel by activityViewModels {
         RecordListViewModelFactory(database.databaseDao, prefs)
     }
     private val exportViewModel: ExportViewModel by activityViewModels()
@@ -51,49 +55,67 @@ class RvFragment: Fragment() {
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
     private lateinit var toolbar: Toolbar
-    private lateinit var appBar: AppBarLayout
+//    private lateinit var appBar: AppBarLayout
     private var actionMode: ActionMode? = null
     private var itemForDeletionCount = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        appBar = view.findViewById(R.id.rv_appBar)
-        toolbar = view.findViewById(R.id.rv_toolbar)
-        toolbar.inflateMenu(R.menu.menu_main)
-
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-        toolbar.menu.forEach { menuItem ->
-            if (menuItem.hasSubMenu())
-                menuItem.subMenu.forEach {
-                    it.setOnMenuItemClickListener {
-                        findNavController().navigate(it.itemId, null, navOptions)
-
-                        super.onOptionsItemSelected(it)
-                    }
-                }
-            menuItem.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.share -> {
-                        findNavController().navigate(RvFragmentDirections.actionRvFragmentToExportFragment(Export.FORMAT_PICK, Export.DESTINATION_LOCAL))
-                    }
-                    R.id.hidden_group -> {
-                        super.onOptionsItemSelected(it)
-                    }
-                    else -> {
-                        findNavController().navigate(it.itemId, null, navOptions)
-                    }
-                }
-
-                return@setOnMenuItemClickListener super.onOptionsItemSelected(it)
-            }
+        postponeEnterTransition()
+        view.doOnPreDraw {
+            startPostponedEnterTransition()
         }
+
+//        val navController = findNavController()
+//        val appBarConfiguration = AppBarConfiguration(navController.graph)
+//        appBar = view.findViewById(R.id.rv_appBar)
+//        toolbar = view.findViewById(R.id.rv_toolbar)
+//        toolbar.inflateMenu(R.menu.menu_main)
+
+//        toolbar.setupWithNavController(navController, appBarConfiguration)
+//        val navOptions = NavOptions.Builder()
+//                .setEnterAnim(R.anim.slide_in_right)
+//                .setExitAnim(R.anim.slide_out_left)
+//                .setPopEnterAnim(R.anim.slide_in_left)
+//                .setPopExitAnim(R.anim.slide_out_right)
+//                .build()
+//        toolbar.menu.forEach { menuItem ->
+//            if (menuItem.hasSubMenu())
+//                menuItem.subMenu.forEach {
+//                    it.setOnMenuItemClickListener {
+//                        findNavController().navigate(it.itemId, null, navOptions)
+//
+//                        super.onOptionsItemSelected(it)
+//                    }
+//                }
+//            menuItem.setOnMenuItemClickListener {
+//                when (it.itemId) {
+//                    R.id.share -> {
+//                        findNavController().navigate(RvFragmentDirections.actionRvFragmentToExportFragment(Export.FORMAT_PICK, Export.DESTINATION_LOCAL))
+//                    }
+//                    R.id.hidden_group -> {
+//                        super.onOptionsItemSelected(it)
+//                    }
+//                    else -> {
+//                        findNavController().navigate(it.itemId, null, navOptions)
+//                    }
+//                }
+//
+//                return@setOnMenuItemClickListener super.onOptionsItemSelected(it)
+//            }
+//        }
+        Log.d("TEEEST", "onViewCreated")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.record_motion_duration).toLong()
+        }
+
+        prefs = (requireActivity().application as App).preferenceRepository
+        database = CbdDatabase.getInstance(requireContext())
+        setHasOptionsMenu(true)
+        Log.d("TEEEST", "onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -103,13 +125,22 @@ class RvFragment: Fragment() {
         welcomeTv = ll.findViewById(R.id.welcomeTextView)
         fab = ll.findViewById(R.id.fab)
 
-        prefs = (requireActivity().application as App).preferenceRepository
-        database = CbdDatabase.getInstance(requireContext())
-
-        dataAdapter = RecordsAdapter(RecordListener { _: View, dbRecord: DbRecord, _: Int ->
+        dataAdapter = RecordsAdapter(RecordListener { view: View, dbRecord: DbRecord, _: Int ->
             when (listViewModel.onItemClick(dbRecord)) {
                 null -> {
-                    findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = dbRecord.id })
+                    exitTransition = MaterialElevationScale(false).apply {
+                        duration = resources.getInteger(R.integer.record_motion_duration).toLong()
+                    }
+                    reenterTransition = MaterialElevationScale(true).apply {
+                        duration = resources.getInteger(R.integer.record_motion_duration).toLong()
+                    }
+                    val transName = getString(R.string.record_card_view_detail_transition_name)
+                    val extras = FragmentNavigatorExtras(view to transName)
+                    val directions = RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply {
+                        recordKey = dbRecord.id
+                    }
+                    findNavController().navigate(directions, extras)
+//                    findNavController().navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial().apply { recordKey = dbRecord.id })
                 }
             }
         },
@@ -129,7 +160,7 @@ class RvFragment: Fragment() {
             if (!it) {
                 listViewModel.cancelAllSelections()
             } else {
-                actionMode = toolbar.startActionMode(object: ActionMode.Callback {
+                actionMode = (requireActivity() as MainActivity).startActionMode(object: ActionMode.Callback {
                     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
                         mode.menuInflater?.inflate(R.menu.list_selection, menu)
                         return true
@@ -218,12 +249,6 @@ class RvFragment: Fragment() {
             }
         })
 
-        dataAdapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                rv.layoutManager?.smoothScrollToPosition(rv, null, positionStart)
-            }
-        })
-
         prefs.isQuotesEnabled.observe(viewLifecycleOwner) {
             dataAdapter.quotes = it
         }
@@ -262,6 +287,7 @@ class RvFragment: Fragment() {
             }
         }
 
+        Log.d("TEEEST", "onCreateView")
         rv.adapter = dataAdapter
 
         return ll
@@ -276,30 +302,35 @@ class RvFragment: Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-        when (item.itemId) {
+        val navController = findNavController()
+        return when (item.itemId) {
+            R.id.share -> {
+                navController.navigate(RvFragmentDirections.actionRvFragmentToExportFragment(Export.FORMAT_PICK, Export.DESTINATION_LOCAL))
+                true
+            }
+            R.id.hidden_group -> {
+                true
+            }
+            R.id.settingsFragmentRoot -> {
+                navController.navigate(item.itemId)
+                true
+            }
+            R.id.statisticFragment -> {
+                navController.navigate(item.itemId)
+                true
+            }
             R.id.detailsFragmentMaterial -> {
-                findNavController().navigate(item.itemId, null, navOptions)
+                navController.navigate(item.itemId)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        viewModel.recyclerViewState = rv.layoutManager?.onSaveInstanceState()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.restoreRecyclerView(rv)
     }
 }

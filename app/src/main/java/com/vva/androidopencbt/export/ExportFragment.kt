@@ -10,14 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
@@ -41,15 +38,6 @@ class ExportFragment: Fragment() {
     private lateinit var dao: RecordDao
     private val exportViewModel: ExportViewModel by activityViewModels()
     private lateinit var prefs: PreferenceRepository
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-    }
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->

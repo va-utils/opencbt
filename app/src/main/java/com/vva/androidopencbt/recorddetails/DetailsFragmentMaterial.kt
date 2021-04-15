@@ -3,30 +3,28 @@ package com.vva.androidopencbt.recorddetails
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.forEach
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.transition.MaterialContainerTransform
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
+import com.vva.androidopencbt.themeColor
 import org.joda.time.DateTime
 
 class DetailsFragmentMaterial: Fragment() {
@@ -62,47 +60,59 @@ class DetailsFragmentMaterial: Fragment() {
 
     private var id: Long = 0L
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.myNavHostFragment
+            duration = resources.getInteger(R.integer.record_motion_duration).toLong()
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+        }
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        view.findViewById<Toolbar>(R.id.details_toolbar).apply {
-            setupWithNavController(navController, appBarConfiguration)
-            setNavigationOnClickListener {
-                if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
-                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
-                        MaterialAlertDialogBuilder(requireContext())
-                                .setTitle(R.string.details_fragment_confirm_dialog_title)
-                                .setMessage(R.string.details_fragment_confirm_dialog_message)
-                                .setNegativeButton(R.string.exit) { _: DialogInterface, _: Int ->
-                                    navController.navigateUp()
-                                }
-                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, _: Int ->
-                                    dialogInterface.dismiss()
-                                }
-                                .show()
-                    } else {
-                        navController.navigateUp()
-                    }
-                }
-            }
-            menu.forEach { menuItem ->
-                menuItem.setOnMenuItemClickListener { item ->
-                    if (item.itemId == R.id.menu_help) {
-                        val builder = MaterialAlertDialogBuilder(requireContext())
-                        builder.setMessage(getText(R.string.dialog_help_text))
-                        builder.setTitle("Справка")
-                        builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
-                        val dialog = builder.create()
-                        dialog.show()
-                        return@setOnMenuItemClickListener true
-                    }
-                    return@setOnMenuItemClickListener false
-                }
-            }
-        }
+
+//        view.findViewById<Toolbar>(R.id.details_toolbar).apply {
+//            setupWithNavController(navController, appBarConfiguration)
+//            setNavigationOnClickListener {
+//                if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
+//                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
+//                        MaterialAlertDialogBuilder(requireContext())
+//                                .setTitle(R.string.details_fragment_confirm_dialog_title)
+//                                .setMessage(R.string.details_fragment_confirm_dialog_message)
+//                                .setNegativeButton(R.string.exit) { _: DialogInterface, _: Int ->
+//                                    navController.navigateUp()
+//                                }
+//                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, _: Int ->
+//                                    dialogInterface.dismiss()
+//                                }
+//                                .show()
+//                    } else {
+//                        navController.navigateUp()
+//                    }
+//                }
+//            }
+//            menu.forEach { menuItem ->
+//                menuItem.setOnMenuItemClickListener { item ->
+//                    if (item.itemId == R.id.menu_help) {
+//                        val builder = MaterialAlertDialogBuilder(requireContext())
+//                        builder.setMessage(getText(R.string.dialog_help_text))
+//                        builder.setTitle("Справка")
+//                        builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
+//                        val dialog = builder.create()
+//                        dialog.show()
+//                        return@setOnMenuItemClickListener true
+//                    }
+//                    return@setOnMenuItemClickListener false
+//                }
+//            }
+//        }
     }
 
     /*
@@ -132,7 +142,6 @@ class DetailsFragmentMaterial: Fragment() {
         }
 
         deleteButton.setOnClickListener {
-
             MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.details_fragment_remove_confirm_dialog_title).
                     setMessage(R.string.details_fragment_remove_confirm_dialog_message).
                     setNegativeButton(R.string.remove) { _: DialogInterface, _: Int ->
@@ -224,11 +233,11 @@ class DetailsFragmentMaterial: Fragment() {
                         MaterialAlertDialogBuilder(requireContext())
                                 .setTitle(R.string.details_fragment_confirm_dialog_title)
                                 .setMessage(R.string.details_fragment_confirm_dialog_message)
-                                .setNegativeButton(R.string.exit) { dialogInterface: DialogInterface, i: Int ->
+                                .setNegativeButton(R.string.exit) { dialogInterface: DialogInterface, _: Int ->
                                     dialogInterface.dismiss()
                                     viewModel.detailsFragmentRollbackChanges()
                                 }
-                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, i: Int ->
+                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, _: Int ->
                                     dialogInterface.dismiss()
                                     viewModel.detailsFragmentConfirmChangesCancel()
                                 }
@@ -396,5 +405,29 @@ class DetailsFragmentMaterial: Fragment() {
 
         // Hide keyboard when back pressed
         (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_newrecord, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_help -> {
+                makeHelpDialog().show()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    private fun makeHelpDialog(): AlertDialog {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+                        builder.setMessage(getText(R.string.dialog_help_text))
+                        builder.setTitle("Справка")
+                        builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
+        return builder.create()
     }
 }

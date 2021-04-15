@@ -23,7 +23,6 @@ import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getStatsDateTime
 
 class StatisticFragment : Fragment() {
-
     //--общая
     private lateinit var oldTv : TextView
     private lateinit var latestTv : TextView
@@ -52,15 +51,6 @@ class StatisticFragment : Fragment() {
     //-----
     private lateinit var ll : LinearLayout
     private val viewModel: StatisticViewModel by activityViewModels()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        view.findViewById<Toolbar>(R.id.statistic_toolbar).setupWithNavController(navController, appBarConfiguration)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

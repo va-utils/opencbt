@@ -24,11 +24,7 @@
             app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_rvFragment_to_detailsFragmentMaterial"
-            app:destination="@id/detailsFragmentMaterial"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:destination="@id/detailsFragmentMaterial" />
         <action
             android:id="@+id/action_rvFragment_to_exportFragment"
             app:destination="@id/exportFragment" />

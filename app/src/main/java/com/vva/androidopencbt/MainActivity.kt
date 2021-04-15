@@ -1,12 +1,9 @@
 package com.vva.androidopencbt
 
 import android.app.KeyguardManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,23 +12,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.preference.PreferenceManager
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.vva.androidopencbt.db.CbdDatabase
-import com.vva.androidopencbt.recordslist.RecordListViewModel
-import com.vva.androidopencbt.recordslist.RecordListViewModelFactory
+import com.vva.androidopencbt.export.Export
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
 
 @Suppress("UNUSED_PARAMETER")
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
     private val vm: RecordsViewModel by viewModels()
     private lateinit var preferences: PreferenceRepository
     private lateinit var database: CbdDatabase
@@ -41,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         if (it.resultCode == RESULT_OK) {
             vm.authSuccessful()
         }
+    }
+    private lateinit var toolbar: Toolbar
+    private lateinit var appBar: AppBarLayout
+    private val navController: NavController by lazy {
+        findNavController(R.id.myNavHostFragment)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -52,10 +56,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createNotifyChannels()
-
         preferences = (application as App).preferenceRepository
         database = CbdDatabase.getInstance(this)
+        appBar = findViewById(R.id.app_bar_layout)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         vm.isAuthenticated.observe(this) {
             if (!it && preferences.isPinEnabled.value == true) {
@@ -101,12 +106,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addNewRecord(view: View) {
-        findNavController(R.id.myNavHostFragment).navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
+        navController.navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+        toolbar.setNavigationOnClickListener {
+            if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
+                vm.askDetailsFragmentConfirmation()
+            } else {
+                navController.navigateUp()
+            }
+        }
+        navController.addOnDestinationChangedListener(this)
     }
 
     override fun onBackPressed() {
-        val navController = findNavController(R.id.myNavHostFragment)
-
         if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
             vm.askDetailsFragmentConfirmation()
         } else  if (navController.currentDestination?.id == R.id.rvFragment && vm.isSelectionActive.value == true) {
@@ -116,18 +134,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNotifyChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.downloads_channel_name)
-            val descriptionText = getString(R.string.downloads_channel_description)
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val channel = NotificationChannel(DOWNLOADS_CHANNEL_ID, name, importance).apply {
-                description = descriptionText
+    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+        when(destination.id) {
+            R.id.driveLoginFragment -> {
+//                toolbar.visibility = View.GONE
             }
-
-            val nm = ContextCompat.getSystemService(applicationContext,
-                    NotificationManager::class.java) as NotificationManager
-            nm.createNotificationChannel(channel)
+            else -> {
+//                toolbar.visibility = View.VISIBLE
+            }
         }
     }
 }

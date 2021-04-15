@@ -12,13 +12,10 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
@@ -38,13 +35,6 @@ const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
 class SettingsFragmentRoot: Fragment() {
     private lateinit var linearLayout: LinearLayout
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        view.findViewById<Toolbar>(R.id.settings_toolbar).setupWithNavController(navController, appBarConfiguration)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         linearLayout = inflater.inflate(R.layout.fragment_settings, container, false) as LinearLayout

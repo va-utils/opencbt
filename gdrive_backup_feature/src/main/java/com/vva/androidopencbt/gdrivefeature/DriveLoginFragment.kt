@@ -21,8 +21,8 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.DriveScopes
+import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.export.Export
-import com.vva.androidopencbt.settings.ExportFormats
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -75,6 +75,7 @@ class DriveLoginFragment: Fragment() {
 
         requestSignIn()
 
+//        requireActivity().window.decorView.systemUiVisibility =
         return cl
     }
 
@@ -146,5 +147,15 @@ class DriveLoginFragment: Fragment() {
         job.cancel()
 
         super.onDestroy()
+    }
+
+    override fun onResume() {
+        (requireActivity() as MainActivity).supportActionBar?.hide()
+        super.onResume()
+    }
+
+    override fun onStop() {
+        (requireActivity() as MainActivity).supportActionBar?.show()
+        super.onStop()
     }
 }
