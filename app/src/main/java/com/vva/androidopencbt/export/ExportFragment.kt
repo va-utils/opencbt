@@ -262,7 +262,7 @@ class ExportFragment: Fragment() {
         cloudGoBtn = ll.findViewById(R.id.cloudExportBtn)
 
         prefs.isDriveIntegrationEnabled.observe(viewLifecycleOwner) {
-            if (!it) {
+            if (!it || args.destination == Export.DESTINATION_CLOUD) {
                 cloudGoBtn.visibility = View.GONE
             }
         }

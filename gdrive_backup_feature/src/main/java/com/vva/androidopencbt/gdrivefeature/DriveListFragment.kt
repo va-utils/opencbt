@@ -44,18 +44,42 @@ class DriveListFragment: Fragment() {
         setHasOptionsMenu(true)
 
         dao = CbdDatabase.getInstance(requireContext()).databaseDao
-        if (driveViewModel.driveClient == null || driveViewModel.driveAccount?.isExpired == true)
-            findNavController().navigate(DriveListFragmentDirections.actionDriveListFragmentToDriveLoginFragment(false, true))
 
         driveViewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
-                false -> {
-                    Log.d(logTag, "logOut")
+                LoggingInStatus.Canceled -> {
+                    Log.d(logTag, "cancelled")
                     findNavController().popBackStack()
+                    findNavController().popBackStack()
+                    driveViewModel.setLoginNull()
+                }
+                LoggingInStatus.Success -> {
+                    Log.d(logTag, "success")
+                    recyclerViewInit()
+                    importStateSubscribe()
+                    requestSubscriptions()
+
+                    val args = DriveListFragmentArgs.fromBundle(requireArguments())
+                    if (args.fileName.isNotEmpty() && args.filePath.isNotEmpty()) {
+                        driveViewModel.uploadFileAppRoot(args.fileName, args.filePath)
+                    } else {
+                        driveViewModel.getFileList()
+                    }
+                }
+                LoggingInStatus.LogOut -> {
+                    findNavController().popBackStack()
+                    driveViewModel.setLoginNull()
                 }
             }
         }
 
+        if (!driveViewModel.isLoggedIn())
+            findNavController().navigate(DriveListFragmentDirections.actionDriveListFragmentToDriveLoginFragment())
+
+        return ll
+    }
+
+    private fun recyclerViewInit() {
         val adapter = DriveListAdapter(
                 OnClickListener {
                     importViewModel.importFromList {
@@ -64,6 +88,13 @@ class DriveListFragment: Fragment() {
                 }
         )
 
+        driveViewModel.driveFileList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
+        rv.adapter = adapter
+    }
+    private fun importStateSubscribe() {
         val dialog = blockingProgressDialog()
         importViewModel.importState.observe(viewLifecycleOwner) {
             when (it) {
@@ -94,23 +125,6 @@ class DriveListFragment: Fragment() {
                 }
             }
         }
-
-        val args = DriveListFragmentArgs.fromBundle(requireArguments())
-        if (args.fileName.isNotEmpty() && args.filePath.isNotEmpty()) {
-            driveViewModel.uploadFileAppRoot(args.fileName, args.filePath)
-        } else {
-            driveViewModel.getFileList()
-        }
-
-        driveViewModel.driveFileList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-
-        requestSubscriptions()
-
-        rv.adapter = adapter
-
-        return ll
     }
 
     private fun requestSubscriptions() {

@@ -17,8 +17,6 @@ import kotlinx.serialization.json.Json
 class DriveFileListViewModel: ViewModel() {
     private val tagLog = javaClass.canonicalName
     var appDirId = ""
-    var fileName: String = ""
-    var filePath: String = ""
 
     private var driveServiceHelper: DriveServiceHelper? = null
     var driveClient: GoogleSignInClient? = null
@@ -31,16 +29,24 @@ class DriveFileListViewModel: ViewModel() {
             }
         }
 
-    private val _isLoginSuccessful = MutableLiveData<Boolean?>(null)
-    val isLoginSuccessful: LiveData<Boolean?>
+    private val _isLoginSuccessful = MutableLiveData<LoggingInStatus?>(null)
+    val isLoginSuccessful: LiveData<LoggingInStatus?>
         get() = _isLoginSuccessful
 
     fun setLoginSuccessful() {
-        _isLoginSuccessful.postValue(true)
+        _isLoginSuccessful.postValue(LoggingInStatus.Success)
     }
 
     fun setLoginUnsuccessful() {
-        _isLoginSuccessful.postValue(false)
+        _isLoginSuccessful.postValue(LoggingInStatus.Failure)
+    }
+
+    fun setLoginCanceled() {
+        _isLoginSuccessful.postValue(LoggingInStatus.Canceled)
+    }
+
+    fun setLoginNull() {
+        _isLoginSuccessful.postValue(null)
     }
 
     private val _driveFileList = MutableLiveData<List<File>>()
@@ -112,8 +118,7 @@ class DriveFileListViewModel: ViewModel() {
                 try {
                     it.signOut().await()
                     withContext(Dispatchers.Main) {
-                        _isLoginSuccessful.value = false
-                        _isLoginSuccessful.value = null
+                        _isLoginSuccessful.value = LoggingInStatus.LogOut
                     }
                     clearCredentials()
                 } catch (e: Exception) {
@@ -121,6 +126,13 @@ class DriveFileListViewModel: ViewModel() {
                 }
             }
         }
+    }
+
+    fun isLoggedIn(): Boolean {
+        return driveAccount != null
+                && driveClient != null
+                && driveCredentials != null
+                && driveAccount?.isExpired != true
     }
 
     private suspend fun checkAndMakeRootFolder() {
@@ -201,4 +213,11 @@ sealed class RequestStatus {
     object InProgress : RequestStatus()
     object Success : RequestStatus()
     class Failure(val e: Exception): RequestStatus()
+}
+
+sealed class LoggingInStatus {
+    object Success: LoggingInStatus()
+    object Failure: LoggingInStatus()
+    object Canceled: LoggingInStatus()
+    object LogOut: LoggingInStatus()
 }

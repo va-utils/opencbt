@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.LabelFormatter
@@ -70,57 +69,6 @@ class DetailsFragmentMaterial: Fragment() {
         }
         setHasOptionsMenu(true)
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-
-//        view.findViewById<Toolbar>(R.id.details_toolbar).apply {
-//            setupWithNavController(navController, appBarConfiguration)
-//            setNavigationOnClickListener {
-//                if (navController.currentDestination?.id == R.id.detailsFragmentMaterial) {
-//                    if (detailsViewModel.isRecordHasChanged(getRecordFromInput())) {
-//                        MaterialAlertDialogBuilder(requireContext())
-//                                .setTitle(R.string.details_fragment_confirm_dialog_title)
-//                                .setMessage(R.string.details_fragment_confirm_dialog_message)
-//                                .setNegativeButton(R.string.exit) { _: DialogInterface, _: Int ->
-//                                    navController.navigateUp()
-//                                }
-//                                .setNeutralButton(R.string.cancel) { dialogInterface: DialogInterface, _: Int ->
-//                                    dialogInterface.dismiss()
-//                                }
-//                                .show()
-//                    } else {
-//                        navController.navigateUp()
-//                    }
-//                }
-//            }
-//            menu.forEach { menuItem ->
-//                menuItem.setOnMenuItemClickListener { item ->
-//                    if (item.itemId == R.id.menu_help) {
-//                        val builder = MaterialAlertDialogBuilder(requireContext())
-//                        builder.setMessage(getText(R.string.dialog_help_text))
-//                        builder.setTitle("Справка")
-//                        builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
-//                        val dialog = builder.create()
-//                        dialog.show()
-//                        return@setOnMenuItemClickListener true
-//                    }
-//                    return@setOnMenuItemClickListener false
-//                }
-//            }
-//        }
-    }
-
-    /*
-    val listener = View.OnClickListener { v ->
-        (v as EditText).setSelection(v.text.length) //может как-то так? но в конец переходит не сразу, а со второго клика
-    }*/
-
-    //-----
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

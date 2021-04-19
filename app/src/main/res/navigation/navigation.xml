@@ -52,9 +52,6 @@
         <action
             android:id="@+id/action_settingsFragmentRoot_to_exportFragment"
             app:destination="@id/exportFragment" />
-        <action
-            android:id="@+id/action_settingsFragmentRoot_to_driveLoginFragment"
-            app:destination="@id/driveLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragmentMaterial"
@@ -80,22 +77,7 @@
         android:id="@+id/driveLoginFragment"
         android:name="com.vva.androidopencbt.gdrivefeature.DriveLoginFragment"
         app:moduleName="gdrive_backup_feature"
-        android:label="DriveLoginFragment" >
-        <action
-            android:id="@+id/action_driveLoginFragment_to_driveListFragment"
-            app:destination="@id/driveListFragment"
-            app:popUpTo="@id/settingsFragmentRoot" />
-        <action
-            android:id="@+id/action_driveLoginFragment_to_exportFragment"
-            app:destination="@id/exportFragment"
-            app:popUpTo="@id/settingsFragmentRoot" />
-        <argument
-            android:name="isExport"
-            app:argType="boolean" />
-        <argument
-            android:name="isJust"
-            app:argType="boolean" />
-    </fragment>
+        android:label="DriveLoginFragment" />
     <fragment
         android:id="@+id/driveListFragment"
         android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
@@ -109,11 +91,10 @@
             app:argType="string" />
         <action
             android:id="@+id/action_driveListFragment_to_driveLoginFragment"
-            app:destination="@id/driveLoginFragment"
-            app:popUpTo="@id/rvFragment" />
+            app:destination="@id/driveLoginFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_driveListFragment"
-        app:destination="@id/driveListFragment"
-        app:popUpTo="@id/rvFragment" />
+        app:destination="@id/driveListFragment" />
+    <action android:id="@+id/action_global_rvFragment" app:destination="@id/rvFragment" />
 </navigation>

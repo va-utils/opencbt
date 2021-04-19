@@ -21,15 +21,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.vva.androidopencbt.App
+import com.vva.androidopencbt.NavigationDirections
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
-import com.vva.androidopencbt.export.Export
-import com.vva.androidopencbt.export.ImportViewModel
-import com.vva.androidopencbt.export.ImportViewModelFactory
-import com.vva.androidopencbt.export.ProcessStates
+import com.vva.androidopencbt.export.*
 import com.vva.androidopencbt.playfeatures.FeatureDownloadViewModel
 import com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
+import kotlinx.coroutines.GlobalScope
 
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
@@ -146,7 +145,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
         driveEnabled.setOnPreferenceChangeListener { preference, newValue ->
 //            if (!manager.installedModules.contains(GDRIVE_MODULE_NAME) && newValue == true) {
             if (newValue == true) {
-//                        DriveDownloader(requireContext(), preference).download()
                 featureDownloadViewModel.driveFeatureDownload()
                 false
             } else {
@@ -162,7 +160,8 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(false, false))
+                findNavController().navigate(NavigationDirections.actionGlobalDriveListFragment("", ""))
+//                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(false, false))
             }
 
             true
@@ -172,7 +171,9 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(true, false))
+//                findNavController().navigate(NavigationDirections.actionGlobalDriveListFragment("", ""))
+//                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(true, false))
+                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(Export.FORMAT_JSON, Export.DESTINATION_CLOUD))
             }
 
             true

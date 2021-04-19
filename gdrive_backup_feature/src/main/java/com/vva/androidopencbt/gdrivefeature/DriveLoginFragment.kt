@@ -22,7 +22,6 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.DriveScopes
 import com.vva.androidopencbt.MainActivity
-import com.vva.androidopencbt.export.Export
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -41,35 +40,14 @@ class DriveLoginFragment: Fragment() {
         if (it.resultCode == Activity.RESULT_OK && resultIntent != null) {
             handleSignInResult(resultIntent)
         } else if (it.resultCode == Activity.RESULT_CANCELED) {
+//            findNavController().navigate(NavigationDirections.actionGlobalRvFragment())
             findNavController().popBackStack()
+            viewModel.setLoginCanceled()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         cl = inflater.inflate(R.layout.fragment_login, container, false) as ConstraintLayout
-        val isExport = DriveLoginFragmentArgs.fromBundle(requireArguments()).isExport
-        val isJust = DriveLoginFragmentArgs.fromBundle(requireArguments()).isJust
-
-        viewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
-            when (it) {
-                true -> {
-                    if (isJust) {
-                        Log.e(logTag, "login succeeded popping back")
-                        findNavController().popBackStack()
-                    } else {
-                        if (isExport) {
-                            findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToExportFragment(0, Export.DESTINATION_CLOUD))
-                        } else {
-                            findNavController().navigate(DriveLoginFragmentDirections.actionDriveLoginFragmentToDriveListFragment("", ""))
-                        }
-                    }
-                }
-                false -> {
-                    Log.e(logTag, "login failed")
-                    findNavController().popBackStack()
-                }
-            }
-        }
 
         requestSignIn()
 
@@ -100,7 +78,9 @@ class DriveLoginFragment: Fragment() {
                         listOf(DriveScopes.DRIVE_FILE)).apply {
                             selectedAccount = account.account
                     }
-                    loginSuccessful(credentials, account, googleClient)
+                    withContext(Dispatchers.Main) {
+                        loginSuccessful(credentials, account, googleClient)
+                    }
                 } catch (e: ApiException) {
                     Log.e(logTag, "login exception", e)
                     when(e.statusCode) {
@@ -121,7 +101,9 @@ class DriveLoginFragment: Fragment() {
                         listOf(DriveScopes.DRIVE_FILE)).apply {
                     selectedAccount = account.account
                 }
-                loginSuccessful(credential, account, googleClient)
+                withContext(Dispatchers.Main) {
+                    loginSuccessful(credential, account, googleClient)
+                }
             } catch (e: ApiException) {
                 Log.e(logTag, "failed", e)
                 loginFailed()
@@ -134,10 +116,12 @@ class DriveLoginFragment: Fragment() {
         viewModel.driveCredentials = credentials
         viewModel.driveAccount = account
         viewModel.driveClient = client
+        findNavController().popBackStack()
     }
 
     private fun loginFailed() {
         viewModel.setLoginUnsuccessful()
+        findNavController().popBackStack()
     }
 
     override fun onDestroy() {
