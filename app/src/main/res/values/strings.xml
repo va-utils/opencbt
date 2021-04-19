@@ -217,4 +217,17 @@
     <string name="export_wizard_csv_rb">CSV</string>
     <string name="selection_action_cloud_export">Экспортировать в облако</string>
     <string name="record_card_view_detail_transition_name">record_card_detail</string>
+    <string name="settings_title_import">Загрузить записи локально</string>
+    <string name="settings_title_export">Выгрузить записи локально</string>
+    <string name="settings_title_export_drive">Выгрузить записи в GDrive</string>
+    <string name="settings_title_import_drive">Загрузить записи из GDrive</string>
+    <string name="settings_title_backup_category">Резервное копирование</string>
+    <string name="settings_title_default_format">Формат по умолчанию</string>
+    <string name="settings_title_drive_integration">Google Drive интеграция</string>
+    <string name="settings_title_enter_protection_category">Защита входа</string>
+    <string name="settings_title_enter_protection_enable">Включить защиту входа</string>
+    <string name="settings_title_night_theme">Ночная тема</string>
+    <string name="settings_title_intensity_indication">Индикация интенсивности на главном экране</string>
+    <string name="settings_title_new_first">Сначала новые записи</string>
+    <string name="settings_title_category_vew_settings">Настройки отображения</string>
 </resources>

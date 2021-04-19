@@ -37,30 +37,11 @@ class DriveListFragment: Fragment() {
     private lateinit var rv: RecyclerView
     private lateinit var sr: SwipeRefreshLayout
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-//        val toolbar = view.findViewById<Toolbar>(R.id.rv_toolbar)
-
-//        toolbar.setupWithNavController(navController, appBarConfiguration)
-//        toolbar.inflateMenu(R.menu.list_menu)
-//        toolbar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//                R.id.log_out -> {
-//                    driveViewModel.signOut()
-//                }
-//            }
-//            true
-//        }
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_list, container, false) as LinearLayout
         rv = ll.findViewById(R.id.rv)
         sr = ll.findViewById(R.id.list_swipe)
+        setHasOptionsMenu(true)
 
         dao = CbdDatabase.getInstance(requireContext()).databaseDao
         if (driveViewModel.driveClient == null || driveViewModel.driveAccount?.isExpired == true)

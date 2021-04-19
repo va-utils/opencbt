@@ -109,7 +109,11 @@
             app:argType="string" />
         <action
             android:id="@+id/action_driveListFragment_to_driveLoginFragment"
-            app:destination="@id/driveLoginFragment" />
+            app:destination="@id/driveLoginFragment"
+            app:popUpTo="@id/rvFragment" />
     </fragment>
-    <action android:id="@+id/action_global_driveListFragment" app:destination="@id/driveListFragment" />
+    <action
+        android:id="@+id/action_global_driveListFragment"
+        app:destination="@id/driveListFragment"
+        app:popUpTo="@id/rvFragment" />
 </navigation>

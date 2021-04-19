@@ -47,8 +47,6 @@ class DriveLoginFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         cl = inflater.inflate(R.layout.fragment_login, container, false) as ConstraintLayout
-//        viewModel.fileName = DriveLoginFragmentArgs.fromBundle(requireArguments()).fileName
-//        viewModel.filePath = DriveLoginFragmentArgs.fromBundle(requireArguments()).filePath
         val isExport = DriveLoginFragmentArgs.fromBundle(requireArguments()).isExport
         val isJust = DriveLoginFragmentArgs.fromBundle(requireArguments()).isJust
 
@@ -75,7 +73,6 @@ class DriveLoginFragment: Fragment() {
 
         requestSignIn()
 
-//        requireActivity().window.decorView.systemUiVisibility =
         return cl
     }
 
