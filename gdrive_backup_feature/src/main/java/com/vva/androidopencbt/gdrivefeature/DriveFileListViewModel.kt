@@ -115,6 +115,7 @@ class DriveFileListViewModel: ViewModel() {
                         _isLoginSuccessful.value = false
                         _isLoginSuccessful.value = null
                     }
+                    clearCredentials()
                 } catch (e: Exception) {
                     Log.e(tagLog, "exception", e)
                 }
@@ -187,6 +188,12 @@ class DriveFileListViewModel: ViewModel() {
             }
         }
         return result
+    }
+
+    private fun clearCredentials() {
+        driveClient = null
+        driveAccount = null
+        driveServiceHelper = null
     }
 }
 
