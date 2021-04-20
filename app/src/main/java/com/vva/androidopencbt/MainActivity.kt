@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,22 +14,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.vva.androidopencbt.db.CbdDatabase
-import com.vva.androidopencbt.export.Export
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 import com.vva.androidopencbt.settings.PreferenceRepository
 import java.io.File
 
 
 @Suppress("UNUSED_PARAMETER")
-class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
+class MainActivity : AppCompatActivity() {
     private val vm: RecordsViewModel by viewModels()
     private lateinit var preferences: PreferenceRepository
     private lateinit var database: CbdDatabase
@@ -121,7 +117,6 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
                 navController.navigateUp()
             }
         }
-        navController.addOnDestinationChangedListener(this)
     }
 
     override fun onBackPressed() {
@@ -131,17 +126,6 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
             vm.deactivateSelection()
         } else {
             super.onBackPressed()
-        }
-    }
-
-    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
-        when(destination.id) {
-            R.id.driveLoginFragment -> {
-//                toolbar.visibility = View.GONE
-            }
-            else -> {
-//                toolbar.visibility = View.VISIBLE
-            }
         }
     }
 }
