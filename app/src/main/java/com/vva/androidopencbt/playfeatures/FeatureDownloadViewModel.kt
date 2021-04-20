@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.vva.androidopencbt.settings.GDRIVE_MODULE_NAME
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class FeatureDownloadViewModel(application: Application): AndroidViewModel(application) {
@@ -65,9 +67,12 @@ class FeatureDownloadViewModel(application: Application): AndroidViewModel(appli
 
     fun driveFeatureDownload() {
         splitInstallManager.registerListener(listener)
-        id = splitInstallManager.startInstall (
+        splitInstallManager.startInstall (
             SplitInstallRequest.newBuilder().addModule(GDRIVE_MODULE_NAME).build()
-        ).result
+        ).addOnSuccessListener {
+            Log.d("TAAAAG", it.toString())
+            id = it
+        }
         Log.d("TAAAAG", id.toString())
     }
 

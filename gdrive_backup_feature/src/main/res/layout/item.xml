@@ -30,7 +30,6 @@
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:layout_marginBottom="2dp"
-            android:inputType="text"
             android:lines="2"
             android:maxLines="2"
             android:minLines="2"

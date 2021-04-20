@@ -25,7 +25,7 @@ import org.joda.time.DateTime
 import java.io.File
 
 class ExportFragment: Fragment() {
-    private lateinit var ll: LinearLayout
+    private lateinit var sv: ScrollView
     private lateinit var beginDate: EditText
     private lateinit var endDate: EditText
     private lateinit var wholeDiary: CheckBox
@@ -50,7 +50,7 @@ class ExportFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        ll = inflater.inflate(R.layout.export_wizard, container, false) as LinearLayout
+        sv = inflater.inflate(R.layout.export_wizard, container, false) as ScrollView
         prefs = (requireActivity().application as App).preferenceRepository
 
         initViews()
@@ -62,12 +62,12 @@ class ExportFragment: Fragment() {
         wholeDiary.setOnCheckedChangeListener { _, b ->
             beginDate.isEnabled = !b
             endDate.isEnabled = !b
-            ll.findViewById<TextView>(R.id.endDate_tv).isEnabled = !b
-            ll.findViewById<TextView>(R.id.beginDate_tv).isEnabled = !b
+            sv.findViewById<TextView>(R.id.endDate_tv).isEnabled = !b
+            sv.findViewById<TextView>(R.id.beginDate_tv).isEnabled = !b
         }
         wholeDiary.isChecked = true
 
-        formatGroup = ll.findViewById(R.id.radioGroup)
+        formatGroup = sv.findViewById(R.id.radioGroup)
         when (args.format) {
             Export.FORMAT_PICK -> {
                 formatGroup.visibility = View.VISIBLE
@@ -118,7 +118,7 @@ class ExportFragment: Fragment() {
             }
         }
 
-        return ll
+        return sv
     }
 
     private fun sendCloud(fileName: String, filePath: String) {
@@ -132,7 +132,7 @@ class ExportFragment: Fragment() {
         val forSendIntent = Intent(Intent.ACTION_SEND)
         forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        forSendIntent.setDataAndType(uri, "application/octet-stream")
+        forSendIntent.setDataAndType(uri, "text/plain")
 
         val pm: PackageManager = requireActivity().packageManager
         if (forSendIntent.resolveActivity(pm) != null) {
@@ -151,8 +151,8 @@ class ExportFragment: Fragment() {
     }
 
     private fun initDateEditText() {
-        beginDate = ll.findViewById(R.id.startDate_et)
-        endDate = ll.findViewById(R.id.endDate_et)
+        beginDate = sv.findViewById(R.id.startDate_et)
+        endDate = sv.findViewById(R.id.endDate_et)
 
         exportViewModel.beginDate.observe(viewLifecycleOwner) {
             beginDate.setText(it.getDateString())
@@ -257,9 +257,9 @@ class ExportFragment: Fragment() {
     private fun initViews() {
         dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
-        wholeDiary = ll.findViewById(R.id.whole_cb)
-        goBtn = ll.findViewById(R.id.exportBtn)
-        cloudGoBtn = ll.findViewById(R.id.cloudExportBtn)
+        wholeDiary = sv.findViewById(R.id.whole_cb)
+        goBtn = sv.findViewById(R.id.exportBtn)
+        cloudGoBtn = sv.findViewById(R.id.cloudExportBtn)
 
         prefs.isDriveIntegrationEnabled.observe(viewLifecycleOwner) {
             if (!it || args.destination == Export.DESTINATION_CLOUD) {

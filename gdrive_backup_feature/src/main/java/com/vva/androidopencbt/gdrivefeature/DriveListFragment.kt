@@ -47,14 +47,10 @@ class DriveListFragment: Fragment() {
 
         driveViewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
             when (it) {
-                LoggingInStatus.Canceled -> {
-                    Log.d(logTag, "cancelled")
+                false -> {
                     findNavController().popBackStack()
-                    findNavController().popBackStack()
-                    driveViewModel.setLoginNull()
                 }
-                LoggingInStatus.Success -> {
-                    Log.d(logTag, "success")
+                true -> {
                     recyclerViewInit()
                     importStateSubscribe()
                     requestSubscriptions()
@@ -66,10 +62,6 @@ class DriveListFragment: Fragment() {
                         driveViewModel.getFileList()
                     }
                 }
-                LoggingInStatus.LogOut -> {
-                    findNavController().popBackStack()
-                    driveViewModel.setLoginNull()
-                }
             }
         }
 
@@ -80,13 +72,11 @@ class DriveListFragment: Fragment() {
     }
 
     private fun recyclerViewInit() {
-        val adapter = DriveListAdapter(
-                OnClickListener {
-                    importViewModel.importFromList {
-                        driveViewModel.readFile(it)
-                    }
-                }
-        )
+        val adapter = DriveListAdapter {
+            importViewModel.importFromList {
+                driveViewModel.readFile(it)
+            }
+        }
 
         driveViewModel.driveFileList.observe(viewLifecycleOwner) {
             adapter.submitList(it)

@@ -28,21 +28,20 @@ import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.export.*
 import com.vva.androidopencbt.playfeatures.FeatureDownloadViewModel
 import com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
-import kotlinx.coroutines.GlobalScope
 
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
 class SettingsFragmentRoot: Fragment() {
-    private lateinit var linearLayout: LinearLayout
+    private lateinit var frameLayout: FrameLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        linearLayout = inflater.inflate(R.layout.fragment_settings, container, false) as LinearLayout
+        frameLayout = inflater.inflate(R.layout.fragment_settings, container, false) as FrameLayout
 
         parentFragmentManager.beginTransaction()
                 .replace(R.id.settings_container, SettingsFragmentNew())
                 .commit()
 
-        return linearLayout
+        return frameLayout
     }
 }
 
@@ -171,8 +170,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
             if (!manager.installedModules.contains(GDRIVE_MODULE_NAME)) {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
-//                findNavController().navigate(NavigationDirections.actionGlobalDriveListFragment("", ""))
-//                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(true, false))
                 findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToExportFragment(Export.FORMAT_JSON, Export.DESTINATION_CLOUD))
             }
 
@@ -188,7 +185,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_IMPORT)?.setOnPreferenceClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                type = "application/octet-stream"
+                type = "text/plain"
                 addCategory(Intent.CATEGORY_DEFAULT)
             }
             backupPicker.launch(intent)

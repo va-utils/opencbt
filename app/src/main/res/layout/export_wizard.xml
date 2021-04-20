@@ -1,174 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/appBarLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/AppTheme.AppBarOverlay"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="?attr/colorPrimary"-->
-<!--            app:popupTheme="@style/AppTheme.PopupOverlay" />-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="16dp" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/pismo" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-                app:layout_constraintStart_toStartOf="@+id/guideline_start"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/pismo" />
+        <TextView
+            android:id="@+id/tv_information"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/savehtml_welcome"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/beginDate_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/savehtml_text_startdate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/startDate_et"
+            app:layout_constraintStart_toStartOf="@+id/tv_information" />
+
+        <TextView
+            android:id="@+id/endDate_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/savehtml_text_enddate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/endDate_et"
+            app:layout_constraintStart_toStartOf="@+id/tv_information" />
+
+        <EditText
+            android:id="@+id/startDate_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date"
+            android:longClickable="false"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/tv_information"
+            app:layout_constraintTop_toBottomOf="@+id/tv_information" />
+
+        <EditText
+            android:id="@+id/endDate_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date"
+            android:longClickable="false"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/startDate_et"
+            app:layout_constraintTop_toBottomOf="@+id/startDate_et" />
+
+        <CheckBox
+            android:id="@+id/whole_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/savehtml_text_alldiary"
+            app:layout_constraintStart_toStartOf="@+id/endDate_tv"
+            app:layout_constraintTop_toBottomOf="@+id/endDate_et" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/endDate_et"
+            app:layout_constraintStart_toStartOf="@+id/whole_cb"
+            app:layout_constraintTop_toBottomOf="@+id/whole_cb">
 
             <TextView
-                android:id="@+id/tv_information"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/savehtml_welcome"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-                app:layout_constraintStart_toStartOf="@+id/guideline_start"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-            <TextView
-                android:id="@+id/beginDate_tv"
+                android:id="@+id/textView28"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/savehtml_text_startdate"
-                app:layout_constraintBaseline_toBaselineOf="@+id/startDate_et"
-                app:layout_constraintStart_toStartOf="@+id/tv_information" />
+                android:text="@string/export_text_format" />
 
-            <TextView
-                android:id="@+id/endDate_tv"
-                android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/html_rb"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/savehtml_text_enddate"
-                app:layout_constraintBaseline_toBaselineOf="@+id/endDate_et"
-                app:layout_constraintStart_toStartOf="@+id/tv_information" />
+                android:text="@string/export_wizard_html_rb" />
 
-            <EditText
-                android:id="@+id/startDate_et"
-                android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/csv_rb"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:cursorVisible="false"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="date"
-                android:longClickable="false"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="@+id/tv_information"
-                app:layout_constraintTop_toBottomOf="@+id/tv_information" />
+                android:text="@string/export_wizard_csv_rb" />
+        </RadioGroup>
 
-            <EditText
-                android:id="@+id/endDate_et"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:cursorVisible="false"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="date"
-                android:longClickable="false"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="@+id/startDate_et"
-                app:layout_constraintTop_toBottomOf="@+id/startDate_et" />
+        <Button
+            android:id="@+id/exportBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/export_wizard_export_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-            <CheckBox
-                android:id="@+id/whole_cb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/savehtml_text_alldiary"
-                app:layout_constraintStart_toStartOf="@+id/endDate_tv"
-                app:layout_constraintTop_toBottomOf="@+id/endDate_et" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/endDate_et"
-                app:layout_constraintStart_toStartOf="@+id/whole_cb"
-                app:layout_constraintTop_toBottomOf="@+id/whole_cb">
-
-                <TextView
-                    android:id="@+id/textView28"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/export_text_format" />
-
-                <RadioButton
-                    android:id="@+id/html_rb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/export_wizard_html_rb" />
-
-                <RadioButton
-                    android:id="@+id/csv_rb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/export_wizard_csv_rb" />
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/exportBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/export_wizard_export_btn"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline_start"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-            <Button
-                android:id="@+id/cloudExportBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/export_wizard_cloud_export_btn"
-                app:layout_constraintBaseline_toBaselineOf="@+id/exportBtn"
-                app:layout_constraintStart_toStartOf="@+id/guideline_start" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</LinearLayout>
+        <Button
+            android:id="@+id/cloudExportBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/export_wizard_cloud_export_btn"
+            app:layout_constraintBaseline_toBaselineOf="@+id/exportBtn"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

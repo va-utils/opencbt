@@ -1,6 +1,5 @@
 package com.vva.androidopencbt.gdrivefeature
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.api.services.drive.model.File
 import com.vva.androidopencbt.FORMAT_DATE_TIME_DRIVE
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, DriveListAdapter.DriveViewHolder>(DiffCallback()) {
+class DriveListAdapter(private val clickListener: OnClickListener): ListAdapter<File, DriveListAdapter.DriveViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriveViewHolder {
         return DriveViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false))
     }
@@ -24,6 +24,7 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
     }
 
     class DriveViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
+        private val cardView: MaterialCardView = view as MaterialCardView
         private val icon: ImageView = view.findViewById(R.id.icon)
         private val name: TextView = view.findViewById(R.id.file_name_tv)
         private val size: TextView = view.findViewById(R.id.file_size_tv)
@@ -33,7 +34,7 @@ class DriveListAdapter(val clickListener: OnClickListener): ListAdapter<File, Dr
             when (item.name.substringAfterLast(".")) {
                 "json" -> {
                     icon.setImageResource(R.drawable.ic_json_file)
-                    view.setOnClickListener {
+                    cardView.setOnClickListener {
                         listener.onClick(item)
                     }
                 }
@@ -61,6 +62,6 @@ class DiffCallback: DiffUtil.ItemCallback<File>() {
     }
 }
 
-class OnClickListener(val listener: (file: File) -> Unit) {
-    fun onClick(file: File) = listener(file)
+fun interface OnClickListener {
+    fun onClick(file: File)
 }
