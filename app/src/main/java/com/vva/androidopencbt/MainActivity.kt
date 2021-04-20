@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         val forSendIntent = Intent(Intent.ACTION_SEND)
         forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        forSendIntent.setDataAndType(uri, "application/octet-stream")
+        forSendIntent.setDataAndType(uri, "plain/text")
 
         val pm: PackageManager = this.packageManager
         if (forSendIntent.resolveActivity(pm) != null) {
