@@ -5,9 +5,9 @@ buildscript {
             'compileSdk'        : 30,
             'minSdk'            : 21,
             'targetSdk'         : 30,
-            'playcore'          : '1.9.1',
+            'playcore'          : '1.10.0',
     ]
-    ext.kotlin_version = '1.4.31'
+    ext.kotlin_version = '1.4.32'
     ext.futured_donut_version = '2.0.0'
     repositories {
         google()
