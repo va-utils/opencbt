@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -22,6 +23,7 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.DriveScopes
 import com.vva.androidopencbt.MainActivity
+import com.vva.androidopencbt.NavigationDirections
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -40,9 +42,10 @@ class DriveLoginFragment: Fragment() {
         if (it.resultCode == Activity.RESULT_OK && resultIntent != null) {
             handleSignInResult(resultIntent)
         } else if (it.resultCode == Activity.RESULT_CANCELED) {
-//            findNavController().navigate(NavigationDirections.actionGlobalRvFragment())
-            findNavController().popBackStack()
-            viewModel.setLoginCanceled()
+            val navOptions = NavOptions.Builder().setPopUpTo(com.vva.androidopencbt.R.id.rvFragment, false).build()
+            findNavController().navigate(NavigationDirections.actionGlobalRvFragment(), navOptions)
+//            findNavController().popBackStack()
+//            viewModel.setLoginCanceled()
         }
     }
 

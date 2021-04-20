@@ -29,24 +29,16 @@ class DriveFileListViewModel: ViewModel() {
             }
         }
 
-    private val _isLoginSuccessful = MutableLiveData<LoggingInStatus?>(null)
-    val isLoginSuccessful: LiveData<LoggingInStatus?>
+    private val _isLoginSuccessful = MutableLiveData<Boolean?>(null)
+    val isLoginSuccessful: LiveData<Boolean?>
         get() = _isLoginSuccessful
 
     fun setLoginSuccessful() {
-        _isLoginSuccessful.postValue(LoggingInStatus.Success)
+        _isLoginSuccessful.postValue(true)
     }
 
     fun setLoginUnsuccessful() {
-        _isLoginSuccessful.postValue(LoggingInStatus.Failure)
-    }
-
-    fun setLoginCanceled() {
-        _isLoginSuccessful.postValue(LoggingInStatus.Canceled)
-    }
-
-    fun setLoginNull() {
-        _isLoginSuccessful.postValue(null)
+        _isLoginSuccessful.postValue(false)
     }
 
     private val _driveFileList = MutableLiveData<List<File>>()
@@ -79,19 +71,6 @@ class DriveFileListViewModel: ViewModel() {
                 Log.d("IMPORT", list.toString())
                 list
         }
-
-//        return makeBlockingRequest {
-//            val result = withContext(Dispatchers.IO) {
-//                driveServiceHelper?.readFile(file.id)?.await()
-//            }
-//
-//            result?.second?.let {
-//                Log.d("IMPORT", it)
-//                val list: List<DbRecord> = Json.decodeFromString(it)
-//                Log.d("IMPORT", list.toString())
-//                list
-//            }
-//        }
     }
 
     fun getFileList() {
@@ -118,7 +97,8 @@ class DriveFileListViewModel: ViewModel() {
                 try {
                     it.signOut().await()
                     withContext(Dispatchers.Main) {
-                        _isLoginSuccessful.value = LoggingInStatus.LogOut
+                        _isLoginSuccessful.value = false
+                        _isLoginSuccessful.value = null
                     }
                     clearCredentials()
                 } catch (e: Exception) {
@@ -213,11 +193,4 @@ sealed class RequestStatus {
     object InProgress : RequestStatus()
     object Success : RequestStatus()
     class Failure(val e: Exception): RequestStatus()
-}
-
-sealed class LoggingInStatus {
-    object Success: LoggingInStatus()
-    object Failure: LoggingInStatus()
-    object Canceled: LoggingInStatus()
-    object LogOut: LoggingInStatus()
 }
