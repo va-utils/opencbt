@@ -267,6 +267,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     Log.d(logTag, "Success")
                     driveEnabled.isInProgress = false
                     driveEnabled.isChecked = true
+                    requireActivity().recreate()
                 }
                 null -> {
                 }

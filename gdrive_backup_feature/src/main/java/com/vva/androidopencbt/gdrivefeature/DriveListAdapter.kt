@@ -13,6 +13,7 @@ import com.google.api.services.drive.model.File
 import com.vva.androidopencbt.FORMAT_DATE_TIME_DRIVE
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 
 class DriveListAdapter(private val clickListener: OnClickListener): ListAdapter<File, DriveListAdapter.DriveViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriveViewHolder {
@@ -47,7 +48,8 @@ class DriveListAdapter(private val clickListener: OnClickListener): ListAdapter<
             }
             name.text = item.name
             date.text = SimpleDateFormat(FORMAT_DATE_TIME_DRIVE, Locale.getDefault()).format(item.createdTime.value)
-            size.text = "${(item.getSize() / 1024)} KB"
+
+            size.text = "${ceil(item.getSize() / 1024.0).toInt()} KiB"
         }
     }
 }

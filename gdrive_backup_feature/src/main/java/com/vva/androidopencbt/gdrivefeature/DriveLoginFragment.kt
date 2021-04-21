@@ -115,7 +115,6 @@ class DriveLoginFragment: Fragment() {
     }
 
     private fun loginSuccessful(credentials: GoogleAccountCredential, account: GoogleSignInAccount, client: GoogleSignInClient) {
-        viewModel.setLoginSuccessful()
         viewModel.driveCredentials = credentials
         viewModel.driveAccount = account
         viewModel.driveClient = client
@@ -123,7 +122,6 @@ class DriveLoginFragment: Fragment() {
     }
 
     private fun loginFailed() {
-        viewModel.setLoginUnsuccessful()
         findNavController().popBackStack()
     }
 

@@ -5,24 +5,20 @@ import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.export.ImportViewModel
 import com.vva.androidopencbt.export.ImportViewModelFactory
 import com.vva.androidopencbt.export.ProcessStates
-import kotlin.math.log
 
 const val ROOT_FOLDER = "OpenCBT"
 
@@ -45,29 +41,23 @@ class DriveListFragment: Fragment() {
 
         dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
-        driveViewModel.isLoginSuccessful.observe(viewLifecycleOwner) {
-            when (it) {
-                false -> {
-                    findNavController().popBackStack()
-                }
-                true -> {
-                    recyclerViewInit()
-                    importStateSubscribe()
-                    requestSubscriptions()
+        when (driveViewModel.isLoggedIn()) {
+            false -> {
+                findNavController().navigate(DriveListFragmentDirections.actionDriveListFragmentToDriveLoginFragment())
+            }
+            true -> {
+                recyclerViewInit()
+                importStateSubscribe()
+                requestSubscriptions()
 
-                    val args = DriveListFragmentArgs.fromBundle(requireArguments())
-                    if (args.fileName.isNotEmpty() && args.filePath.isNotEmpty()) {
-                        driveViewModel.uploadFileAppRoot(args.fileName, args.filePath)
-                    } else {
-                        driveViewModel.getFileList()
-                    }
+                val args = DriveListFragmentArgs.fromBundle(requireArguments())
+                if (args.fileName.isNotEmpty() && args.filePath.isNotEmpty()) {
+                    driveViewModel.uploadFileAppRoot(args.fileName, args.filePath)
+                } else {
+                    driveViewModel.getFileList()
                 }
             }
         }
-
-        if (!driveViewModel.isLoggedIn())
-            findNavController().navigate(DriveListFragmentDirections.actionDriveListFragmentToDriveLoginFragment())
-
         return ll
     }
 
@@ -84,6 +74,7 @@ class DriveListFragment: Fragment() {
 
         rv.adapter = adapter
     }
+
     private fun importStateSubscribe() {
         val dialog = blockingProgressDialog()
         importViewModel.importState.observe(viewLifecycleOwner) {
@@ -176,6 +167,7 @@ class DriveListFragment: Fragment() {
         return when (item.itemId) {
             R.id.log_out -> {
                 driveViewModel.signOut()
+                findNavController().popBackStack()
                 true
             }
             else -> {

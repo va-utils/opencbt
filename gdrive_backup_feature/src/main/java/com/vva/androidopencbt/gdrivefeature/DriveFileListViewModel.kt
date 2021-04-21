@@ -29,18 +29,6 @@ class DriveFileListViewModel: ViewModel() {
             }
         }
 
-    private val _isLoginSuccessful = MutableLiveData<Boolean?>(null)
-    val isLoginSuccessful: LiveData<Boolean?>
-        get() = _isLoginSuccessful
-
-    fun setLoginSuccessful() {
-        _isLoginSuccessful.postValue(true)
-    }
-
-    fun setLoginUnsuccessful() {
-        _isLoginSuccessful.postValue(false)
-    }
-
     private val _driveFileList = MutableLiveData<List<File>>()
     val driveFileList: LiveData<List<File>>
         get() = _driveFileList
@@ -97,10 +85,9 @@ class DriveFileListViewModel: ViewModel() {
                 try {
                     it.signOut().await()
                     withContext(Dispatchers.Main) {
-                        _isLoginSuccessful.value = false
-                        _isLoginSuccessful.value = null
+                        clearCredentials()
                     }
-                    clearCredentials()
+
                 } catch (e: Exception) {
                     Log.e(tagLog, "exception", e)
                 }

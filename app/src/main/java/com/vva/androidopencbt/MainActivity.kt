@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendLocalFile(filePath: String) {
+        Log.d("send", filePath)
         val file = File(filePath)
         val uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file)
         val forSendIntent = Intent(Intent.ACTION_SEND)

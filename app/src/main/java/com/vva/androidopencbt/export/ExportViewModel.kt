@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
+import java.io.File
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class ExportViewModel(application: Application): AndroidViewModel(application) {
@@ -87,7 +88,7 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
                 strings.getString(R.string.csv_header_distortions),
                 strings.getString(R.string.csv_header_rational))
 
-        val filePath = "${getApplication<Application>().filesDir.absolutePath}/$fileName"
+        val filePath = "${getApplication<Application>().cacheDir.absolutePath}/$fileName"
         val csvWriter = CsvWriter()
         csvWriter.open(filePath) {
             writeRow(header)
@@ -184,12 +185,9 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
      */
     private suspend fun saveStringToFile(string: String, fileName: String): String {
         return withContext(Dispatchers.IO) {
-            getApplication<Application>()
-                    .openFileOutput(fileName, Context.MODE_PRIVATE).apply {
-                            write(string.toByteArray())
-                            close()
-                    }
-            "${getApplication<Application>().filesDir.absolutePath}/$fileName"
+            val file = File.createTempFile(fileName, null, getApplication<App>().cacheDir)
+            file.writeText(string)
+            file.absolutePath
         }
     }
 }

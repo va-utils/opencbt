@@ -1,8 +1,6 @@
 package com.vva.androidopencbt.export
 
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,7 +19,6 @@ import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import org.joda.time.DateTime
-import java.io.File
 
 class ExportFragment: Fragment() {
     private lateinit var sv: ScrollView
@@ -99,7 +95,7 @@ class ExportFragment: Fragment() {
 
                     when (it.isCloud) {
                         false -> {
-                            sendLocalFile(it.filePath)
+                            (requireActivity() as MainActivity).sendLocalFile(it.filePath)
                             findNavController().popBackStack()
                         }
                         true -> {
@@ -124,22 +120,6 @@ class ExportFragment: Fragment() {
     private fun sendCloud(fileName: String, filePath: String) {
         findNavController()
                 .navigate(NavigationDirections.actionGlobalDriveListFragment(fileName, filePath))
-    }
-
-    private fun sendLocalFile(filePath: String) {
-        val file = File(filePath)
-        val uri = FileProvider.getUriForFile(requireContext(), BuildConfig.APPLICATION_ID, file)
-        val forSendIntent = Intent(Intent.ACTION_SEND)
-        forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        forSendIntent.setDataAndType(uri, "text/plain")
-
-        val pm: PackageManager = requireActivity().packageManager
-        if (forSendIntent.resolveActivity(pm) != null) {
-            startActivity(Intent.createChooser(forSendIntent, getString(R.string.savehtml_text_share)))
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.savehtml_error), Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun makeIndeterminateProgressDialog(): AlertDialog {
