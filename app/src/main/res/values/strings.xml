@@ -86,7 +86,7 @@
     <string name="pref_percents">Проценты всегда</string>
     <string name="pref_pin_problem">Для использования этой функции, необходимо чтобы в настройках телефона была включена блокировка экрана. Открыть настройки телефона?</string>
     <string name="pref_pin_title">Защита входа</string>
-
+    <string name="pref_compatibility">Совместимость</string>
     <string name="pref_summ_percents">Уровень дискомфорта как в v0.3</string>
 
     <string name="pref_dividers">Показывать разделители</string>
