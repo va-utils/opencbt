@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
+        installSplitActivity()
+    }
+
+    fun installSplitActivity() {
         SplitCompat.installActivity(this)
     }
 
@@ -87,7 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendLocalFile(filePath: String) {
-        Log.d("send", filePath)
         val file = File(filePath)
         val uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file)
         val forSendIntent = Intent(Intent.ACTION_SEND)

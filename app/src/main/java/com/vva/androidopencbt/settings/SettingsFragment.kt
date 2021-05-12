@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.vva.androidopencbt.App
+import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.NavigationDirections
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.CbdDatabase
@@ -271,7 +272,8 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     Log.d(logTag, "Success")
                     driveEnabled.isInProgress = false
                     driveEnabled.isChecked = true
-                    requireActivity().recreate()
+//                    requireActivity().recreate()
+                    (requireActivity() as MainActivity).installSplitActivity()
                 }
                 null -> {
                 }
