@@ -185,7 +185,8 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
      */
     private suspend fun saveStringToFile(string: String, fileName: String): String {
         return withContext(Dispatchers.IO) {
-            val file = File.createTempFile(fileName, null, getApplication<App>().cacheDir)
+            val file = File(getApplication<App>().cacheDir, fileName)
+//            val file = File.createTempFile(fileName, null, getApplication<App>().cacheDir)
             file.writeText(string)
             file.absolutePath
         }

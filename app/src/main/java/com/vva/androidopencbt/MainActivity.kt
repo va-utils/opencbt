@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         val forSendIntent = Intent(Intent.ACTION_SEND)
         forSendIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         forSendIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        forSendIntent.setDataAndType(uri, "plain/text")
+        forSendIntent.setDataAndType(uri, "application/octet-stream")
 
         val pm: PackageManager = this.packageManager
         if (forSendIntent.resolveActivity(pm) != null) {
