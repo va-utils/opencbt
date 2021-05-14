@@ -186,7 +186,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
         findPreference<Preference>(PreferenceRepository.PREFERENCE_LOCAL_IMPORT)?.setOnPreferenceClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                type = "application/octet-stream"
+                type = "*/*"
                 addCategory(Intent.CATEGORY_DEFAULT)
             }
             backupPicker.launch(intent)
