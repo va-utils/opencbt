@@ -8,13 +8,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     private val _isNightThemeLive = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_NIGHT_MODE, false)
     }
-
-    private val _isPreferenceCompat = MutableLiveData<Boolean>().apply {
-        value = sharedPreferences.getBoolean(PREFERENCE_COMP,false)
-    }
-    val isPreferenceCompat: LiveData<Boolean>
-        get() = _isPreferenceCompat
-
     val isNightThemeLive: LiveData<Boolean>
         get() = _isNightThemeLive
 
@@ -112,9 +105,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     PREFERENCE_GDRIVE_ENABLED -> {
                         _isDriveIntegrationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false)
                     }
-                    PREFERENCE_COMP -> {
-                        _isPreferenceCompat.value = sharedPreferences.getBoolean(PREFERENCE_COMP,false)
-                    }
                 }
             }
 
@@ -136,6 +126,5 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         const val PREFERENCE_LOCAL_EXPORT = "setting_export_local"
         const val PREFERENCE_LOCAL_IMPORT = "setting_import_local"
         const val PREFERENCE_ABOUT = "setting_about"
-        const val PREFERENCE_COMP = "compatibility_explorer"
     }
 }

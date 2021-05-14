@@ -110,10 +110,6 @@
             app:useSimpleSummaryProvider="true"
             app:defaultValue="HTML"
             app:title="@string/settings_title_default_format" />
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="compatibility_explorer"
-            app:title="@string/pref_compatibility" />
         <Preference
             app:title="@string/settings_title_export"
             app:key="setting_export_local" />
