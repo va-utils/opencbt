@@ -23,14 +23,11 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isQuotesEnabled: LiveData<Boolean>
         get() = _isQuotesEnabled
 
-
     private val _isDividersEnabled = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
     }
-
     val isDividersEnabled : LiveData<Boolean>
         get() = _isDividersEnabled
-
 
     private val _isDescOrder = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_IS_DESC_ORDER, false)
@@ -44,6 +41,10 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
 
+    private val _isDriveIntegrationEnabled = MutableLiveData(sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false))
+    val isDriveIntegrationEnabled: LiveData<Boolean>
+        get() = _isDriveIntegrationEnabled
+
     private val _defaultExportFormat = MutableLiveData<ExportFormats>().apply {
         value = when (sharedPreferences.getString(PREFERENCE_DEFAULT_EXPORT, ExportFormats.JSON.formatString)) {
             ExportFormats.JSON.formatString -> {
@@ -51,6 +52,9 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
             }
             ExportFormats.HTML.formatString -> {
                 ExportFormats.HTML
+            }
+            ExportFormats.CSV.formatString -> {
+                ExportFormats.CSV
             }
             else -> {
                 throw IllegalStateException("No such format")
@@ -87,14 +91,19 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                             ExportFormats.HTML.formatString -> {
                                 ExportFormats.HTML
                             }
+                            ExportFormats.CSV.formatString -> {
+                                ExportFormats.CSV
+                            }
                             else -> {
                                 throw IllegalStateException("No such format")
                             }
                         }
                     }
-                    PREFERENCE_DIVIDERS_ENABLED ->
-                    {
-                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED,true)
+                    PREFERENCE_DIVIDERS_ENABLED -> {
+                        _isDividersEnabled.value = sharedPreferences.getBoolean(PREFERENCE_DIVIDERS_ENABLED, true)
+                    }
+                    PREFERENCE_GDRIVE_ENABLED -> {
+                        _isDriveIntegrationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false)
                     }
                 }
             }
@@ -104,12 +113,18 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     }
 
     companion object {
-        private const val PREFERENCE_NIGHT_MODE = "enable_night_theme"
-        private const val PREFERENCE_INTENSITY_INDICATION = "enable_intensity_indication"
-        private const val PREFERENCE_QUOTES_ENABLED = "enable_quotes"
-        private const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
-        private const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
-        private const val PREFERENCE_DEFAULT_EXPORT = "default_export"
-        private const val PREFERENCE_DIVIDERS_ENABLED = "enable_dividers"
+        const val PREFERENCE_NIGHT_MODE = "enable_night_theme"
+        const val PREFERENCE_INTENSITY_INDICATION = "enable_intensity_indication"
+        const val PREFERENCE_QUOTES_ENABLED = "enable_quotes"
+        const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"
+        const val PREFERENCE_ENABLE_PIN = "enable_pin_protection"
+        const val PREFERENCE_DEFAULT_EXPORT = "default_export"
+        const val PREFERENCE_DIVIDERS_ENABLED = "enable_dividers"
+        const val PREFERENCE_GDRIVE_ENABLED = "enable_gdrive_integration"
+        const val PREFERENCE_GDRIVE_EXPORT = "setting_export_gdrive"
+        const val PREFERENCE_GDRIVE_IMPORT = "setting_import_gdrive"
+        const val PREFERENCE_LOCAL_EXPORT = "setting_export_local"
+        const val PREFERENCE_LOCAL_IMPORT = "setting_import_local"
+        const val PREFERENCE_ABOUT = "setting_about"
     }
 }

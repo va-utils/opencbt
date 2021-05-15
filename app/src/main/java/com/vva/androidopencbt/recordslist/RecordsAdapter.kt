@@ -40,7 +40,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         private val distortionTextView: TextView = itemView.findViewById(R.id.distortionTextView)
         private val intensityTextView: TextView = itemView.findViewById(R.id.intensityTextView)
         private val cardView: MaterialCardView = itemView.findViewById(R.id.card_view)
-        private val ll : LinearLayout  = itemView.findViewById(R.id.item_ll);
+        private val ll : LinearLayout  = itemView.findViewById(R.id.item_ll)
         private val res = itemView.resources
 
         fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
@@ -51,6 +51,8 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
             cardView.setOnLongClickListener {
                 onLongListener.onClick(it, record, position)
             }
+
+            cardView.transitionName = "${res.getString(R.string.record_card_view_detail_transition_name)}(${record.id})"
 
             if (dividers)
                 ll.showDividers = LinearLayout.SHOW_DIVIDER_BEGINNING or LinearLayout.SHOW_DIVIDER_MIDDLE

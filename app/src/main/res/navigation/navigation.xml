@@ -9,26 +9,12 @@
         android:name="com.vva.androidopencbt.recordslist.RvFragment"
         android:label="@string/app_name">
         <action
-            android:id="@+id/action_rvFragment_to_aboutFragment"
-            app:destination="@id/aboutFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-        <action
             android:id="@+id/action_rvFragment_to_statisticFragment"
             app:destination="@id/statisticFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_rvFragment_to_exportToHtmlFragment"
-            app:destination="@id/exportToHtmlFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_rvFragment_to_settingsFragmentRoot"
             app:destination="@id/settingsFragmentRoot"
@@ -38,11 +24,10 @@
             app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_rvFragment_to_detailsFragmentMaterial"
-            app:destination="@id/detailsFragmentMaterial"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:destination="@id/detailsFragmentMaterial" />
+        <action
+            android:id="@+id/action_rvFragment_to_exportFragment"
+            app:destination="@id/exportFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -54,13 +39,20 @@
         android:label="@string/action_statistics"
         tools:layout="@layout/fragment_statistic" />
     <fragment
-        android:id="@+id/exportToHtmlFragment"
-        android:name="com.vva.androidopencbt.export.html.ExportToHtmlFragment"
-        android:label="@string/title_export_to" />
-    <fragment
         android:id="@+id/settingsFragmentRoot"
         android:name="com.vva.androidopencbt.settings.SettingsFragmentRoot"
-        android:label="@string/title_activity_settings" />
+        android:label="@string/title_activity_settings" >
+        <action
+            android:id="@+id/action_settingsFragmentRoot_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_settingsFragmentRoot_to_exportFragment"
+            app:destination="@id/exportFragment" />
+    </fragment>
     <fragment
         android:id="@+id/detailsFragmentMaterial"
         android:name="com.vva.androidopencbt.recorddetails.DetailsFragmentMaterial"
@@ -70,4 +62,39 @@
             android:defaultValue="0L"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/exportFragment"
+        android:name="com.vva.androidopencbt.export.ExportFragment"
+        android:label="@string/title_export_to">
+        <argument
+            android:name="format"
+            app:argType="integer" />
+        <argument
+            android:name="destination"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/driveLoginFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveLoginFragment"
+        app:moduleName="gdrive_backup_feature"
+        android:label="DriveLoginFragment" />
+    <fragment
+        android:id="@+id/driveListFragment"
+        android:name="com.vva.androidopencbt.gdrivefeature.DriveListFragment"
+        android:label="@string/title_drive_backup_feature"
+        app:moduleName="gdrive_backup_feature" >
+        <argument
+            android:name="fileName"
+            app:argType="string" />
+        <argument
+            android:name="filePath"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_driveListFragment_to_driveLoginFragment"
+            app:destination="@id/driveLoginFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_driveListFragment"
+        app:destination="@id/driveListFragment" />
+    <action android:id="@+id/action_global_rvFragment" app:destination="@id/rvFragment" />
 </navigation>

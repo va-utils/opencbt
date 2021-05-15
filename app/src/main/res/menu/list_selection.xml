@@ -2,18 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_export_cloud"
+        android:title="@string/selection_action_cloud_export"
+        android:icon="@drawable/ic_baseline_cloud_download"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_export"
-        android:icon="@drawable/ic_baseline_save_alt_24"
+        android:icon="@drawable/ic_baseline_save_alt"
         android:title="@string/selection_action_export"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_select_all"
         android:title="@string/selection_action_select_all"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_baseline_select_all_24" />
+        android:icon="@drawable/ic_baseline_select_all" />
     <item
         android:id="@+id/action_delete"
         android:title="@string/selection_action_delete"
         app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_delete_24" />
+        android:icon="@drawable/ic_baseline_delete" />
 </menu>

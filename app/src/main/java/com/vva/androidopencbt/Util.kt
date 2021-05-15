@@ -1,5 +1,11 @@
 package com.vva.androidopencbt
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.core.content.res.use
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -12,6 +18,7 @@ import org.joda.time.format.DateTimeFormat
 const val FORMAT_DATE_TIME = "HH:mm dd MMMM yyyy"
 const val FORMAT_DATE = "dd/MM/yyyy"
 const val FORMAT_DATE_TIME_FOR_STATS = "dd MMMM yyyy HH:mm"
+const val FORMAT_DATE_TIME_DRIVE = "dd MMMM yyyy HH:mm"
 
 fun DateTime.getDateTimeString(): String {
     return DateTimeFormat.forPattern(FORMAT_DATE_TIME).print(this)
@@ -44,5 +51,17 @@ object DateTimeAsTimestampSerializer: KSerializer<DateTime> {
 
     override fun serialize(encoder: Encoder, value: DateTime) {
         encoder.encodeLong(value.millis)
+    }
+}
+
+@ColorInt
+@SuppressLint("Recycle")
+fun Context.themeColor(
+        @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(
+            intArrayOf(themeAttrId)
+    ).use {
+        it.getColor(0, Color.MAGENTA)
     }
 }

@@ -15,17 +15,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 
 class AboutFragment : Fragment() {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        view.findViewById<Toolbar>(R.id.about_toolbar).setupWithNavController(navController, appBarConfiguration)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
+                              savedInstanceState: Bundle?): View {
         val v : View = inflater.inflate(R.layout.fragment_about, container, false)
 
         val aboutTextView : TextView = v.findViewById(R.id.aboutTextView)
@@ -36,7 +28,7 @@ class AboutFragment : Fragment() {
         sendButton.setOnClickListener(listener)
         webSiteButton.setOnClickListener(listener)
         cbdButton.setOnClickListener(listener)
-        allVersionButton.setOnClickListener(listener);
+        allVersionButton.setOnClickListener(listener)
 
         aboutTextView.text = getString(R.string.app_author, BuildConfig.VERSION_NAME, BuildConfig.BUILD_TYPE)
         return v
@@ -59,7 +51,7 @@ class AboutFragment : Fragment() {
         fbIntent.data = Uri.parse("mailto:")
         fbIntent.putExtra(Intent.EXTRA_EMAIL, Array<String>(1){"androidopencbt@yandex.ru"})
         fbIntent.putExtra(Intent.EXTRA_SUBJECT, "Android OpenCBT")
-        if(fbIntent.resolveActivity((requireActivity().packageManager))!=null) {
+        if(fbIntent.resolveActivity(requireActivity().packageManager) != null) {
             activity?.startActivity(fbIntent)
         }
     }

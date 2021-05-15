@@ -2,60 +2,35 @@ package com.vva.androidopencbt.export
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.vva.androidopencbt.App
-import com.vva.androidopencbt.beginOfMonth
+import androidx.lifecycle.*
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
-import com.vva.androidopencbt.endOfDay
-import com.vva.androidopencbt.getShortDateTime
 import com.vva.androidopencbt.settings.ExportFormats
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
-import java.io.IOException
+import java.io.File
 
-private const val FILE_NAME_PREFIX = "CBT_diary"
-
-@Suppress("unused")
-class ExportViewModel(application: Application) : AndroidViewModel(application) {
-    private var _fileName = ""
-    val fileName: String
-        get() = _fileName
-
-    var format = (application as App).preferenceRepository.defaultExportFormat.value
-
+@Suppress("BlockingMethodInNonBlockingContext")
+class ExportViewModel(application: Application): AndroidViewModel(application) {
     private val dao = CbdDatabase.getInstance(application).databaseDao
-    private val vmJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
-    private val _isExportInProgress = MutableLiveData<Boolean>()
-
-    //---для периода
     private val _beginDate = MutableLiveData(DateTime().beginOfMonth())
     val beginDate: LiveData<DateTime>
         get() = _beginDate
+    val beginDateTime: DateTime
+        get() = _beginDate.value ?: DateTime().beginOfMonth()
 
     private val _endDate = MutableLiveData(DateTime().endOfDay())
     val endDate: LiveData<DateTime>
         get() = _endDate
-
-    private val _totalDiary = MutableLiveData(false)
-    val totalDiary : LiveData<Boolean>
-        get() = _totalDiary
-    //--------------
-
-//    private val _format = MutableLiveData<String>((application as App).preferenceRepository.defaultExportFormat.value)
-
-//    val format : LiveData<String>
-//    get() = _format
-//
-//    fun setFormat(s : String) {
-//        _format.value = s
-//    }
+    val endDateTime: DateTime
+        get() = _endDate.value ?: DateTime().endOfDay()
 
     fun setBeginDate(dateTime: DateTime) {
         _beginDate.value = dateTime
@@ -65,116 +40,84 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         _endDate.value = dateTime
     }
 
-    fun setTotalDiary(total : Boolean) {
-        _totalDiary.value = total
+    private val _exportState = MutableLiveData<ExportStates?>(null)
+    val exportState: LiveData<ExportStates?>
+        get() = _exportState
 
-    }
+    fun export(export: Export) {
+        process(export.fileName, export.isCloud) {
+            val list = export.list
+                    ?: withContext(Dispatchers.IO) {
+                        if (export.isWholeDiary) {
+                            dao.getAllList()
+                        } else if (export.begin != null && export.end != null) {
+                            dao.getRecordsForPeriod(export.begin, export.end)
+                        } else {
+                            throw IllegalStateException("Dates is null")
+                        }
+                    }
 
-    val isExportInProgress: LiveData<Boolean>
-        get() = _isExportInProgress
-
-    private val _isExportFileReady = MutableLiveData<Boolean>()
-    val isExportFileReady: LiveData<Boolean>
-        get() = _isExportFileReady
-
-    fun htmlFileShared() {
-        _isExportFileReady.value = false
-    }
-
-//    fun makeExportFile(context: Context) {
-//        when (format.value) {
-//            "JSON" -> {
-//                makeJsonExportFile()
-//            }
-//            "HTML" -> {
-//                makeHtmlExportFile(context)
-//            }
-//            else -> {
-//                throw IllegalArgumentException("No such format")
-//            }
-//        }
-//    }
-
-//    fun makeHtmlExportFile(context: Context) {
-//        _isExportInProgress.value = true
-//        _isExportFileReady.value = false
-//        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.html"
-//        uiScope.launch {
-//            val records = withContext(Dispatchers.IO) {
-//                if(_totalDiary.value==false)
-//                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
-//                else
-//                    dao.getAllList()
-//            }
-//            val exportString = withContext(Dispatchers.Default) {
-//                makeHtmlString(records, context)
-//            }
-//            withContext(Dispatchers.IO) {
-//                saveStringToFile(exportString, fileName)
-//            }
-//        }
-//    }
-
-//    fun makeJsonExportFile() {
-//        _isExportInProgress.value = true
-//        _isExportFileReady.value = false
-//        _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}.json"
-//        uiScope.launch {
-//            val records = withContext(Dispatchers.IO) {
-//                if(_totalDiary.value==false)
-//                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
-//                else
-//                    dao.getAllList()
-//            }
-//            val exportString = withContext(Dispatchers.Default) {
-//                Json.encodeToString(records)
-//            }
-//            withContext(Dispatchers.IO) {
-//                saveStringToFile(exportString, fileName)
-//            }
-//        }
-//    }
-
-    fun makeExportFile(list: List<DbRecord>? = null, context: Context) {
-        _isExportInProgress.value = true
-        _isExportFileReady.value = false
-
-        uiScope.launch(Dispatchers.IO) {
-            val exportData = if (list == null) {
-                _fileName = "${FILE_NAME_PREFIX}_${beginDate.value!!.toString("dd-MM-yyyy")}_${endDate.value!!.toString("dd-MM-yyyy")}"
-                if(_totalDiary.value == false)
-                    dao.getRecordsForPeriod(beginDate.value!!, endDate.value!!)
-                else
-                    dao.getAllList()
-            } else {
-                _fileName = "${FILE_NAME_PREFIX}_selected"
-                list
-            }
-
-            val exportString = when(format) {
+            when (export.format) {
                 ExportFormats.JSON -> {
-                    _fileName = "$_fileName.json"
-                    Json.encodeToString(exportData)
-
+                    saveStringToFile(toJson(list), export.fileName)
                 }
                 ExportFormats.HTML -> {
-                    _fileName = "$_fileName.html"
-                    makeHtmlString(exportData, context)
+                    saveStringToFile(toHtml(list, getApplication()), export.fileName)
                 }
-                else -> {
-                    throw IllegalArgumentException("No such format")
+                ExportFormats.CSV -> {
+                    toCsv(list, export.fileName)
                 }
             }
-
-            saveStringToFile(exportString, fileName)
         }
     }
 
-    fun exportSelected(data: List<DbRecord>?, context: Context) {
-        makeExportFile(data, context)
+    /**
+     * @param list - list с данными для сохранения
+     * @param fileName имя создаваемого файла
+     * @return полный путь к созданному файлу
+     */
+    private fun toCsv(list: List<DbRecord>, fileName: String): String {
+        val strings = getApplication<App>().resources
+        val header = listOf(strings.getString(R.string.csv_header_datetime),
+                strings.getString(R.string.csv_header_situation),
+                strings.getString(R.string.csv_header_thoughts),
+                strings.getString(R.string.csv_header_emotions),
+                strings.getString(R.string.csv_header_intensity),
+                strings.getString(R.string.csv_header_feelings),
+                strings.getString(R.string.csv_header_actions),
+                strings.getString(R.string.csv_header_distortions),
+                strings.getString(R.string.csv_header_rational))
+
+        val filePath = "${getApplication<Application>().cacheDir.absolutePath}/$fileName"
+        val csvWriter = CsvWriter()
+        csvWriter.open(filePath) {
+            writeRow(header)
+            list.forEach {
+                writeRow(convertRecordToList(it))
+            }
+        }
+
+        return filePath
     }
 
-    private suspend fun makeHtmlString(records: List<DbRecord>, context: Context): String {
+    private fun convertRecordToList(record: DbRecord): List<String> {
+        return listOf(record.datetime.getShortDateTime(),
+                record.situation,
+                record.thoughts,
+                record.emotions,
+                record.intensity.toString(),
+                record.feelings,
+                record.actions,
+                record.getDistortionsString(getApplication()),
+                record.rational
+        )
+    }
+
+    private fun toJson(list: List<DbRecord>): String {
+        return Json.encodeToString(list)
+    }
+
+    private suspend fun toHtml(records: List<DbRecord>, context: Context): String {
         return withContext(Dispatchers.Default) {
             val forHtml = StringBuilder()
             forHtml.append("<!DOCTYPE html>")
@@ -221,32 +164,118 @@ class ExportViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private suspend fun saveStringToFile(string: String, fileName: String) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                getApplication<Application>()
-                        .openFileOutput(fileName, Context.MODE_PRIVATE).apply {
-                            try {
-                                write(string.toByteArray())
-                                close()
-
-                                withContext(Dispatchers.Main) {
-                                    _isExportFileReady.value = true
-                                    _isExportInProgress.value = false
-                                }
-                            } catch (e: IOException) {
-                                withContext(Dispatchers.Main) {
-                                    _isExportFileReady.value = false
-                                    _isExportInProgress.value = false
-                                }
-                            }
-                        }
+    private fun process(fileName: String, isCloud: Boolean, block: suspend () -> String) {
+        viewModelScope.launch {
+            _exportState.value = ExportStates.InProgress
+            try {
+                val filePath = block()
+                _exportState.value = ExportStates.Success(fileName, filePath, isCloud)
+            } catch (e: Exception) {
+                _exportState.value = ExportStates.Failure(e)
+            } finally {
+                _exportState.value = null
             }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        vmJob.cancel()
+    /**
+     * @param string - строка для записи в файл
+     * @param fileName - имя создаваемого файла
+     * @return полный путь к созданному файлу
+     */
+    private suspend fun saveStringToFile(string: String, fileName: String): String {
+        return withContext(Dispatchers.IO) {
+            val file = File(getApplication<App>().cacheDir, fileName)
+//            val file = File.createTempFile(fileName, null, getApplication<App>().cacheDir)
+            file.writeText(string)
+            file.absolutePath
+        }
     }
+}
+
+class Export private constructor(val fileName: String, val format: ExportFormats,
+                                 val isWholeDiary: Boolean,
+                                 val begin: DateTime? = null, val end: DateTime? = null,
+                                 val list: List<DbRecord>? = null,
+                                 val isCloud: Boolean) {
+    class Builder {
+        private var isWholeDiary = true
+        private var beginDate: DateTime? = null
+        private var endDate: DateTime? = null
+        private var format = ExportFormats.JSON
+        private var fileName: String = ""
+        private var exportList: List<DbRecord>? = null
+        private var isCloud: Boolean = false
+
+        fun cloud() : Builder {
+            isCloud = true
+
+            return this
+        }
+
+        fun setExportList(list: List<DbRecord>): Builder {
+            isWholeDiary = false
+            exportList = list
+
+            return this
+        }
+
+        fun setPeriod(begin: DateTime, end: DateTime): Builder {
+            if (!begin.isBefore(end)) {
+                throw IllegalStateException("Begin date is not before end date")
+            }
+            isWholeDiary = false
+
+            beginDate = begin
+            endDate = end
+            return this
+        }
+
+        fun setFormat(format: ExportFormats): Builder {
+            this.format = format
+
+            return this
+        }
+
+        fun setFileName(name: String): Builder {
+            fileName = name
+
+            return this
+        }
+
+        fun build(): Export {
+            if (fileName.isEmpty())
+                throw IllegalStateException("No filename supplied")
+
+            val name: String = when(format) {
+                ExportFormats.JSON -> {
+                    "$fileName.json"
+                }
+                ExportFormats.HTML -> {
+                    "$fileName.html"
+                }
+                ExportFormats.CSV -> {
+                    "$fileName.csv"
+                }
+            }
+
+            return Export(name, format, isWholeDiary, beginDate, endDate, exportList, isCloud)
+        }
+    }
+
+    companion object {
+        const val DESTINATION_LOCAL = 0
+        const val DESTINATION_CLOUD = 1
+
+        const val FORMAT_JSON = 0
+        const val FORMAT_HTML = 1
+        const val FORMAT_CSV = 2
+        const val FORMAT_PICK = 100
+    }
+}
+
+sealed class ExportStates {
+    object InProgress : ExportStates()
+    data class Success(val fileName: String, val filePath: String, val isCloud: Boolean) : ExportStates()
+    data class Failure(val e: java.lang.Exception): ExportStates()
 }

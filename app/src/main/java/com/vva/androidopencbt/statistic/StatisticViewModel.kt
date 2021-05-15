@@ -44,8 +44,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun getDistortionsTop()
-    {
+    fun getDistortionsTop() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 //сейчас будет мясо
@@ -58,7 +57,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
                     var i = 0
                     //обход каждой записи на тему искажений
                     while(i<10) {
-                        if(((n.and(distArray[i]))!=0)) {
+                        if(n.and(distArray[i]) != 0) {
                             servArray[i]++
                         }
                         i++

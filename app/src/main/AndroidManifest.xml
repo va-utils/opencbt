@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vva.androidopencbt">
 
-
     <application
         android:name=".App"
         android:requestLegacyExternalStorage="true"

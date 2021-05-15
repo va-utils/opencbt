@@ -5,25 +5,20 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.AttributeSet
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import app.futured.donut.DonutProgressView
 import app.futured.donut.DonutSection
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getStatsDateTime
 
 class StatisticFragment : Fragment() {
-
     //--общая
     private lateinit var oldTv : TextView
     private lateinit var latestTv : TextView
@@ -50,50 +45,39 @@ class StatisticFragment : Fragment() {
     private lateinit var timeDonut : DonutProgressView
     private lateinit var distortionsDonut : DonutProgressView
     //-----
-    private lateinit var ll : LinearLayout
+    private lateinit var sv : ScrollView
     private val viewModel: StatisticViewModel by activityViewModels()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        view.findViewById<Toolbar>(R.id.statistic_toolbar).setupWithNavController(navController, appBarConfiguration)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        ll = inflater.inflate(R.layout.fragment_statistic, container, false) as LinearLayout
+        sv = inflater.inflate(R.layout.fragment_statistic, container, false) as ScrollView
 
-        totalTv = ll.findViewById(R.id.totalTv)
-        oldTv = ll.findViewById(R.id.oldTv)
-        latestTv = ll.findViewById(R.id.latestTv)
+        totalTv = sv.findViewById(R.id.totalTv)
+        oldTv = sv.findViewById(R.id.oldTv)
+        latestTv = sv.findViewById(R.id.latestTv)
 
-        timeDonut = ll.findViewById(R.id.timeDonut)
-        nightTv = ll.findViewById(R.id.nightTv)
-        morningTv = ll.findViewById(R.id.morningTv)
-        dayTv = ll.findViewById(R.id.dayTv)
-        eveningTv = ll.findViewById(R.id.eveningTv)
+        timeDonut = sv.findViewById(R.id.timeDonut)
+        nightTv = sv.findViewById(R.id.nightTv)
+        morningTv = sv.findViewById(R.id.morningTv)
+        dayTv = sv.findViewById(R.id.dayTv)
+        eveningTv = sv.findViewById(R.id.eveningTv)
 
-        distortionsDonut = ll.findViewById(R.id.distortionsDonut)
-        allOrNothingTv = ll.findViewById(R.id.allOrNothingTv)
-        overgeneralizingTv = ll.findViewById(R.id.overgeneralizingTv)
-        filteringTv = ll.findViewById(R.id.filteringTv)
-        disqualTv = ll.findViewById(R.id.disqualTv)
-        jumpTv = ll.findViewById(R.id.jumpTv)
-        magnAndMinTv = ll.findViewById(R.id.magnMinTv)
-        emotionalTv = ll.findViewById(R.id.emoReasonTv)
-        mustTv = ll.findViewById(R.id.mustTv)
-        labelingTv = ll.findViewById(R.id.labelingTv)
-        personTv = ll.findViewById(R.id.personTv)
+        distortionsDonut = sv.findViewById(R.id.distortionsDonut)
+        allOrNothingTv = sv.findViewById(R.id.allOrNothingTv)
+        overgeneralizingTv = sv.findViewById(R.id.overgeneralizingTv)
+        filteringTv = sv.findViewById(R.id.filteringTv)
+        disqualTv = sv.findViewById(R.id.disqualTv)
+        jumpTv = sv.findViewById(R.id.jumpTv)
+        magnAndMinTv = sv.findViewById(R.id.magnMinTv)
+        emotionalTv = sv.findViewById(R.id.emoReasonTv)
+        mustTv = sv.findViewById(R.id.mustTv)
+        labelingTv = sv.findViewById(R.id.labelingTv)
+        personTv = sv.findViewById(R.id.personTv)
      //   emptyTv = ll.findViewById(R.id.emptyTv)
 
-        intensityTv = ll.findViewById(R.id.intensityTv)
+        intensityTv = sv.findViewById(R.id.intensityTv)
 
-
-        
 
         viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
             if (it != null) {
@@ -173,7 +157,7 @@ class StatisticFragment : Fragment() {
                     timeDonut.submitData(list.sortedBy { it.amount })
                 })
 
-        return ll
+        return sv
     }
 }
 

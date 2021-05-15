@@ -3,38 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.vva.androidopencbt.MainActivity">
 
+    <item android:id="@+id/share"
+        android:icon="@drawable/ic_baseline_share"
+        android:title="@string/savehtml_button_save"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/detailsFragmentMaterial"
-        android:orderInCategory="100"
-        android:title="@string/action_newrecord"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/settingsFragmentRoot"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/exportToHtmlFragment"
-        android:orderInCategory="100"
-        android:title="@string/action_html"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/openDocumentPicker"
-        android:orderInCategory="100"
-        android:title="@string/import_records"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/statisticFragment"
-        android:orderInCategory="100"
-        android:title="@string/action_statistics"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/aboutFragment"
-        android:orderInCategory="100"
-        android:title="@string/action_about" />
-
+        android:id="@+id/hidden_group"
+        android:icon="@drawable/ic_baseline_more_vert"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/detailsFragmentMaterial"
+                android:icon="@drawable/ic_baseline_note_add"
+                android:orderInCategory="100"
+                android:title="@string/action_newrecord" />
+            <item
+                android:id="@+id/statisticFragment"
+                android:icon="@drawable/ic_baseline_bar_chart"
+                android:orderInCategory="100"
+                android:title="@string/action_statistics"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/settingsFragmentRoot"
+                android:orderInCategory="100"
+                android:icon="@drawable/ic_baseline_settings"
+                android:title="@string/action_settings"
+                app:showAsAction="never" />
+        </menu>
+    </item>
 </menu>

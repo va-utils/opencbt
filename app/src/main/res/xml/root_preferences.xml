@@ -14,21 +14,27 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceCategory app:title="Настройки отображения"
-        app:iconSpaceReserved="false">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="@string/settings_title_category_vew_settings"
+        app:key="settings_view_category"
+        app:icon="@drawable/ic_baseline_palette"
+        app:initialExpandedChildrenCount="3">
         <SwitchPreferenceCompat
             app:defaultValue="false"
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/ic_baseline_mode_night"
+            app:key="enable_night_theme"
+            app:title="@string/settings_title_night_theme" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:icon="@drawable/ic_baseline_sort"
             app:key="desc_ordering"
-            app:title="Сначала новые записи"/>
+            app:title="@string/settings_title_new_first"/>
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_quotes"
-            app:iconSpaceReserved="false"
+            app:icon="@drawable/ic_baseline_format_quote"
             app:title="@string/pref_quotes"/>
 
         <SwitchPreferenceCompat
@@ -36,100 +42,111 @@
             app:key="enable_percents"
             app:dependency="enable_intensity"
             app:summary="@string/pref_summ_percents"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_percents"/>
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
-            app:key="enable_night_theme"
-            app:iconSpaceReserved="false"
-            app:title="Ночная тема" />
-
-
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
             app:key="enable_intensity_indication"
-            app:iconSpaceReserved="false"
-            app:title="Индикация интенсивности на главном экране" />
+            app:title="@string/settings_title_intensity_indication" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_dividers"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_dividers"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns"
-        app:iconSpaceReserved="false">
+        app:key="settings_new_records_category"
+        app:icon="@drawable/ic_baseline_checklist"
+        app:initialExpandedChildrenCount="2">
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_situation"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_situation" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_thoughts"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_thoughts" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_emotions"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_emotions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_intensity"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_intensity" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:iconSpaceReserved="false"
             app:key="enable_feelings"
             app:title="@string/pref_feelings" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_actions"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_actions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_distortions"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_distortions" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="enable_rational"
-            app:iconSpaceReserved="false"
             app:title="@string/pref_disput" />
     </PreferenceCategory>
     <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="Экспорт" >
+        app:title="@string/settings_title_backup_category"
+        app:icon="@drawable/ic_baseline_import_export">
         <ListPreference
             app:key="default_export"
-            app:iconSpaceReserved="false"
             app:entries="@array/export_settings_entries"
             app:entryValues="@array/export_settings_values"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="HTML"
-            app:title="Формат по умолчанию" />
+            app:title="@string/settings_title_default_format" />
+        <Preference
+            app:title="@string/settings_title_export"
+            app:key="setting_export_local" />
+        <Preference
+            app:title="@string/settings_title_import"
+            app:key="setting_import_local" />
+        <com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
+            app:defaultValue="false"
+            app:key="enable_gdrive_integration"
+            app:icon="@drawable/ic_baseline_cloud"
+            app:title="@string/settings_title_drive_integration" />
+        <Preference
+            app:title="@string/settings_title_export_drive"
+            app:icon="@drawable/ic_baseline_cloud_upload"
+            app:key="setting_export_gdrive"
+            app:dependency="enable_gdrive_integration" />
+        <Preference
+            app:title="@string/settings_title_import_drive"
+            app:icon="@drawable/ic_baseline_cloud_download"
+            app:key="setting_import_gdrive"
+            app:dependency="enable_gdrive_integration" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Защита входа"
-        app:iconSpaceReserved="false">
+    <PreferenceCategory app:title="@string/settings_title_enter_protection_category"
+        app:icon="@drawable/ic_baseline_lock">
         <SwitchPreferenceCompat
             app:defaultValue="false"
-            app:iconSpaceReserved="false"
             app:key="enable_pin_protection"
-            app:title="Включить защиту входа" />
+            app:title="@string/settings_title_enter_protection_enable" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="@string/settings_category_help"
+        app:icon="@drawable/ic_baseline_help">
+        <Preference
+            app:title="@string/action_about"
+            app:icon="@drawable/ic_baseline_info"
+            app:key="setting_about"/>
+    </PreferenceCategory>
 </PreferenceScreen>

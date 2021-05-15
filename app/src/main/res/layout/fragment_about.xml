@@ -1,69 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/about_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-    </com.google.android.material.appbar.AppBarLayout>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/about"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp"
-        tools:context=".statistic.SaveHTMLFragment">
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/sendButton"
+    android:text="@string/about_button_send"
+    />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about"/>
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/websiteButton"
+    android:text="@string/about_button_website"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sendButton"
-        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-        android:text="@string/about_button_send"
-        />
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cbdButton"
+    android:text="@string/about_button_cbt"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/websiteButton"
-        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-        android:text="@string/about_button_website"/>
+        android:id="@+id/allVersionButton"
+        android:text="@string/about_button_versions"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cbdButton"
-        style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-        android:text="@string/about_button_cbt"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/allVersionButton"
-            style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-            android:text="@string/about_button_versions"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:gravity="bottom|center"
-        android:id="@+id/aboutTextView" />
-    </LinearLayout>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAlignment="center"
+    android:gravity="bottom|center"
+    android:id="@+id/aboutTextView" />
 </LinearLayout>
