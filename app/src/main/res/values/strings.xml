@@ -223,7 +223,7 @@
     <string name="settings_title_backup_category">Резервное копирование</string>
     <string name="settings_title_default_format">Формат по умолчанию</string>
     <string name="settings_title_drive_integration">Google Drive интеграция</string>
-    <string name="settings_title_enter_protection_category">Защита входа</string>
+    <string name="settings_title_enter_protection_category">Безопасность</string>
     <string name="settings_title_enter_protection_enable">Включить защиту входа</string>
     <string name="settings_title_night_theme">Ночная тема</string>
     <string name="settings_title_intensity_indication">Индикация интенсивности на главном экране</string>

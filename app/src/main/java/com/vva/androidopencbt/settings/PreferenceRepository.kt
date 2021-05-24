@@ -64,6 +64,11 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val defaultExportFormat: LiveData<ExportFormats>
         get() = _defaultExportFormat
 
+    private val _isScreenSecureEnabled = MutableLiveData(sharedPreferences.getBoolean(
+        PREFERENCE_SCREEN_SECURE, false))
+    val isScreenSecureEnabled: LiveData<Boolean>
+        get() = _isScreenSecureEnabled
+
     private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener {
                 _, key ->
@@ -105,6 +110,10 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     PREFERENCE_GDRIVE_ENABLED -> {
                         _isDriveIntegrationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false)
                     }
+                    PREFERENCE_SCREEN_SECURE -> {
+                        _isScreenSecureEnabled.value = sharedPreferences.getBoolean(
+                            PREFERENCE_SCREEN_SECURE, false)
+                    }
                 }
             }
 
@@ -126,5 +135,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         const val PREFERENCE_LOCAL_EXPORT = "setting_export_local"
         const val PREFERENCE_LOCAL_IMPORT = "setting_import_local"
         const val PREFERENCE_ABOUT = "setting_about"
+        const val PREFERENCE_SCREEN_SECURE = "enable_flag_screen_secure"
     }
 }

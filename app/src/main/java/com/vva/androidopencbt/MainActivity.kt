@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -63,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        screenSecure()
+
         vm.isAuthenticated.observe(this) {
             if (!it && preferences.isPinEnabled.value == true) {
                 val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
@@ -108,6 +111,21 @@ class MainActivity : AppCompatActivity() {
 
     fun addNewRecord(view: View) {
         navController.navigate(RvFragmentDirections.actionRvFragmentToDetailsFragmentMaterial())
+    }
+
+    private fun screenSecure() {
+        preferences.isScreenSecureEnabled.observe(this) {
+            when (it) {
+                true -> {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+
+                }
+                false -> {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                }
+            }
+            Log.d("SECURIIII", it.toString())
+        }
     }
 
     override fun onResume() {

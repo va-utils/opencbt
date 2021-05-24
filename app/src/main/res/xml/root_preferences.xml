@@ -139,6 +139,11 @@
             app:defaultValue="false"
             app:key="enable_pin_protection"
             app:title="@string/settings_title_enter_protection_enable" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_flag_screen_secure"
+            app:title="Скрыть содержание экрана"
+            app:summary="Не отображать содерджимое экрана при переходе между приложениями. Запрет снимков. "/>
     </PreferenceCategory>
 
     <PreferenceCategory
