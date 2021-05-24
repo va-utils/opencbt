@@ -124,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
             }
-            Log.d("SECURIIII", it.toString())
         }
     }
 
