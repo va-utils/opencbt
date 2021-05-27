@@ -8,28 +8,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.vva.androidopencbt.db.CbdDatabase
-import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.export.ImportViewModel
-import com.vva.androidopencbt.export.ImportViewModelFactory
 import com.vva.androidopencbt.export.ProcessStates
+import dagger.hilt.android.AndroidEntryPoint
 
 const val ROOT_FOLDER = "OpenCBT"
 
+@AndroidEntryPoint
 class DriveListFragment: Fragment() {
     private val logTag = javaClass.canonicalName
     private lateinit var ll: LinearLayout
     private val driveViewModel: DriveFileListViewModel by activityViewModels()
-    private lateinit var dao: RecordDao
-    private val importViewModel: ImportViewModel by activityViewModels {
-        ImportViewModelFactory(dao)
-    }
+    private val importViewModel: ImportViewModel by activityViewModels()
     private lateinit var rv: RecyclerView
     private lateinit var sr: SwipeRefreshLayout
 
@@ -38,8 +33,6 @@ class DriveListFragment: Fragment() {
         rv = ll.findViewById(R.id.rv)
         sr = ll.findViewById(R.id.list_swipe)
         setHasOptionsMenu(true)
-
-        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         when (driveViewModel.isLoggedIn()) {
             false -> {

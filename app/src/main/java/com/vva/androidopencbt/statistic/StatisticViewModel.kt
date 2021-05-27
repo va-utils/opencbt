@@ -4,12 +4,18 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.db.RecordDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.util.*
-class StatisticViewModel(application: Application) : AndroidViewModel(application) {
+import javax.inject.Inject
 
-    private val db = CbdDatabase.getInstance(application)
+@HiltViewModel
+class StatisticViewModel @Inject constructor(val dao: RecordDao) : ViewModel() {
+
+//    private val db = CbdDatabase.getInstance(application)
     private var vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
@@ -26,7 +32,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
         uiScope.launch {
             withContext(Dispatchers.IO) {
 
-                val list : List<Long> = db.databaseDao.getDateTimeList()
+                val list : List<Long> = dao.getDateTimeList()
                 val servArray = IntArray(4)
                 for (n in list) {
                     val c : Calendar = GregorianCalendar(Locale.getDefault())
@@ -48,7 +54,7 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 //сейчас будет мясо
-                val list : List<Int> = db.databaseDao.getDistList()
+                val list : List<Int> = dao.getDistList()
                 val servArray = IntArray(11)
                 val distArray : Array<Int> = arrayOf(0x1,0x2,0x4,0x8,0x10,0x20,0x40,0x80,0x100,0x200)
 
@@ -69,13 +75,13 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun getAllRecordsCount() = db.databaseDao.getAllCount()
+    fun getAllRecordsCount() = dao.getAllCount()
 
-    fun getAverageIntensity() = db.databaseDao.getAverageIntensity()
+    fun getAverageIntensity() = dao.getAverageIntensity()
 
-    fun getOldestRecordDate() = db.databaseDao.getOldestDate()
+    fun getOldestRecordDate() = dao.getOldestDate()
 
-    fun getLatestRecordDate() = db.databaseDao.getLatestDate()
+    fun getLatestRecordDate() = dao.getLatestDate()
 
     override fun onCleared() {
         vmJob.cancel()

@@ -26,19 +26,24 @@ import com.vva.androidopencbt.export.ExportStates
 import com.vva.androidopencbt.export.ExportViewModel
 import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RvFragment: Fragment() {
+    @Inject
+    lateinit var database: CbdDatabase
+    @Inject
+    lateinit var prefs: PreferenceRepository
+
     private val viewModel: RecordsViewModel by activityViewModels()
-    private lateinit var database: CbdDatabase
-    private lateinit var prefs: PreferenceRepository
-    private val listViewModel: RecordListViewModel by activityViewModels {
-        RecordListViewModelFactory(database.databaseDao, prefs)
-    }
+    private val listViewModel: RecordListViewModel by activityViewModels()
     private val exportViewModel: ExportViewModel by activityViewModels()
 
     private lateinit var cl: ConstraintLayout
     private lateinit var rv: RecyclerView
-    private lateinit var dataAdapter: RecordsAdapter
+
+    lateinit var dataAdapter: RecordsAdapter
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
     private var actionMode: ActionMode? = null
@@ -57,8 +62,6 @@ class RvFragment: Fragment() {
             duration = resources.getInteger(R.integer.record_motion_duration).toLong()
         }
 
-        prefs = (requireActivity().application as App).preferenceRepository
-        database = CbdDatabase.getInstance(requireContext())
         setHasOptionsMenu(true)
     }
 

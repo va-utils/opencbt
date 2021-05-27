@@ -18,8 +18,11 @@ import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
+import dagger.hilt.android.AndroidEntryPoint
 import org.joda.time.DateTime
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ExportFragment: Fragment() {
     private lateinit var sv: ScrollView
     private lateinit var beginDate: EditText
@@ -31,9 +34,11 @@ class ExportFragment: Fragment() {
 
     private lateinit var args: ExportFragmentArgs
 
-    private lateinit var dao: RecordDao
+    @Inject
+    lateinit var dao: RecordDao
     private val exportViewModel: ExportViewModel by activityViewModels()
-    private lateinit var prefs: PreferenceRepository
+    @Inject
+    lateinit var prefs: PreferenceRepository
 
     private val beginDpListener = DatePickerDialog.OnDateSetListener {
         _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
@@ -47,7 +52,6 @@ class ExportFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         sv = inflater.inflate(R.layout.export_wizard, container, false) as ScrollView
-        prefs = (requireActivity().application as App).preferenceRepository
 
         initViews()
         initDateEditText()
@@ -235,7 +239,7 @@ class ExportFragment: Fragment() {
     }
 
     private fun initViews() {
-        dao = CbdDatabase.getInstance(requireContext()).databaseDao
+//        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         wholeDiary = sv.findViewById(R.id.whole_cb)
         goBtn = sv.findViewById(R.id.exportBtn)

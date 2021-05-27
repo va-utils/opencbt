@@ -10,8 +10,11 @@ import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.vva.androidopencbt.settings.GDRIVE_MODULE_NAME
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class FeatureDownloadViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class FeatureDownloadViewModel @Inject constructor(application: Application): AndroidViewModel(application) {
     private val _installState = MutableLiveData<ProcessState?>(null)
     val installState: LiveData<ProcessState?>
         get() = _installState

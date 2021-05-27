@@ -12,8 +12,8 @@ abstract class CbdDatabase: RoomDatabase() {
     abstract val databaseDao: RecordDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: CbdDatabase? = null
+//        @Volatile
+//        private var INSTANCE: CbdDatabase? = null
 
         val MIGRATION_1_2 = object: Migration(1, 2) {
             private val oldSuffix = "_old"
@@ -72,23 +72,23 @@ abstract class CbdDatabase: RoomDatabase() {
             }
         }
 
-        fun getInstance(context: Context): CbdDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                            context.applicationContext,
-                            CbdDatabase::class.java,
-                            DbContract.DATABASE_NAME
-                    )
-                            .addMigrations(MIGRATION_1_2)
-                            .build()
-                    INSTANCE = instance
-                }
-
-                return instance
-            }
-        }
+//        fun getInstance(context: Context): CbdDatabase {
+//            synchronized(this) {
+//                var instance = INSTANCE
+//
+//                if (instance == null) {
+//                    instance = Room.databaseBuilder(
+//                            context.applicationContext,
+//                            CbdDatabase::class.java,
+//                            DbContract.DATABASE_NAME
+//                    )
+//                            .addMigrations(MIGRATION_1_2)
+//                            .build()
+//                    INSTANCE = instance
+//                }
+//
+//                return instance
+//            }
+//        }
     }
 }

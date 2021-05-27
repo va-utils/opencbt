@@ -13,8 +13,9 @@ import com.google.android.material.card.MaterialCardView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.getDateTimeString
+import javax.inject.Inject
 
-class RecordsAdapter(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
+class RecordsAdapter constructor(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false
     var dividers = true
     var intensityIndication = false
@@ -43,7 +44,8 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         private val ll : LinearLayout  = itemView.findViewById(R.id.item_ll)
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener,
+                 quotes: Boolean, indication: Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
             cardView.setOnClickListener {
                 onClickListener.onClick(it, record, position)
             }
@@ -183,10 +185,10 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     }
 }
 
-class RecordListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Unit) {
+class RecordListener constructor(val clickListener: (view: View, record: DbRecord, position: Int) -> Unit) {
     fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
 }
 
-class RecordLongListener(val clickListener: (view: View, record: DbRecord, position: Int) -> Boolean) {
+class RecordLongListener constructor(val clickListener: (view: View, record: DbRecord, position: Int) -> Boolean) {
     fun onClick(view: View, record: DbRecord, position: Int) = clickListener(view, record, position)
 }

@@ -1,14 +1,16 @@
 package com.vva.androidopencbt.recorddetails
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class DetailsViewModel(
-        private val recordKey: Long = 0,
+@HiltViewModel
+class DetailsViewModel @Inject constructor(
         private val dataSource: RecordDao) : ViewModel() {
+    var recordKey = 0L
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
     var currentRecord: DbRecord? = null
@@ -71,14 +73,14 @@ class DetailsViewModel(
     }
 }
 
-class DetailsViewModelFactory(
-        private val recordKey: Long,
-        private val dataSource: RecordDao) : ViewModelProvider.Factory {
-    @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
-            return DetailsViewModel(recordKey, dataSource) as T
-        }
-        throw IllegalAccessException("Unknown ViewModel class")
-    }
-}
+//class DetailsViewModelFactory(
+//        private val recordKey: Long,
+//        private val dataSource: RecordDao) : ViewModelProvider.Factory {
+//    @Suppress("unchecked_cast")
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
+//            return DetailsViewModel(recordKey, dataSource) as T
+//        }
+//        throw IllegalAccessException("Unknown ViewModel class")
+//    }
+//}

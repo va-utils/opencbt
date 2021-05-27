@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,8 +15,10 @@ import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.FileReader
 import java.lang.Exception
+import javax.inject.Inject
 
-class ImportViewModel(private val dao: RecordDao): ViewModel() {
+@HiltViewModel
+class ImportViewModel @Inject constructor(private val dao: RecordDao): ViewModel() {
     private val logTag = javaClass.canonicalName
     private val _importState = MutableLiveData<ProcessStates?>(null)
     val importState: LiveData<ProcessStates?>
@@ -135,12 +138,12 @@ sealed class ProcessStates {
     data class Failure(val e: Exception): ProcessStates()
 }
 
-class ImportViewModelFactory(private val dao: RecordDao): ViewModelProvider.Factory {
-    @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ImportViewModel::class.java)) {
-            return ImportViewModel(dao) as T
-        }
-        throw IllegalAccessException("Unknown ViewModel class")
-    }
-}
+//class ImportViewModelFactory(private val dao: RecordDao): ViewModelProvider.Factory {
+//    @Suppress("unchecked_cast")
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(ImportViewModel::class.java)) {
+//            return ImportViewModel(dao) as T
+//        }
+//        throw IllegalAccessException("Unknown ViewModel class")
+//    }
+//}

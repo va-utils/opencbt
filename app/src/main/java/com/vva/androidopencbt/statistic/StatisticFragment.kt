@@ -12,12 +12,14 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import app.futured.donut.DonutProgressView
 import app.futured.donut.DonutSection
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.getStatsDateTime
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StatisticFragment : Fragment() {
     //--общая
     private lateinit var oldTv : TextView
@@ -46,7 +48,7 @@ class StatisticFragment : Fragment() {
     private lateinit var distortionsDonut : DonutProgressView
     //-----
     private lateinit var sv : ScrollView
-    private val viewModel: StatisticViewModel by activityViewModels()
+    private val viewModel: StatisticViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -79,12 +81,12 @@ class StatisticFragment : Fragment() {
         intensityTv = sv.findViewById(R.id.intensityTv)
 
 
-        viewModel.getAllRecordsCount().observe(viewLifecycleOwner, {
+        viewModel.getAllRecordsCount().observe(viewLifecycleOwner) {
             if (it != null) {
                 totalTv.text = it.toString()
               //  Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
             }
-        })
+        }
 
         viewModel.getAverageIntensity().observe(viewLifecycleOwner, {
                 intensityTv.text  = if(it!=null) String.format("%1.2f%%",it) else "0.0"

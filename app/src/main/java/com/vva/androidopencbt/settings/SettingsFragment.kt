@@ -20,18 +20,19 @@ import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
-import com.vva.androidopencbt.App
 import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.NavigationDirections
 import com.vva.androidopencbt.R
-import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.export.*
 import com.vva.androidopencbt.playfeatures.FeatureDownloadViewModel
 import com.vva.androidopencbt.settings.widgets.SwitchProgressPreference
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 const val GDRIVE_MODULE_NAME = "gdrive_backup_feature"
 
+@AndroidEntryPoint
 class SettingsFragmentRoot: Fragment() {
     private lateinit var frameLayout: FrameLayout
 
@@ -46,15 +47,17 @@ class SettingsFragmentRoot: Fragment() {
     }
 }
 
+@AndroidEntryPoint
 class SettingsFragmentNew : PreferenceFragmentCompat() {
     private val logTag = javaClass.canonicalName
     private lateinit var prefs: Array<SwitchPreferenceCompat>
-    private lateinit var preferenceRepository: PreferenceRepository
+    @Inject
+    lateinit var preferenceRepository: PreferenceRepository
     private lateinit var manager: SplitInstallManager
-    private lateinit var dao: RecordDao
-    private val importViewModel: ImportViewModel by viewModels {
-        ImportViewModelFactory(dao)
-    }
+    @Inject
+    lateinit var dao: RecordDao
+
+    private val importViewModel: ImportViewModel by viewModels()
     private val featureDownloadViewModel: FeatureDownloadViewModel by activityViewModels()
     private lateinit var driveEnabled: SwitchProgressPreference
 
@@ -69,10 +72,7 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceRepository = (requireActivity().application as App).preferenceRepository
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        dao = CbdDatabase.getInstance(requireContext()).databaseDao
 
         manager = SplitInstallManagerFactory.create(requireContext())
 

@@ -7,14 +7,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.drive.model.File
 import com.vva.androidopencbt.db.DbRecord
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-class DriveFileListViewModel: ViewModel() {
+@HiltViewModel
+class DriveFileListViewModel @Inject constructor(): ViewModel() {
     private val tagLog = javaClass.canonicalName
     var appDirId = ""
 

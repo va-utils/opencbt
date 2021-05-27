@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -24,14 +23,19 @@ import com.google.android.play.core.splitcompat.SplitCompat
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.recordslist.RvFragmentDirections
 import com.vva.androidopencbt.settings.PreferenceRepository
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import javax.inject.Inject
 
 
 @Suppress("UNUSED_PARAMETER")
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val vm: RecordsViewModel by viewModels()
-    private lateinit var preferences: PreferenceRepository
-    private lateinit var database: CbdDatabase
+    @Inject
+    lateinit var preferences: PreferenceRepository
+    @Inject
+    lateinit var database: CbdDatabase
     private val authActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_CANCELED)
             this.finishAffinity()
@@ -58,8 +62,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        preferences = (application as App).preferenceRepository
-        database = CbdDatabase.getInstance(this)
         appBar = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)

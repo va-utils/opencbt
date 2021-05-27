@@ -2,20 +2,19 @@
 
 package com.vva.androidopencbt
 
-import android.app.Application
-import android.os.Parcelable
-import androidx.lifecycle.*
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.RecyclerView
+import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.vva.androidopencbt.db.CbdDatabase
-import kotlinx.coroutines.*
-import java.util.concurrent.TimeUnit
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecordsViewModel(application: Application): AndroidViewModel(application) {
-    private val db = CbdDatabase.getInstance(application)
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-    var recyclerViewState: Parcelable? = null
-
+@HiltViewModel
+class RecordsViewModel @Inject constructor(private val db: CbdDatabase, prefs: SharedPreferences): ViewModel() {
     private val _recordsListUpdated = MutableLiveData<Boolean>()
     val recordsListUpdated: LiveData<Boolean>
         get() = _recordsListUpdated
@@ -62,23 +61,6 @@ class RecordsViewModel(application: Application): AndroidViewModel(application) 
             db.databaseDao.deleteRecord(
                     db.databaseDao.getRecordById(id)
             )
-        }
-    }
-
-    fun listUpdated() {
-        _recordsListUpdated.value = true
-        viewModelScope.launch {
-            delay(TimeUnit.SECONDS.toMillis(1))
-            _recordsListUpdated.value = false
-        }
-    }
-
-    fun restoreRecyclerView(rv: RecyclerView) {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                delay(10)
-            }
-            rv.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
     }
 }

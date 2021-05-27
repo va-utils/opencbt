@@ -24,16 +24,19 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.services.drive.DriveScopes
 import com.vva.androidopencbt.MainActivity
 import com.vva.androidopencbt.NavigationDirections
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DriveLoginFragment: Fragment() {
     private val logTag = javaClass.canonicalName
     private val job = Job()
     private val fragmentScope = CoroutineScope(Dispatchers.Main + job)
     private val viewModel: DriveFileListViewModel by activityViewModels()
-    private lateinit var googleClient: GoogleSignInClient
+    lateinit var googleClient: GoogleSignInClient
     private lateinit var cl: ConstraintLayout
 
     private val requestDriveAccountActivity = registerForActivityResult(
@@ -44,8 +47,6 @@ class DriveLoginFragment: Fragment() {
         } else if (it.resultCode == Activity.RESULT_CANCELED) {
             val navOptions = NavOptions.Builder().setPopUpTo(com.vva.androidopencbt.R.id.rvFragment, false).build()
             findNavController().navigate(NavigationDirections.actionGlobalRvFragment(), navOptions)
-//            findNavController().popBackStack()
-//            viewModel.setLoginCanceled()
         }
     }
 

@@ -7,7 +7,10 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
+import com.vva.androidopencbt.db.RecordDao
 import com.vva.androidopencbt.settings.ExportFormats
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,11 +18,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.joda.time.DateTime
 import java.io.File
+import javax.inject.Inject
 
 @Suppress("BlockingMethodInNonBlockingContext")
-class ExportViewModel(application: Application): AndroidViewModel(application) {
-    private val dao = CbdDatabase.getInstance(application).databaseDao
-
+@HiltViewModel
+class ExportViewModel @Inject constructor(application: Application, val dao: RecordDao): AndroidViewModel(application) {
     private val _beginDate = MutableLiveData(DateTime().beginOfMonth())
     val beginDate: LiveData<DateTime>
         get() = _beginDate
@@ -186,7 +189,6 @@ class ExportViewModel(application: Application): AndroidViewModel(application) {
     private suspend fun saveStringToFile(string: String, fileName: String): String {
         return withContext(Dispatchers.IO) {
             val file = File(getApplication<App>().cacheDir, fileName)
-//            val file = File.createTempFile(fileName, null, getApplication<App>().cacheDir)
             file.writeText(string)
             file.absolutePath
         }

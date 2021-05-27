@@ -24,16 +24,21 @@ import com.vva.androidopencbt.RecordsViewModel
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.themeColor
+import dagger.hilt.android.AndroidEntryPoint
 import org.joda.time.DateTime
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DetailsFragmentMaterial: Fragment() {
     private lateinit var ll: LinearLayout
     private val viewModel: RecordsViewModel by activityViewModels()
-    private lateinit var database: CbdDatabase
+    private val detailsViewModel: DetailsViewModel by activityViewModels()
+    @Inject
+    lateinit var database: CbdDatabase
     private lateinit var args: DetailsFragmentMaterialArgs
-    private val detailsViewModel: DetailsViewModel by viewModels {
-        DetailsViewModelFactory(args.recordKey, database.databaseDao)
-    }
+//    private val detailsViewModel: DetailsViewModel by viewModels {
+//        DetailsViewModelFactory(args.recordKey, database.databaseDao)
+//    }
 
     private lateinit var thoughtInputLayout: TextInputLayout
     private lateinit var rationalInputLayout: TextInputLayout
@@ -74,9 +79,9 @@ class DetailsFragmentMaterial: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         ll = inflater.inflate(R.layout.fragment_details, container, false) as LinearLayout
         args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
-        database = CbdDatabase.getInstance(requireActivity().application)
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         id = args.recordKey
+        detailsViewModel.recordKey = id
 
         initControls()
 
@@ -118,16 +123,6 @@ class DetailsFragmentMaterial: Fragment() {
                 proceedString(record.situation, "enable_situation", situationInputLayout)
                 proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
                 proceedString(record.actions, "enable_actions", actionsInputLayout)
-
-                //vyalichkin----попытки поставить курсор в конец
-                /*
-                thoughtInputLayout.editText?.setOnClickListener(listener);
-                rationalInputLayout.editText?.setOnClickListener(listener);
-                situationInputLayout.editText?.setOnClickListener(listener);
-                emotionsInputLayout.editText?.setOnClickListener(listener);
-                feelingsInputLayout.editText?.setOnClickListener(listener);
-                actionsInputLayout.editText?.setOnClickListener(listener);
-                */
 
                 if (record.intensity != 0 || prefs.getBoolean("enable_intensity", true)) {
                     intensitySeekBar.value = record.intensity.toFloat()
