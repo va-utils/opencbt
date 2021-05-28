@@ -53,7 +53,8 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
     private lateinit var prefs: Array<SwitchPreferenceCompat>
     @Inject
     lateinit var preferenceRepository: PreferenceRepository
-    private lateinit var manager: SplitInstallManager
+    @Inject
+    lateinit var manager: SplitInstallManager
     @Inject
     lateinit var dao: RecordDao
 
@@ -73,8 +74,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        manager = SplitInstallManagerFactory.create(requireContext())
 
         prefs = arrayOf(
                 findPreference<Preference>("enable_thoughts") as SwitchPreferenceCompat,
@@ -161,7 +160,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                 Toast.makeText(requireContext(), "Модуль еще не установлен", Toast.LENGTH_LONG).show()
             } else {
                 findNavController().navigate(NavigationDirections.actionGlobalDriveListFragment("", ""))
-//                findNavController().navigate(SettingsFragmentRootDirections.actionSettingsFragmentRootToDriveLoginFragment(false, false))
             }
 
             true
@@ -268,7 +266,6 @@ class SettingsFragmentNew : PreferenceFragmentCompat() {
                     Log.d(logTag, "Success")
                     driveEnabled.isInProgress = false
                     driveEnabled.isChecked = true
-//                    requireActivity().recreate()
                     (requireActivity() as MainActivity).installSplitActivity()
                 }
                 null -> {

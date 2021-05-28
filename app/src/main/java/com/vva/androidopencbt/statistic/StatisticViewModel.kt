@@ -1,11 +1,8 @@
 package com.vva.androidopencbt.statistic
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.RecordDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -14,8 +11,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatisticViewModel @Inject constructor(val dao: RecordDao) : ViewModel() {
-
-//    private val db = CbdDatabase.getInstance(application)
     private var vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
 
@@ -27,8 +22,7 @@ class StatisticViewModel @Inject constructor(val dao: RecordDao) : ViewModel() {
     val timesOfDay: LiveData<IntArray>
         get() = _timesOfDay
 
-    fun getTimeOfDay()
-    {
+    fun getTimeOfDay() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
 

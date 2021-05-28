@@ -40,10 +40,8 @@ class ImportViewModel @Inject constructor(private val dao: RecordDao): ViewModel
 
     private suspend fun importRecordsFromList(list: List<DbRecord>?) {
         if (list == null || list.isEmpty()) {
-            Log.d("IMPORT", "nullOrEmpty")
             return
         }
-        Log.d("IMPORT", list.toString())
         val currentList = withContext(Dispatchers.IO){
             dao.getAllList()
         }
@@ -137,13 +135,3 @@ sealed class ProcessStates {
     object Success : ProcessStates()
     data class Failure(val e: Exception): ProcessStates()
 }
-
-//class ImportViewModelFactory(private val dao: RecordDao): ViewModelProvider.Factory {
-//    @Suppress("unchecked_cast")
-//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(ImportViewModel::class.java)) {
-//            return ImportViewModel(dao) as T
-//        }
-//        throw IllegalAccessException("Unknown ViewModel class")
-//    }
-//}

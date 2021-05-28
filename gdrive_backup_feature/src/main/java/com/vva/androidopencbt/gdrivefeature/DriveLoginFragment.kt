@@ -28,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DriveLoginFragment: Fragment() {

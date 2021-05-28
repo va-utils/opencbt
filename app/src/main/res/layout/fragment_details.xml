@@ -1,276 +1,294 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <androidx.core.widget.NestedScrollView
+    xmlns:tools="http://schemas.android.com/tools" >
+    <data>
+        <variable
+            name="record"
+            type="com.vva.androidopencbt.db.DbRecord" />
+        <variable
+            name="pref_repo"
+            type="com.vva.androidopencbt.settings.PreferenceRepository" />
+        <variable
+            name="viewModel"
+            type="com.vva.androidopencbt.recorddetails.DetailsViewModel" />
+    </data>
+    <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="false"
-        android:scrollbars="vertical">
-
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:transitionName="@string/record_card_view_detail_transition_name"
-            android:padding="8dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/situationsInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_situation"
-                android:textDirection="locale"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/situationEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="4"
-                    android:textDirection="locale"
-                    tools:text="текстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстъ" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emotionsInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_emotions"
-                app:layout_constraintEnd_toEndOf="@+id/thoughtInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/thoughtInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/thoughtInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emotionEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    tools:text="csdscvscs" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/thoughtInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_thought"
-                app:layout_constraintEnd_toEndOf="@+id/situationsInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/situationsInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/situationsInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/thoughtEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tvDiscomfortLevel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/newrecord_text_intensity" />
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/intensitySeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stepSize="1.0"
-                android:value="0.0"
-                android:valueFrom="0"
-                android:valueTo="100.0"
-                app:layout_constraintEnd_toEndOf="@+id/emotionsInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/emotionsInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/emotionsInputLayout" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="0%"
-                android:visibility="gone"
-                android:id="@+id/percentsTextView"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/feelingsInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_feelings"
-                app:layout_constraintEnd_toEndOf="@+id/intensitySeekBar"
-                app:layout_constraintStart_toStartOf="@+id/intensitySeekBar"
-                app:layout_constraintTop_toBottomOf="@+id/intensitySeekBar">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/feelingsEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/actionsInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_actions"
-                app:layout_constraintEnd_toEndOf="@+id/feelingsInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/feelingsInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/feelingsInputLayout"
-                tools:visibility="visible">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/actionsEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/rationalInputLayout"
-                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/newrecord_text_rational"
-                app:layout_constraintEnd_toEndOf="@+id/actionsInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/actionsInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/actionsInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/rationalEditText"
-                    style="@style/AppTheme.Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4" />
-            </com.google.android.material.textfield.TextInputLayout>
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="false"
+            android:scrollbars="vertical">
+    
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rationalInputLayout">
-
+                android:transitionName="@string/record_card_view_detail_transition_name"
+                android:padding="8dp">
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/situationsInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/newrecord_text_situation"
+                    android:textDirection="locale"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/situationEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="4"
+                        android:textDirection="locale"
+                        android:text="@{viewModel.recordLocal.situation}"
+                        tools:text="текстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстъ" />
+    
+                </com.google.android.material.textfield.TextInputLayout>
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emotionsInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/newrecord_text_emotions"
+                    app:layout_constraintEnd_toEndOf="@+id/thoughtInputLayout"
+                    app:layout_constraintStart_toStartOf="@+id/thoughtInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/thoughtInputLayout">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emotionEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="4"
+                        android:text="@{viewModel.recordLocal.emotions}"
+                        tools:text="csdscvscs" />
+                </com.google.android.material.textfield.TextInputLayout>
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/thoughtInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/newrecord_text_thought"
+                    app:layout_constraintEnd_toEndOf="@+id/situationsInputLayout"
+                    app:layout_constraintStart_toStartOf="@+id/situationsInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/situationsInputLayout">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/thoughtEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.recordLocal.thoughts}"
+                        android:maxLines="4" />
+                </com.google.android.material.textfield.TextInputLayout>
+    
                 <TextView
-                    android:id="@+id/tvDistortions"
+                    android:id="@+id/tvDiscomfortLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
-                    android:text="@string/newrecord_text_distortions" />
-
-                <CheckBox
-                    android:id="@+id/allOrNothingCheckBox"
-                    style="@style/AppTheme.Widget.Widget.MaterialComponents.CompoundButton.CheckBox"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/newrecord_text_intensity" />
+    
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/intensitySeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_all_or_nothing" />
-
-                <CheckBox
-                    android:id="@+id/overgeneralizingCheckBox"
+                    android:stepSize="1.0"
+                    android:value="0.0"
+                    android:valueFrom="0"
+                    android:valueTo="100.0"
+                    app:layout_constraintEnd_toEndOf="@+id/emotionsInputLayout"
+                    app:layout_constraintStart_toStartOf="@+id/emotionsInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/emotionsInputLayout" />
+    
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_overgeneralizing" />
-
-                <CheckBox
-                    android:id="@+id/filteringCheckBox"
+                    android:textSize="14sp"
+                    android:text="0%"
+                    android:visibility="gone"
+                    android:id="@+id/percentsTextView"/>
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/feelingsInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_filtering" />
-
-                <CheckBox
-                    android:id="@+id/disqualCheckBox"
+                    android:hint="@string/newrecord_text_feelings"
+                    app:layout_constraintEnd_toEndOf="@+id/intensitySeekBar"
+                    app:layout_constraintStart_toStartOf="@+id/intensitySeekBar"
+                    app:layout_constraintTop_toBottomOf="@+id/intensitySeekBar">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/feelingsEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.recordLocal.feelings}"
+                        android:maxLines="4" />
+                </com.google.android.material.textfield.TextInputLayout>
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/actionsInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_disqual_positive" />
-
-                <CheckBox
-                    android:id="@+id/jumpCheckBox"
+                    android:hint="@string/newrecord_text_actions"
+                    app:layout_constraintEnd_toEndOf="@+id/feelingsInputLayout"
+                    app:layout_constraintStart_toStartOf="@+id/feelingsInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/feelingsInputLayout"
+                    tools:visibility="visible">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/actionsEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.recordLocal.actions}"
+                        android:maxLines="4" />
+                </com.google.android.material.textfield.TextInputLayout>
+    
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/rationalInputLayout"
+                    style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_jump_conclusion" />
-
-                <CheckBox
-                    android:id="@+id/magnMinCheckBox"
+                    android:hint="@string/newrecord_text_rational"
+                    app:layout_constraintEnd_toEndOf="@+id/actionsInputLayout"
+                    app:layout_constraintStart_toStartOf="@+id/actionsInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/actionsInputLayout">
+    
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/rationalEditText"
+                        style="@style/AppTheme.Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.recordLocal.rational}"
+                        android:maxLines="4" />
+                </com.google.android.material.textfield.TextInputLayout>
+    
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dist_magn_and_min" />
-
-                <CheckBox
-                    android:id="@+id/emoReasonCheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dist_emotional_reasoning" />
-
-                <CheckBox
-                    android:id="@+id/mustCheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dist_must_statement" />
-
-                <CheckBox
-                    android:id="@+id/labelingCheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dist_labeling" />
-
-                <CheckBox
-                    android:id="@+id/personCheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dist_personalistion" />
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rationalInputLayout">
+    
+                    <TextView
+                        android:id="@+id/tvDistortions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/newrecord_text_distortions" />
+    
+                    <CheckBox
+                        android:id="@+id/allOrNothingCheckBox"
+                        style="@style/AppTheme.Widget.Widget.MaterialComponents.CompoundButton.CheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_all_or_nothing" />
+    
+                    <CheckBox
+                        android:id="@+id/overgeneralizingCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_overgeneralizing" />
+    
+                    <CheckBox
+                        android:id="@+id/filteringCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_filtering" />
+    
+                    <CheckBox
+                        android:id="@+id/disqualCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_disqual_positive" />
+    
+                    <CheckBox
+                        android:id="@+id/jumpCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_jump_conclusion" />
+    
+                    <CheckBox
+                        android:id="@+id/magnMinCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_magn_and_min" />
+    
+                    <CheckBox
+                        android:id="@+id/emoReasonCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_emotional_reasoning" />
+    
+                    <CheckBox
+                        android:id="@+id/mustCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_must_statement" />
+    
+                    <CheckBox
+                        android:id="@+id/labelingCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_labeling" />
+    
+                    <CheckBox
+                        android:id="@+id/personCheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dist_personalistion" />
+                </LinearLayout>
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/colorAccent" />
+    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+    
+            <Button
+                android:id="@+id/deleteButton"
+                style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/newrecord_button_delete"
+                android:visibility="gone"
+                tools:visibility="visible" />
+    
+            <Button
+                android:id="@+id/save_button"
+                style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/newrecord_button_add" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="?attr/colorAccent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/deleteButton"
-            style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/newrecord_button_delete"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <Button
-            android:id="@+id/save_button"
-            style="@style/AppTheme.Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/newrecord_button_add" />
     </LinearLayout>
-
-</LinearLayout>
+</layout>

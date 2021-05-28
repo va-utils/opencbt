@@ -1,6 +1,9 @@
 package com.vva.androidopencbt.recorddetails
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,10 +14,28 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(
         private val dataSource: RecordDao) : ViewModel() {
     var recordKey = 0L
+        set(value) {
+            if (value == 0L) {
+                currentRecord = DbRecord()
+            } else {
+                getRec()
+            }
+            field = value
+        }
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
     var currentRecord: DbRecord? = null
 
+    private val _record = MutableLiveData(DbRecord())
+    val recordLocal: LiveData<DbRecord>
+        get() = _record
+
+    private fun getRec() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val dbRecord = dataSource.getRecordById(recordKey)
+            _record.postValue(dbRecord)
+        }
+    }
     fun getRecord() = dataSource.getRecordLiveDataById(recordKey)
 
     fun isRecordHasChanged(dbRecord: DbRecord): Boolean {

@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
-class RecordListViewModel @Inject constructor(private val dataSource: RecordDao, private val prefs: PreferenceRepository): ViewModel() {
+class RecordListViewModel @Inject constructor(private val dataSource: RecordDao, prefs: PreferenceRepository): ViewModel() {
     private val job = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + job)
 
@@ -103,13 +103,3 @@ class RecordListViewModel @Inject constructor(private val dataSource: RecordDao,
         job.cancel()
     }
 }
-
-//class RecordListViewModelFactory(private val dataSource: RecordDao, private val prefs: PreferenceRepository): ViewModelProvider.Factory {
-//    @Suppress("unchecked_cast")
-//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(RecordListViewModel::class.java)) {
-//            return RecordListViewModel(dataSource, prefs) as T
-//        }
-//        throw IllegalAccessException("Unknown ViewModel class")
-//    }
-//}

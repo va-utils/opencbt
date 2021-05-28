@@ -3,6 +3,7 @@ package com.vva.androidopencbt.recorddetails
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -21,8 +22,10 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.transition.MaterialContainerTransform
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.databinding.FragmentDetailsBinding
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
+import com.vva.androidopencbt.settings.PreferenceRepository
 import com.vva.androidopencbt.themeColor
 import dagger.hilt.android.AndroidEntryPoint
 import org.joda.time.DateTime
@@ -30,15 +33,17 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailsFragmentMaterial: Fragment() {
+    private lateinit var binding: FragmentDetailsBinding
     private lateinit var ll: LinearLayout
     private val viewModel: RecordsViewModel by activityViewModels()
     private val detailsViewModel: DetailsViewModel by activityViewModels()
     @Inject
     lateinit var database: CbdDatabase
+    @Inject
+    lateinit var preferenceRepository: PreferenceRepository
+    @Inject
+    lateinit var prefs: SharedPreferences
     private lateinit var args: DetailsFragmentMaterialArgs
-//    private val detailsViewModel: DetailsViewModel by viewModels {
-//        DetailsViewModelFactory(args.recordKey, database.databaseDao)
-//    }
 
     private lateinit var thoughtInputLayout: TextInputLayout
     private lateinit var rationalInputLayout: TextInputLayout
@@ -77,13 +82,23 @@ class DetailsFragmentMaterial: Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        ll = inflater.inflate(R.layout.fragment_details, container, false) as LinearLayout
+        binding = FragmentDetailsBinding.inflate(inflater)
+        ll = binding.root as LinearLayout
         args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+//        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         id = args.recordKey
         detailsViewModel.recordKey = id
 
         initControls()
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = detailsViewModel
+
+//        binding.record = if (id == 0L) {
+//            DbRecord()
+//        } else {
+//
+//        }
 
         if(prefs.getBoolean("enable_percents",false)) {
             percentsTextView.visibility = View.VISIBLE
@@ -117,12 +132,12 @@ class DetailsFragmentMaterial: Fragment() {
 
             detailsViewModel.getRecord().observe(viewLifecycleOwner) { record ->
                 detailsViewModel.currentRecord = record
-                proceedString(record.thoughts, "enable_thoughts", thoughtInputLayout)
-                proceedString(record.rational, "enable_rational", rationalInputLayout)
-                proceedString(record.emotions, "enable_emotions", emotionsInputLayout)
-                proceedString(record.situation, "enable_situation", situationInputLayout)
-                proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
-                proceedString(record.actions, "enable_actions", actionsInputLayout)
+//                proceedString(record.thoughts, "enable_thoughts", thoughtInputLayout)
+//                proceedString(record.rational, "enable_rational", rationalInputLayout)
+//                proceedString(record.emotions, "enable_emotions", emotionsInputLayout)
+//                proceedString(record.situation, "enable_situation", situationInputLayout)
+//                proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
+//                proceedString(record.actions, "enable_actions", actionsInputLayout)
 
                 if (record.intensity != 0 || prefs.getBoolean("enable_intensity", true)) {
                     intensitySeekBar.value = record.intensity.toFloat()

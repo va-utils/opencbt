@@ -1,11 +1,9 @@
 package com.vva.androidopencbt.playfeatures
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import androidx.lifecycle.ViewModel
+import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
@@ -14,12 +12,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class FeatureDownloadViewModel @Inject constructor(application: Application): AndroidViewModel(application) {
+class FeatureDownloadViewModel @Inject constructor(private val splitInstallManager: SplitInstallManager): ViewModel() {
     private val _installState = MutableLiveData<ProcessState?>(null)
     val installState: LiveData<ProcessState?>
         get() = _installState
 
-    private val splitInstallManager = SplitInstallManagerFactory.create(application)
     private val listener = SplitInstallStateUpdatedListener {
         when (it.status()) {
             SplitInstallSessionStatus.CANCELED -> {
@@ -70,10 +67,8 @@ class FeatureDownloadViewModel @Inject constructor(application: Application): An
         splitInstallManager.startInstall (
             SplitInstallRequest.newBuilder().addModule(GDRIVE_MODULE_NAME).build()
         ).addOnSuccessListener {
-            Log.d("TAAAAG", it.toString())
             id = it
         }
-        Log.d("TAAAAG", id.toString())
     }
 
     sealed class ProcessState {

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.dynamic-feature'
     id 'kotlin-android'
+    id("kotlin-kapt")
 }
 android {
     compileSdkVersion versions.compileSdk
@@ -33,7 +34,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.2.0'
 
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation('com.google.api-client:google-api-client-android:1.26.0') {

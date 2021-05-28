@@ -1,9 +1,7 @@
 package com.vva.androidopencbt.db
 
-import android.content.Context
-import androidx.room.RoomDatabase
 import androidx.room.Database
-import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
@@ -12,9 +10,6 @@ abstract class CbdDatabase: RoomDatabase() {
     abstract val databaseDao: RecordDao
 
     companion object {
-//        @Volatile
-//        private var INSTANCE: CbdDatabase? = null
-
         val MIGRATION_1_2 = object: Migration(1, 2) {
             private val oldSuffix = "_old"
 
@@ -71,24 +66,5 @@ abstract class CbdDatabase: RoomDatabase() {
                 }
             }
         }
-
-//        fun getInstance(context: Context): CbdDatabase {
-//            synchronized(this) {
-//                var instance = INSTANCE
-//
-//                if (instance == null) {
-//                    instance = Room.databaseBuilder(
-//                            context.applicationContext,
-//                            CbdDatabase::class.java,
-//                            DbContract.DATABASE_NAME
-//                    )
-//                            .addMigrations(MIGRATION_1_2)
-//                            .build()
-//                    INSTANCE = instance
-//                }
-//
-//                return instance
-//            }
-//        }
     }
 }

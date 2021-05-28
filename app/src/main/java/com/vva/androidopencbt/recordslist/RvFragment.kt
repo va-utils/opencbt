@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.vva.androidopencbt.*
+import com.vva.androidopencbt.databinding.RvLayoutBinding
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.export.Export
@@ -66,11 +67,11 @@ class RvFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        cl = inflater.inflate(R.layout.rv_layout, container, false) as ConstraintLayout
-
-        rv = cl.findViewById(R.id.rv)
-        welcomeTv = cl.findViewById(R.id.welcomeTextView)
-        fab = cl.findViewById(R.id.fab)
+        val binding = RvLayoutBinding.inflate(inflater)
+        cl = binding.root as ConstraintLayout
+        rv = binding.rv
+        welcomeTv = binding.welcomeTextView
+        fab = binding.fab
 
         dataAdapter = RecordsAdapter(RecordListener { view: View, dbRecord: DbRecord, _: Int ->
             when (listViewModel.onItemClick(dbRecord)) {

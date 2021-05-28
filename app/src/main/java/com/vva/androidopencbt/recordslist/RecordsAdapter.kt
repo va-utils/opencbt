@@ -3,17 +3,11 @@ package com.vva.androidopencbt.recordslist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.DbRecord
-import com.vva.androidopencbt.getDateTimeString
-import javax.inject.Inject
 
 class RecordsAdapter constructor(private val listener: RecordListener, private val longListener: RecordLongListener): ListAdapter<DbRecord, RecordsAdapter.RecordsViewHolder>(DiffCallback()){
     var quotes = false

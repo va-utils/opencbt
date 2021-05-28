@@ -13,9 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.vva.androidopencbt.*
-import com.vva.androidopencbt.db.CbdDatabase
+import com.vva.androidopencbt.MainActivity
+import com.vva.androidopencbt.NavigationDirections
+import com.vva.androidopencbt.R
 import com.vva.androidopencbt.db.RecordDao
+import com.vva.androidopencbt.getDateString
 import com.vva.androidopencbt.settings.ExportFormats
 import com.vva.androidopencbt.settings.PreferenceRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -239,8 +241,6 @@ class ExportFragment: Fragment() {
     }
 
     private fun initViews() {
-//        dao = CbdDatabase.getInstance(requireContext()).databaseDao
-
         wholeDiary = sv.findViewById(R.id.whole_cb)
         goBtn = sv.findViewById(R.id.exportBtn)
         cloudGoBtn = sv.findViewById(R.id.cloudExportBtn)
