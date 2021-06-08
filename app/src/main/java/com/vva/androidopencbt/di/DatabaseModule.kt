@@ -24,6 +24,7 @@ class DatabaseModule {
             DbContract.DATABASE_NAME
         )
             .addMigrations(CbdDatabase.MIGRATION_1_2)
+            .addMigrations(CbdDatabase.MIGRATION_2_3)
             .build()
     }
 

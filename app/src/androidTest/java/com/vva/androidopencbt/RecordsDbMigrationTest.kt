@@ -47,4 +47,27 @@ class RecordsDbMigrationTest {
         assertEquals("", query.getString(query.getColumnIndex(DbContract.Diary.COLUMN_THOUGHTS)))
         assertEquals(1604339210420, query.getLong(query.getColumnIndex(DbContract.Diary.COLUMN_DATETIME)))
     }
+
+    @Test
+    fun migrateFrom2To3() {
+        database = migrationTestHelper.createDatabase("test_db", 2).apply {
+            with(DbContract.Diary) {
+                execSQL("INSERT INTO $TABLE_NAME($COLUMN_ID, $COLUMN_SITUATION, $COLUMN_THOUGHTS, " +
+                        "$COLUMN_RATIONAL, $COLUMN_EMOTIONS, $COLUMN_DISTORTIONS, $COLUMN_FEELINGS, $COLUMN_ACTIONS, " +
+                        "$COLUMN_INTENSITY, $COLUMN_DATETIME) " +
+                        "VALUES(1, 'sit1', 'th1', 'rat1', 'emo1', 'dis1', 'fee1', 'act1', 'int1', 1604339210420)")
+            }
+            close()
+        }
+
+        database = migrationTestHelper.runMigrationsAndValidate("test_db", 3, false, CbdDatabase.MIGRATION_2_3)
+
+        val query = database.query("SELECT * FROM ${DbContract.Diary.TABLE_NAME}")
+        assertTrue(query.moveToFirst())
+        Log.d("test", query.count.toString())
+        assertEquals("sit1", query.getString(query.getColumnIndex(DbContract.Diary.COLUMN_SITUATION)))
+        assertEquals("th1", query.getString(query.getColumnIndex(DbContract.Diary.COLUMN_THOUGHTS)))
+        assertEquals(1604339210420, query.getLong(query.getColumnIndex(DbContract.Diary.COLUMN_DATETIME)))
+        assertEquals(1604339210420, query.getLong(query.getColumnIndex(DbContract.Diary.COLUMN_USER_DATETIME)))
+    }
 }

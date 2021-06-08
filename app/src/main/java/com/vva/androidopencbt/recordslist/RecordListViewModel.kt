@@ -27,12 +27,9 @@ class RecordListViewModel @Inject constructor(private val dataSource: RecordDao,
     private var isSelectionActive = false
     private var isSelectAllActive = false
 
-    private var _selectedItemsMap = HashMap<DbRecord, Boolean>()
-    private var deletedCache = ArrayList<DbRecord>()
-
-    private val _selectedItems = MutableLiveData<HashMap<DbRecord, Boolean>>()
-    val selectedItems: LiveData<HashMap<DbRecord, Boolean>>
-        get() = _selectedItems
+    private var _selectedItemsSet = HashSet<DbRecord>()
+    val selectedItems: Set<DbRecord>
+        get() = _selectedItemsSet
 
     fun getAllRecords() = records
 
@@ -41,8 +38,12 @@ class RecordListViewModel @Inject constructor(private val dataSource: RecordDao,
             null
         } else {
             isSelectAllActive = false
-            _selectedItemsMap[dbRecord] = _selectedItemsMap[dbRecord] != true
-            _selectedItems.value = _selectedItemsMap
+            if (_selectedItemsSet.contains(dbRecord)) {
+                _selectedItemsSet.remove(dbRecord)
+            } else {
+                _selectedItemsSet.add(dbRecord)
+            }
+
             true
         }
     }
@@ -50,47 +51,40 @@ class RecordListViewModel @Inject constructor(private val dataSource: RecordDao,
     fun onItemLongClick(dbRecord: DbRecord) {
         if (!isSelectionActive) {
             isSelectionActive = true
-            deletedCache.clear()
-            _selectedItemsMap.clear()
-            _selectedItems.value = _selectedItemsMap
+            _selectedItemsSet.clear()
             onItemClick(dbRecord)
         }
     }
 
     fun cancelAllSelections() {
-        _selectedItemsMap.clear()
-        _selectedItems.value = _selectedItemsMap
+        _selectedItemsSet.clear()
         isSelectionActive = false
+    }
+
+    fun getSelectedItemsCount(): Int {
+        return _selectedItemsSet.size
     }
 
     fun selectAll(list: List<DbRecord>) {
         isSelectAllActive = !isSelectAllActive
         if (isSelectAllActive) {
-            list.forEach {
-                _selectedItemsMap[it] = true
-                _selectedItems.value = _selectedItemsMap
-            }
+            _selectedItemsSet.addAll(list)
         } else {
-            _selectedItemsMap.clear()
-            _selectedItems.value = _selectedItemsMap
+            _selectedItemsSet.clear()
         }
     }
 
     fun deleteSelected(): Int {
-        val selected = _selectedItemsMap.filterValues {
-            it
-        }
-        deletedCache.addAll(selected.keys)
         uiScope.launch(Dispatchers.IO) {
-            selected.forEach {
-                dataSource.deleteRecord(it.key)
+            _selectedItemsSet.forEach {
+                dataSource.deleteRecord(it)
             }
         }
-        return selected.size
+        return _selectedItemsSet.size
     }
 
     fun rollbackDeletion() {
-        deletedCache.forEach {
+        _selectedItemsSet.forEach {
             uiScope.launch(Dispatchers.IO) {
                 dataSource.addRecord(it)
             }

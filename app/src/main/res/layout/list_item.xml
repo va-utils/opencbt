@@ -1,104 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_view"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:selectableItemBackground"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="record"
+            type="com.vva.androidopencbt.db.DbRecord" />
+    </data>
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
+            android:transitionName="@{@string/record_card_view_detail_transition_name(record.id)}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dateTextView"
-                android:textAppearance="?attr/textAppearanceOverline"
-                tools:text="14:35 01 декабря 2020"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/emptyTextView"
-                android:text="@string/adapter_empty"
-                android:visibility="gone"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimaryVariant" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/distortionTextView"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorSecondary"
-                tools:text="Расстройства"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/emotionTextView"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorSecondaryVariant"
-                tools:text="Эмоции: ЪУЪ" />
-
+            android:layout_height="wrap_content" >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:showDividers="middle|beginning"
                 android:orientation="vertical"
-                android:id="@+id/item_ll"
-                android:divider="@drawable/separator">
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dateTextView"
+                    android:textAppearance="?attr/textAppearanceOverline"
+                    tools:text="14:35 01 декабря 2020"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:id="@+id/intensityTextView"
-                    tools:text="Интенсивность невероятная" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:id="@+id/situationTextView"
-                    tools:text="Ситуация"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:id="@+id/thoughtTextView"
-                    tools:text="Мысли"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:id="@+id/feelingsTextView"
-                    tools:text="Чувства"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:id="@+id/actionsTextView"
-                    tools:text="Действия"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
+                    android:id="@+id/emptyTextView"
+                    android:text="@string/adapter_empty"
+                    android:visibility="@{record.isEmpty() ? View.VISIBLE : View.GONE}"
                     android:textStyle="bold"
-                    android:id="@+id/rationalTextView"
-                    tools:text="Рациональный ответ"/>
+                    android:textColor="?attr/colorPrimaryVariant" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/distortionTextView"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="?attr/colorSecondary"
+                    android:visibility="@{record.distortions == 0x0 ? View.GONE : View.VISIBLE}"
+                    app:setDistortionsString="@{record.distortions}"
+                    tools:text="Расстройства"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/emotionTextView"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="?attr/colorSecondaryVariant"
+                    android:visibility="@{record.emotions.empty ? View.GONE : View.VISIBLE}"
+                    android:text="@{record.emotions}"
+                    tools:text="Эмоции: ЪУЪ" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="middle|beginning"
+                    android:orientation="vertical"
+                    android:id="@+id/item_ll"
+                    android:divider="@drawable/separator">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:id="@+id/intensityTextView"
+                        android:visibility="@{record.intensity == 0 ? View.GONE : View.VISIBLE}"
+                        android:text="@{@string/adapter_intensity(record.intensity)}"
+                        tools:text="Интенсивность невероятная" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:id="@+id/situationTextView"
+                        android:visibility="@{record.situation.empty ? View.GONE : View.VISIBLE}"
+                        android:text="@{record.situation}"
+                        tools:text="Ситуация"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:id="@+id/thoughtTextView"
+                        android:visibility="@{record.thoughts.empty ? View.GONE : View.VISIBLE}"
+                        android:text="@{record.thoughts}"
+                        tools:text="Мысли"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:id="@+id/feelingsTextView"
+                        android:visibility="@{record.feelings.empty ? View.GONE : View.VISIBLE}"
+                        android:text="@{record.feelings}"
+                        tools:text="Чувства"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:id="@+id/actionsTextView"
+                        android:visibility="@{record.actions.empty ? View.GONE : View.VISIBLE}"
+                        android:text="@{record.actions}"
+                        tools:text="Действия"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:textStyle="bold"
+                        android:id="@+id/rationalTextView"
+                        android:visibility="@{record.rational.empty ? View.GONE : View.VISIBLE}"
+                        android:text="@{record.rational}"
+                        tools:text="Рациональный ответ"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</layout>

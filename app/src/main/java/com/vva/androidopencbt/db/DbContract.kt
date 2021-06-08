@@ -3,7 +3,7 @@ package com.vva.androidopencbt.db
 @Suppress("unused")
 object DbContract {
     const val DATABASE_NAME = "opencbd_beta9.db" // название бд
-    const val SCHEMA = 2 // версия базы данных
+    const val SCHEMA = 3 // версия базы данных
     const val ORDER_DESC = 0
     const val ORDER_ASC = 1
 
@@ -20,6 +20,7 @@ object DbContract {
         const val COLUMN_ACTIONS = "_actions"
         const val COLUMN_INTENSITY = "_intensity"
         const val COLUMN_DATETIME = "_datetime"
+        const val COLUMN_USER_DATETIME = "_userdatetime"
 
         const val GET_ALL_SQL = "SELECT * FROM $TABLE_NAME"
         const val GET_RECORD_BY_ID = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID = :id"

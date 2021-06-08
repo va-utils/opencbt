@@ -26,6 +26,9 @@ android {
         sourceSets {
             androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
         }
+        buildFeatures {
+            dataBinding true
+        }
     }
     buildTypes {
         release {

@@ -48,7 +48,6 @@ class RvFragment: Fragment() {
     private lateinit var welcomeTv: TextView
     private lateinit var fab : FloatingActionButton
     private var actionMode: ActionMode? = null
-    private var itemForDeletionCount = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
@@ -89,23 +88,30 @@ class RvFragment: Fragment() {
                     }
                     findNavController().navigate(directions, extras)
                 }
+                true -> {
+                    dataAdapter.setItemSelection(dbRecord)
+                    actionMode?.invalidate()
+                }
             }
         },
         RecordLongListener { _: View, dbRecord: DbRecord, _: Int ->
             listViewModel.onItemLongClick(dbRecord)
             viewModel.activateSelection()
+            dataAdapter.setItemSelection(dbRecord)
+            actionMode?.invalidate()
             true
         })
 
-        listViewModel.selectedItems.observe(viewLifecycleOwner) {
-            dataAdapter.submitSelectionArray(it)
-            itemForDeletionCount = it.filterValues { it }.size
-            actionMode?.invalidate()
-        }
+//        listViewModel.selectedItems.observe(viewLifecycleOwner) {
+//            dataAdapter.submitSelectionArray(it)
+//            itemForDeletionCount = it.filterValues { it }.size
+//            actionMode?.invalidate()
+//        }
 
         viewModel.isSelectionActive.observe(viewLifecycleOwner) {
             if (!it) {
                 listViewModel.cancelAllSelections()
+                dataAdapter.deselectAll()
             } else {
                 actionMode = (requireActivity() as MainActivity).startActionMode(object: ActionMode.Callback {
                     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -114,10 +120,10 @@ class RvFragment: Fragment() {
                     }
 
                     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-                        menu.findItem(R.id.action_delete).isEnabled = itemForDeletionCount > 0
-                        menu.findItem(R.id.action_export).isEnabled = itemForDeletionCount > 0
+                        menu.findItem(R.id.action_delete).isEnabled = listViewModel.getSelectedItemsCount() > 0
+                        menu.findItem(R.id.action_export).isEnabled = listViewModel.getSelectedItemsCount() > 0
                         menu.findItem(R.id.action_export_cloud).apply {
-                            isEnabled = itemForDeletionCount > 0
+                            isEnabled = listViewModel.getSelectedItemsCount() > 0
                             isVisible = prefs.isDriveIntegrationEnabled.value == true
                         }
                         return true
@@ -135,13 +141,14 @@ class RvFragment: Fragment() {
                             }
                             R.id.action_select_all -> {
                                 listViewModel.selectAll(dataAdapter.getList())
+                                dataAdapter.selectAll()
                                 true
                             }
                             R.id.action_export -> {
                                 val export = Export.Builder()
                                         .setFormat(prefs.defaultExportFormat.value ?: ExportFormats.JSON)
                                         .setFileName("CBT_diary_selected")
-                                        .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
+                                        .setExportList(listViewModel.selectedItems.toList())
                                         .build()
                                 exportViewModel.export(export)
                                 mode.finish()
@@ -151,7 +158,7 @@ class RvFragment: Fragment() {
                                 val export = Export.Builder()
                                         .setFormat(prefs.defaultExportFormat.value ?: ExportFormats.JSON)
                                         .setFileName("CBT_diary_selected")
-                                        .setExportList(listViewModel.selectedItems.value?.keys?.toList()!!)
+                                        .setExportList(listViewModel.selectedItems.toList())
                                         .cloud()
                                         .build()
 
@@ -181,7 +188,7 @@ class RvFragment: Fragment() {
             if (it) {
                 listViewModel.getAllRecords().observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
-                        dataAdapter.submitList(list)
+                        dataAdapter.setList(list)
 
                         welcomeTv.visibility = View.GONE
                         rv.visibility = View.VISIBLE

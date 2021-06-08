@@ -85,7 +85,6 @@ class DetailsFragmentMaterial: Fragment() {
         binding = FragmentDetailsBinding.inflate(inflater)
         ll = binding.root as LinearLayout
         args = DetailsFragmentMaterialArgs.fromBundle(requireArguments())
-//        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         id = args.recordKey
         detailsViewModel.recordKey = id
 

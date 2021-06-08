@@ -43,7 +43,11 @@ data class DbRecord(
 
         @ColumnInfo(name = DbContract.Diary.COLUMN_DATETIME)
         @Serializable(with = DateTimeAsTimestampSerializer::class)
-        var datetime: DateTime = DateTime()
+        var datetime: DateTime = DateTime(),
+
+        @ColumnInfo(name = DbContract.Diary.COLUMN_USER_DATETIME)
+        @Serializable(with = DateTimeAsTimestampSerializer::class)
+        var userSpecifiedDate: DateTime = DateTime()
 ) {
     fun getDistortionsString(context: Context): String {
         val builder = StringBuilder()
@@ -111,6 +115,17 @@ data class DbRecord(
         if (intensity != record.intensity) return false
 
         return true
+    }
+
+    fun isEmpty(): Boolean {
+        return situation.isEmpty()
+                && thoughts.isEmpty()
+                && rational.isEmpty()
+                && emotions.isEmpty()
+                && distortions == 0x0
+                && feelings.isEmpty()
+                && actions.isEmpty()
+                && intensity == 0
     }
 }
 
