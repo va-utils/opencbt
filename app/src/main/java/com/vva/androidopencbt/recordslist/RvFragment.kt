@@ -169,6 +169,10 @@ class RvFragment: Fragment() {
             }
         }
 
+        prefs.isIntensityColorEnabled.observe(viewLifecycleOwner) {
+            dataAdapter.intensityColor = it
+        }
+
         prefs.isIntensityIndicationEnabled.observe(viewLifecycleOwner) {
             dataAdapter.intensityIndication = it
         }

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,6 +19,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     var quotes = false
     var dividers = true
     var intensityIndication = false
+    var intensityColor = false;
 
     private var _selectedItems = HashMap<DbRecord, Boolean>()
 
@@ -26,7 +28,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
     }
 
     override fun onBindViewHolder(holder: RecordsViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, dividers, position, _selectedItems)
+        holder.bind(getItem(position), listener, longListener, quotes, intensityIndication, intensityColor, dividers, position, _selectedItems)
     }
 
     class RecordsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -43,7 +45,7 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
         private val ll : LinearLayout  = itemView.findViewById(R.id.item_ll)
         private val res = itemView.resources
 
-        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
+        fun bind(record: DbRecord, onClickListener: RecordListener, onLongListener: RecordLongListener, quotes: Boolean, indication: Boolean, color : Boolean, dividers : Boolean, position: Int, selection: HashMap<DbRecord, Boolean>) {
             cardView.setOnClickListener {
                 onClickListener.onClick(it, record, position)
             }
@@ -98,6 +100,18 @@ class RecordsAdapter(private val listener: RecordListener, private val longListe
                 if (intensity == 0) {
                     intensityTextView.visibility = View.GONE
                 } else {
+
+                    if(color)
+                    {
+                        intensityTextView.setTextColor(ContextCompat.getColor(itemView.context, when (intensity) {
+                            0 -> R.color.intensity_zero
+                            in 1..30 -> R.color.intensity_low
+                            in 31..60 -> R.color.intensity_mid
+                            in 61..90 -> R.color.intensity_mid_high
+                            else -> R.color.intensity_high
+                        }))
+                    }
+
                     intensityTextView.visibility = View.VISIBLE
                     intensityTextView.text = res.getString(R.string.adapter_intensity, intensity)
                 }

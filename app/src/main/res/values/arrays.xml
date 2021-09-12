@@ -21,4 +21,9 @@
         <item>CSV</item>
     </string-array>
 
+    <string-array name="discret_percents">
+        <item>5%</item>
+        <item>10%</item>
+        <item>20%</item>
+    </string-array>
 </resources>

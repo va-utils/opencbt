@@ -87,6 +87,11 @@
     <string name="pref_pin_title">Защита входа</string>
 
     <string name="pref_summ_percents">Уровень дискомфорта как в v0.3</string>
+    <string name="pref_discretpercents">Деления ползунка</string>
+
+    <string name="pref_descret_step">Шаг ползунка</string>
+    <string name="pref_color_intensity">Цвет дискомфорта</string>
+    <string name="pref_summ_discretpercents">Будет работать в новых записях</string>
 
     <string name="pref_dividers">Показывать разделители</string>
 
@@ -229,4 +234,7 @@
     <string name="settings_title_intensity_indication">Индикация интенсивности на главном экране</string>
     <string name="settings_title_new_first">Сначала новые записи</string>
     <string name="settings_title_category_vew_settings">Настройки отображения</string>
+
+    <string name="donate">Помочь проекту</string>
+
 </resources>

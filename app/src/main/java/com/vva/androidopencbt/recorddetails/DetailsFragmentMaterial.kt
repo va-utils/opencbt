@@ -80,6 +80,16 @@ class DetailsFragmentMaterial: Fragment() {
 
         initControls()
 
+        if(prefs.getBoolean("enable_discret_percents",false) && id == 0L)
+        {
+           when(prefs.getString("discret_value","10%"))
+           {
+               "5%"  -> intensitySeekBar.stepSize = 5F
+               "10%" -> intensitySeekBar.stepSize = 10F
+               "20%" ->intensitySeekBar.stepSize = 20F
+           }
+        }
+
         if(prefs.getBoolean("enable_percents",false)) {
             percentsTextView.visibility = View.VISIBLE
             intensitySeekBar.labelBehavior = LabelFormatter.LABEL_GONE

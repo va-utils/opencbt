@@ -25,11 +25,12 @@ class AboutFragment : Fragment() {
         val webSiteButton : Button = v.findViewById(R.id.websiteButton)
         val cbdButton : Button = v.findViewById(R.id.cbdButton)
         val allVersionButton : Button = v.findViewById(R.id.allVersionButton)
+        val donateButton : Button = v.findViewById(R.id.donateButton);
         sendButton.setOnClickListener(listener)
         webSiteButton.setOnClickListener(listener)
         cbdButton.setOnClickListener(listener)
         allVersionButton.setOnClickListener(listener)
-
+        donateButton.setOnClickListener(listener)
         aboutTextView.text = getString(R.string.app_author, BuildConfig.VERSION_NAME, BuildConfig.BUILD_TYPE)
         return v
     }
@@ -44,12 +45,13 @@ class AboutFragment : Fragment() {
         R.id.websiteButton -> openGitHub()
         R.id.cbdButton -> getCBTInfo()
         R.id.allVersionButton -> openGitHubAllVersions()
+        R.id.donateButton -> openGitHubDonate()
     }}
 
     private fun sendFeedBack() {
         val fbIntent = Intent(Intent.ACTION_SENDTO)
         fbIntent.data = Uri.parse("mailto:")
-        fbIntent.putExtra(Intent.EXTRA_EMAIL, Array<String>(1){"androidopencbt@yandex.ru"})
+        fbIntent.putExtra(Intent.EXTRA_EMAIL, Array<String>(1){"tulastr71@yandex.ru"})
         fbIntent.putExtra(Intent.EXTRA_SUBJECT, "Android OpenCBT")
         if(fbIntent.resolveActivity(requireActivity().packageManager) != null) {
             activity?.startActivity(fbIntent)
@@ -59,6 +61,13 @@ class AboutFragment : Fragment() {
     private fun openGitHub() {
         //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show()
         val github: Uri = Uri.parse("https://github.com/va-utils/opencbt")
+        val webIntent = Intent(Intent.ACTION_VIEW, github)
+        activity?.startActivity(webIntent)
+    }
+
+    private fun openGitHubDonate() {
+        //Toast.makeText(this, "Скоро эта кнопка будет открывать страницу программы на GitHub", Toast.LENGTH_SHORT).show()
+        val github: Uri = Uri.parse("https://github.com/va-utils/opencbt#%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83")
         val webIntent = Intent(Intent.ACTION_VIEW, github)
         activity?.startActivity(webIntent)
     }

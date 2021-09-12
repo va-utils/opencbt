@@ -11,6 +11,13 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isNightThemeLive: LiveData<Boolean>
         get() = _isNightThemeLive
 
+    private val _isIntensityColorEnabled = MutableLiveData<Boolean>().apply {
+        value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_COLOR, false)
+    }
+    val isIntensityColorEnabled: LiveData<Boolean>
+        get() = _isIntensityColorEnabled
+
+    //PREFERENCE_INTENSITY_COLOR
     private val _isIntensityIndicationEnabled = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_INDICATION, false)
     }
@@ -79,6 +86,13 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                     PREFERENCE_INTENSITY_INDICATION -> {
                         _isIntensityIndicationEnabled.value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_INDICATION, false)
                     }
+
+                    PREFERENCE_INTENSITY_COLOR ->
+                    {
+                        _isIntensityColorEnabled.value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_COLOR, false)
+                    }
+
+
                     PREFERENCE_QUOTES_ENABLED -> {
                         _isQuotesEnabled.value = sharedPreferences.getBoolean(PREFERENCE_QUOTES_ENABLED, false)
                     }
@@ -123,6 +137,7 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
 
     companion object {
         const val PREFERENCE_NIGHT_MODE = "enable_night_theme"
+        const val PREFERENCE_INTENSITY_COLOR = "enable_color_intesity"
         const val PREFERENCE_INTENSITY_INDICATION = "enable_intensity_indication"
         const val PREFERENCE_QUOTES_ENABLED = "enable_quotes"
         const val PREFERENCE_IS_DESC_ORDER = "desc_ordering"

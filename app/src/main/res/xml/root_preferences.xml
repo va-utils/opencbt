@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory app:title="@string/settings_title_category_vew_settings"
         app:key="settings_view_category"
         app:icon="@drawable/ic_baseline_palette"
@@ -46,8 +47,29 @@
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
+            app:key="enable_discret_percents"
+            app:dependency="enable_intensity"
+            app:summary="@string/pref_summ_discretpercents"
+            app:title="@string/pref_discretpercents"/>
+
+        <ListPreference
+            app:key="discret_value"
+            app:title="@string/pref_descret_step"
+            app:defaultValue="10%"
+            app:dependency="enable_discret_percents"
+            app:entries="@array/discret_percents"
+            app:entryValues="@array/discret_percents"
+            app:dialogTitle="@string/pref_descret_step" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
             app:key="enable_intensity_indication"
             app:title="@string/settings_title_intensity_indication" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="enable_color_intesity"
+            app:title="@string/pref_color_intensity" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
