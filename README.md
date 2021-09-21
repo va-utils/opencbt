@@ -5,6 +5,7 @@
 [Загрузить приложение для Android](https://github.com/va-utils/opencbt/releases/download/0.5.2/universal.apk)   
 [Список изменений](https://github.com/va-utils/opencbt/releases/download/0.5.2/)   
 [Скачать из Google Play](https://play.google.com/store/apps/details?id=com.vva.androidopencbt)  
+[Отзывы специалистов](https://github.com/va-utils/opencbt/wiki/Отзывы-специалистов)
 [Помощь проекту](https://github.com/va-utils/opencbt#%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83)
 
 ## Дневник
