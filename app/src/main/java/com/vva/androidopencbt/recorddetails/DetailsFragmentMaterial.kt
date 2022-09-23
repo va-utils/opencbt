@@ -9,6 +9,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -57,6 +58,15 @@ class DetailsFragmentMaterial: Fragment() {
     private lateinit var deleteButton: Button
     private lateinit var saveButton: Button
 
+    private lateinit var suggestTextView : TextView; //for 0.6 version
+    private val mustWords = arrayOf("должн","нужно","обязан");
+    private val overgenWords = arrayOf("всегда", "вечно", "как обычно","никогда");
+    private val labelsWords = arrayOf("дебил","мудак","плох","урод","неудачни","никчемн","долбо","идиот","кретин","лох","лузер","козёл","козел","стерва","сука","говн","гавн");
+    private val jumpconWords = arrayOf("счита", "думают", "думает", "будет", "будут");
+    private val personWords = arrayOf("из-за меня", "потому что я", "моя вина", "я виноват");
+    private val emotionWords = arrayOf("чувствую","кажется");
+    private val allornothWords = arrayOf("полный","полная","конец","пиздец","кошмар");
+
     private var id: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +89,7 @@ class DetailsFragmentMaterial: Fragment() {
         id = args.recordKey
 
         initControls()
+        suggestTextView.visibility = View.GONE;
 
         if(prefs.getBoolean("enable_discret_percents",false) && id == 0L)
         {
@@ -115,6 +126,63 @@ class DetailsFragmentMaterial: Fragment() {
         saveButton.setOnClickListener {
             save()
             findNavController().popBackStack()
+        }
+
+        //for 0.6 version
+        if(prefs.getBoolean("enable_suggest",false)) {
+            thoughtInputLayout.editText?.addTextChangedListener {
+                if (it != null) {
+                    val str: String = it.toString().toLowerCase();
+                    if(!str.isEmpty()) {
+                        var result: String = getString(R.string.dist_help_welcome);
+
+                        var distFinded: Boolean = false;
+
+                        val text = str.split(' ');
+                        if (containsWord(text, mustWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_must_statement) + "\n";
+                        }
+
+                        if (containsWord(text, overgenWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_overgeneralizing) + "\n";
+                        }
+
+                        if (containsWord(text, labelsWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_labeling) + "\n";
+                        }
+
+                        if (containsWord(text, jumpconWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_jump_conclusion) + "\n";
+                        }
+
+                        if (containsWord(text, personWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_personalistion) + "\n";
+                        }
+
+                        if (containsWord(text, emotionWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_emotional_reasoning) + "\n";
+                        }
+
+                        if (containsWord(text, allornothWords)) {
+                            distFinded = true;
+                            result += getString(R.string.dist_all_or_nothing);
+                        }
+
+                        if (distFinded) {
+                            suggestTextView.visibility = View.VISIBLE;
+                            suggestTextView.text = result;
+                        } else {
+                            suggestTextView.visibility = View.GONE;
+                        }
+                    }
+                }
+            }
         }
 
         if (id > 0) {
@@ -220,11 +288,22 @@ class DetailsFragmentMaterial: Fragment() {
         actionsInputLayout = ll.findViewById(R.id.actionsInputLayout)
 
         thoughtInputLayout.editText?.setOnTouchListener(scrollListener)
+        thoughtInputLayout.setEndIconOnClickListener {clearConfirm(thoughtInputLayout.editText)};
+
         rationalInputLayout.editText?.setOnTouchListener(scrollListener)
+        rationalInputLayout.setEndIconOnClickListener{clearConfirm(rationalInputLayout.editText)};
+
         emotionsInputLayout.editText?.setOnTouchListener(scrollListener)
+        emotionsInputLayout.setEndIconOnClickListener{clearConfirm(emotionsInputLayout.editText)};
+
         situationInputLayout.editText?.setOnTouchListener(scrollListener)
+        situationInputLayout.setEndIconOnClickListener{clearConfirm(situationInputLayout.editText)};
+
         feelingsInputLayout.editText?.setOnTouchListener(scrollListener)
+        feelingsInputLayout.setEndIconOnClickListener{clearConfirm(feelingsInputLayout.editText)};
+
         actionsInputLayout.editText?.setOnTouchListener(scrollListener)
+        actionsInputLayout.setEndIconOnClickListener{clearConfirm(actionsInputLayout.editText)};
 
         intensitySeekBar = ll.findViewById(R.id.intensitySeekBar)
         intensitySeekBar.setLabelFormatter { n -> String.format("%1d%%",n.toInt()) }
@@ -244,6 +323,37 @@ class DetailsFragmentMaterial: Fragment() {
         saveButton = ll.findViewById(R.id.save_button)
 
         percentsTextView = ll.findViewById(R.id.percentsTextView)
+
+        suggestTextView = ll.findViewById(R.id.tvSuggest); //for 0.6 version
+
+
+
+    }
+
+    private fun clearConfirm(et : EditText?) {
+        //Toast.makeText(requireContext(),view.parent,Toast.LENGTH_LONG).show();
+        MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.clear_title).
+        setMessage(R.string.clear_confirm).
+        setNegativeButton(R.string.remove) { _: DialogInterface, _: Int ->
+            et?.text?.clear();
+        }
+                .setNeutralButton(R.string.cancel)
+                { dialogInterface: DialogInterface, _: Int ->
+                    dialogInterface.dismiss()
+                }.show()
+    }
+
+    private fun containsWord(input : List<String>, words : Array<String>) : Boolean
+    {
+        for(s in input)
+        {
+            for(w in words)
+            {
+                if(s.startsWith(w))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private fun proceedString(field: String, prefs_name: String, editText: TextInputLayout) {
@@ -381,6 +491,7 @@ class DetailsFragmentMaterial: Fragment() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun makeHelpDialog(): AlertDialog {
         val builder = MaterialAlertDialogBuilder(requireContext())
                         builder.setMessage(getText(R.string.dialog_help_text))

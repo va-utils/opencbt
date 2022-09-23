@@ -76,6 +76,10 @@
             app:key="enable_dividers"
             app:title="@string/pref_dividers"/>
 
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="enable_suggest"
+            app:title="@string/settings_title_suggest"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_columns"
