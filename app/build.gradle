@@ -11,7 +11,7 @@ android {
         applicationId "com.vva.androidopencbt"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 17
+        versionCode 18
         versionName "0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {

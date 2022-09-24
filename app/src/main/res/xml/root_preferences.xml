@@ -77,7 +77,7 @@
             app:title="@string/pref_dividers"/>
 
         <SwitchPreferenceCompat
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:key="enable_suggest"
             app:title="@string/settings_title_suggest"/>
     </PreferenceCategory>
