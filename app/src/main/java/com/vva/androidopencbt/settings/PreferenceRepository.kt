@@ -48,12 +48,12 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
     val isPinEnabled: LiveData<Boolean>
         get() = _isPinEnabled
 
-    private val _isSuggestEnabled = MutableLiveData<Boolean>().apply {
+   /* private val _isSuggestEnabled = MutableLiveData<Boolean>().apply {
         value = sharedPreferences.getBoolean(PREFERENCE_SUGGEST_ENABLED, false)
     }
     val isSuggestEnabled: LiveData<Boolean>
         get() = _isSuggestEnabled
-
+*/
     private val _isDriveIntegrationEnabled = MutableLiveData(sharedPreferences.getBoolean(PREFERENCE_GDRIVE_ENABLED, false))
     val isDriveIntegrationEnabled: LiveData<Boolean>
         get() = _isDriveIntegrationEnabled
@@ -98,9 +98,9 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
                         _isIntensityColorEnabled.value = sharedPreferences.getBoolean(PREFERENCE_INTENSITY_COLOR, false)
                     }
 
-                    PREFERENCE_SUGGEST_ENABLED-> {
+                   /* PREFERENCE_SUGGEST_ENABLED-> {
                         _isSuggestEnabled.value = sharedPreferences.getBoolean(PREFERENCE_SUGGEST_ENABLED, false)
-                    }
+                    }*/
 
                     PREFERENCE_QUOTES_ENABLED -> {
                         _isQuotesEnabled.value = sharedPreferences.getBoolean(PREFERENCE_QUOTES_ENABLED, false)
@@ -162,6 +162,6 @@ class PreferenceRepository(private val sharedPreferences: SharedPreferences) {
         const val PREFERENCE_LOCAL_IMPORT = "setting_import_local"
         const val PREFERENCE_ABOUT = "setting_about"
         const val PREFERENCE_SCREEN_SECURE = "enable_flag_screen_secure"
-        const val PREFERENCE_SUGGEST_ENABLED = "enable_suggest"
+      //  const val PREFERENCE_SUGGEST_ENABLED = "enable_suggest"
     }
 }
