@@ -6,13 +6,13 @@
 [Список изменений](https://github.com/va-utils/opencbt/releases/tag/0.6)   
 [Скачать из Google Play](https://play.google.com/store/apps/details?id=com.vva.androidopencbt)  
 [Отзывы специалистов](https://github.com/va-utils/opencbt/wiki/Отзывы-специалистов)  
-[Помощь проекту](https://github.com/va-utils/opencbt#%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83)
+[Помощь проекту](https://github.com/va-utils/opencbt#%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83)  
 [Книга по самопомощи](https://www.litres.ru/david-d-burns/terapiya-nastroeniya-klinicheski-dokazannyy-sposob-pobedit-d/?lfrom=965623253)  
 
 ## Дневник
 Дневник автоматических мыслей — эффективная техника из когнитивно-поведенческой психологии. 
 С его помощью Вы научитесь находить у себя огорчающие мысли, определять искажения в них и сможете заменить их более рациональными и адаптивными.
-С идеями, лежащими в основе этого метода, Вы можете ознакомиться в книгах Дэвида Бернса, Мэтью Маккея и других специалистов в области КПТ.
+С идеями, лежащими в основе этого метода, Вы можете ознакомиться в книгах [Дэвида Бернса](https://www.litres.ru/author/david-d-burns/?lfrom=965623253), Мэтью Маккея и других специалистов в области КПТ.
 
 > "Людей мучают не вещи, а представления о них." (Эпиктет)
 
