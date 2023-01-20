@@ -7,6 +7,7 @@
 [Скачать из Google Play](https://play.google.com/store/apps/details?id=com.vva.androidopencbt)  
 [Отзывы специалистов](https://github.com/va-utils/opencbt/wiki/Отзывы-специалистов)  
 [Помощь проекту](https://github.com/va-utils/opencbt#%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83)
+[Книга по самопомощи](https://www.litres.ru/david-d-burns/terapiya-nastroeniya-klinicheski-dokazannyy-sposob-pobedit-d/?lfrom=965623253)  
 
 ## Дневник
 Дневник автоматических мыслей — эффективная техника из когнитивно-поведенческой психологии. 
