@@ -68,7 +68,7 @@
     <string name="title_about">О приложении</string>
     <string name="title_newrecord">Запись в дневник</string>
 
-    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2022\nВерсия: %1$s (%2$s)</string>
+    <string name="app_author">Виктор Вяличкин, Василий Тепловодский\n2023\nВерсия: %1$s (%2$s)</string>
     <string name="title_activity_settings">Настройки</string>
 
     <string name="pref_columns">Что записываем в дневник? (предлагается заполнить для новых записей)</string>
