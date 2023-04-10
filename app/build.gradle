@@ -11,7 +11,7 @@ android {
         applicationId "com.vva.androidopencbt"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 19
+        versionCode 20
         versionName "0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -91,7 +91,7 @@ dependencies {
     api 'com.google.android.gms:play-services-auth:19.0.0'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
 
-    def work_version = "2.5.0"
+    def work_version = "2.7.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.15.1'

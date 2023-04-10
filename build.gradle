@@ -2,7 +2,7 @@
 
 buildscript {
     ext.versions = [
-            'compileSdk'        : 30,
+            'compileSdk'        : 31,
             'minSdk'            : 21,
             'targetSdk'         : 31,
             'playcore'          : '1.10.0',
