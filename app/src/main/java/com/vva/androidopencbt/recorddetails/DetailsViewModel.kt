@@ -1,10 +1,14 @@
 package com.vva.androidopencbt.recorddetails
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.vva.androidopencbt.beginOfMonth
 import com.vva.androidopencbt.db.DbRecord
 import com.vva.androidopencbt.db.RecordDao
 import kotlinx.coroutines.*
+import org.joda.time.DateTime
 
 class DetailsViewModel(
         private val recordKey: Long = 0,
@@ -12,6 +16,16 @@ class DetailsViewModel(
     private val vmJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + vmJob)
     var currentRecord: DbRecord? = null
+
+    private val _recordDate = MutableLiveData(DateTime())
+    val recordDate: LiveData<DateTime>
+        get() = _recordDate
+    val recordDateTime: DateTime
+        get() = _recordDate.value ?: DateTime()
+    fun setRecordDate(dateTime: DateTime) {
+        _recordDate.value = dateTime
+    }
+
 
     fun getRecord() = dataSource.getRecordLiveDataById(recordKey)
 
@@ -48,7 +62,8 @@ class DetailsViewModel(
             finalDist: Int,
             feelings: String,
             actions: String,
-            intensity: Int
+            intensity: Int,
+            datetime : DateTime
     ) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
@@ -63,7 +78,7 @@ class DetailsViewModel(
                                 feelings,
                                 actions,
                                 intensity,
-                                dataSource.getRecordById(id).datetime
+                                /*dataSource.getRecordById(id).datetime*/datetime
                         )
                 )
             }

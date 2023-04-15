@@ -21,15 +21,40 @@
             android:padding="8dp">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateTimeInputLayout"
+                style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textDirection="locale"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateTimeEditText"
+                style="@style/AppTheme.Widget.AppCompat.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:textDirection="locale"
+                tools:text="Дата и время" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/situationsInputLayout"
                 style="@style/AppTheme.Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/newrecord_text_situation"
                 android:textDirection="locale"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintEnd_toEndOf="@+id/dateTimeInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/dateTimeInputLayout"
+                app:layout_constraintTop_toTopOf="@+id/dateTimeInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/situationEditText"
@@ -39,8 +64,7 @@
                     android:ellipsize="end"
                     android:maxLines="4"
                     android:textDirection="locale"
-                    tools:text="текстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстътекстъ" />
-
+                    tools:text="ътекстътекстътекстътекстътекстътекстътекстътекстъ" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

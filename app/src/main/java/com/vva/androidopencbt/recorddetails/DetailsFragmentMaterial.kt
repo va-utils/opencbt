@@ -2,6 +2,8 @@ package com.vva.androidopencbt.recorddetails
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
@@ -20,11 +22,9 @@ import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.transition.MaterialContainerTransform
-import com.vva.androidopencbt.R
-import com.vva.androidopencbt.RecordsViewModel
+import com.vva.androidopencbt.*
 import com.vva.androidopencbt.db.CbdDatabase
 import com.vva.androidopencbt.db.DbRecord
-import com.vva.androidopencbt.themeColor
 import org.joda.time.DateTime
 
 class DetailsFragmentMaterial: Fragment() {
@@ -36,6 +36,7 @@ class DetailsFragmentMaterial: Fragment() {
         DetailsViewModelFactory(args.recordKey, database.databaseDao)
     }
 
+    private lateinit var dateTimeInputLayout: TextInputLayout;
     private lateinit var thoughtInputLayout: TextInputLayout
     private lateinit var rationalInputLayout: TextInputLayout
     private lateinit var situationInputLayout: TextInputLayout
@@ -186,6 +187,8 @@ class DetailsFragmentMaterial: Fragment() {
         }
 
         if (id > 0) {
+
+            //detailsViewModel.setRecordDate(detailsViewModel.currentRecord!!.datetime);
             deleteButton.visibility = View.VISIBLE
 
             detailsViewModel.getRecord().observe(viewLifecycleOwner) { record ->
@@ -196,6 +199,8 @@ class DetailsFragmentMaterial: Fragment() {
                 proceedString(record.situation, "enable_situation", situationInputLayout)
                 proceedString(record.feelings, "enable_feelings", feelingsInputLayout)
                 proceedString(record.actions, "enable_actions", actionsInputLayout)
+
+                detailsViewModel.setRecordDate(record.datetime)
 
                 //vyalichkin----попытки поставить курсор в конец
                 /*
@@ -280,6 +285,24 @@ class DetailsFragmentMaterial: Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initControls() {
+
+        dateTimeInputLayout = ll.findViewById(R.id.dateTimeInputLayout);
+        detailsViewModel.recordDate.observe(viewLifecycleOwner) {
+            dateTimeInputLayout.editText?.setText(it.getDateTimeString())
+        }
+
+        dateTimeInputLayout.editText?.setOnClickListener {
+            val date = detailsViewModel.recordDateTime
+            setDateTime(date);
+        }
+
+        dateTimeInputLayout.setEndIconOnClickListener {
+            if(args.recordKey>0)
+                detailsViewModel.setRecordDate(detailsViewModel.currentRecord!!.datetime)
+            else
+                detailsViewModel.setRecordDate(DateTime())
+        }
+
         thoughtInputLayout = ll.findViewById(R.id.thoughtInputLayout)
         rationalInputLayout = ll.findViewById(R.id.rationalInputLayout)
         emotionsInputLayout = ll.findViewById(R.id.emotionsInputLayout)
@@ -377,7 +400,7 @@ class DetailsFragmentMaterial: Fragment() {
                     record.distortions,
                     record.feelings,
                     record.actions,
-                    record.intensity)
+                    record.intensity, detailsViewModel.recordDateTime)
         } else {
             detailsViewModel.addRecord(record)
         }
@@ -434,7 +457,8 @@ class DetailsFragmentMaterial: Fragment() {
                 feelings,
                 actions,
                 intensity,
-                if (id == 0L) DateTime() else detailsViewModel.currentRecord?.datetime ?: DateTime()
+                detailsViewModel.recordDateTime
+               // if (id == 0L) detailsViewModel.recordDateTime else detailsViewModel.currentRecord?.datetime ?: detailsViewModel.recordDateTime
         )
     }
 
@@ -498,5 +522,29 @@ class DetailsFragmentMaterial: Fragment() {
                         builder.setTitle("Справка")
                         builder.setPositiveButton("OK") { dialog, _ -> dialog.cancel() }
         return builder.create()
+    }
+
+    fun setDateTime(dt: DateTime)// : DateTime
+    {
+        var year : Int = 0
+        var mon : Int = 0
+        var day : Int = 0
+        var hour : Int = 0
+        var min : Int = 0
+
+        val recordTpListener = TimePickerDialog.OnTimeSetListener { _ , h, m  ->
+            hour = h;  min = m
+            detailsViewModel.setRecordDate(DateTime(year,mon,day,hour,min))
+        }
+
+        val recordDpListener = DatePickerDialog.OnDateSetListener { tp: DatePicker, y, m, d  ->
+            tp.maxDate = DateTime().millis
+            year=y; mon = m+1; day = d;
+            TimePickerDialog(requireContext(), recordTpListener, dt.hourOfDay, dt.minuteOfHour, true).show();
+        }
+
+        var dialog = DatePickerDialog(requireContext(), recordDpListener, dt.year, dt.monthOfYear-1, dt.dayOfMonth);
+        dialog.datePicker.maxDate = dt.millis
+        dialog.show();
     }
 }
